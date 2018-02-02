@@ -8,14 +8,17 @@
 
 #include "../scene/Scene.hpp"
 #include "RenderTarget.hpp"
+#include "Renderer.hpp"
 
 namespace McRenderer {
-    class RayTracer {
+    class RayTracer : public Renderer{
     private:
         int threads;
 
     public:
+        RayTracer(int threadsIn): threads{threadsIn} { };
         void render(const Scene& scene, RenderTarget& target);
+        ~RayTracer(){};
     };
 }
 

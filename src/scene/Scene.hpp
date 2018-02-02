@@ -12,7 +12,7 @@
 
 namespace McRenderer {
     using namespace std;
-    class Scene {
+    struct Scene {
         vector <Light> lights;
         vector <Triangle> model;
         Camera camera;

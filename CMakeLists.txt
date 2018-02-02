@@ -21,7 +21,7 @@ set(SOURCE_FILES src/main.cpp
         src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
         )
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/catch.hpp src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp src/scene/Material.cpp src/scene/Material.hpp src/scene/TextureSampler2D.cpp src/scene/TextureSampler2D.hpp src/scene/TextureMap.cpp src/scene/TextureMap.hpp tests/scene/RayTests.hpp tests/testMain.cpp src/Exception.cpp src/Exception.hpp)
+set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/catch.hpp src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp src/scene/Material.cpp src/scene/Material.hpp src/scene/TextureSampler2D.cpp src/scene/TextureSampler2D.hpp src/scene/TextureMap.cpp src/scene/TextureMap.hpp tests/scene/RayTests.hpp tests/testMain.cpp src/Exception.cpp src/Exception.hpp src/rendering/Renderer.cpp src/rendering/Renderer.hpp)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories("${PROJECT_SOURCE_DIR}/lib/glm/")

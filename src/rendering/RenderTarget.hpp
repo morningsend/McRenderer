@@ -14,11 +14,14 @@ namespace McRenderer {
     private:
         int width;
         int height;
-        float* frameBuffer;
+        vec3* frameBuffer;
     public:
         RenderTarget(int widthIn = 256, int heightIn = 256);
         ~RenderTarget();
         void setColor(int x, int y, vec3 colour);
+        void fillColor(int xMin, int yMin, int xMax, int yMax, vec3 colour);
+        int getWidth();
+        int getHeight();
     };
 }
 

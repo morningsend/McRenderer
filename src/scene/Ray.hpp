@@ -14,7 +14,10 @@ namespace McRenderer {
     const float EPSILON = 0.00001f;
     struct Ray {
         vec3 origin;
-        vec3 direction;
+        vec3 forward;
+
+        Ray(float originX, float originY, float originZ, float forwardX, float forwardY, float forwardZ);
+        Ray(const vec3& origin, const vec3& forward);
     };
 
     bool castRay(const Ray& ray, const Triangle& triangle, vec3& hitLocation);
