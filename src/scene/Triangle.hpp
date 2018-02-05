@@ -12,6 +12,8 @@ namespace McRenderer {
         vec3 vertices[3];
         vec3 normal;
 
+        void computeNormal();
+        void computeNormal(bool normalize);
     };
 }
 

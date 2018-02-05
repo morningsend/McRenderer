@@ -23,24 +23,49 @@ namespace McRenderer {
      * 1. intersection ray with plane the triangle lies in
      * 2. if did not found a point of intersection, i.e. ray is parallel to plane, return
      * 3. if found point of intersection, test if point lies on triangle.
-     *
+     *  https://cadxfem.org/inf/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
      * @param ray
      * @param triangle
      * @return
      */
-    RayHit castRay(const Ray &ray, const Triangle *triangle) {
-        float d = glm::dot(triangle->normal, triangle->vertices[0]);
-        RayHit hit = castRay(ray, Plane{triangle->normal, d});
+    RayHit castRay(const Ray &ray, Triangle *triangle) {
 
-        if(!hit.isHit) {
-            return hit;
-        }
+        RayHit hit;
+        hit.triangle = triangle;
 
         vec3 edge1 = triangle->vertices[1] - triangle->vertices[0];
         vec3 edge2 = triangle->vertices[2] - triangle->vertices[0];
 
+        vec3 rayTriangle = ray.origin - triangle->vertices[0];
+        vec3 P = glm::cross(ray.forward, edge2);
+        vec3 Q = glm::cross(rayTriangle, edge1);
 
+        float determinant = glm::dot(P, edge1);
 
+        // determinant is zero, no intersection
+        if(determinant < -EPSILON || determinant > EPSILON) {
+            return hit;
+        }
+        determinant = 1.0f / determinant;
+        //barycentric coordinates
+        float u = glm::dot(P, rayTriangle) * determinant;
+        float v = glm::dot(Q, ray.forward) * determinant;
+        float t = glm::dot(Q, ray.forward) * determinant;
+        // point is inside triangle if both uv coordinates are in [0, 1] and u+v < 1;
+        if(u < 0.0f || u > 1.0f) {
+            return hit;
+        } else if(v < 0.0f || v > 1.0f) {
+            return hit;
+        } else if(v + u > 1.0f) {
+            return hit;
+        }
+
+        hit.isHit = true;
+        hit.triangle = triangle;
+        hit.t = t;
+        hit.position = ray.at(t);
+
+        return hit;
     }
 
     RayHit castRay(const Ray &ray, const Plane plane) {
@@ -53,9 +78,9 @@ namespace McRenderer {
             hitStatus.isHit = false;
         }
 
-        hitStatus = true;
+        hitStatus.isHit = true;
         hitStatus.t = (plane.d - num) / denom;
-        hitStatus.location = ray.at(hitStatus.t);
+        hitStatus.position = ray.at(hitStatus.t);
         return hitStatus;
     }
 }

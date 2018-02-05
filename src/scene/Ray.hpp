@@ -33,8 +33,8 @@ namespace McRenderer {
         Triangle* triangle { nullptr };
     };
 
-    bool castRay(const Ray& ray, const Triangle& triangle, vec3& hitLocation, float t);
-    bool castRay(const Ray& ray, const Sphere& sphere, vec3& hitLocation, float t);
+    RayHit castRay(const Ray& ray, const Triangle& triangle, vec3& hitLocation, float t);
+    RayHit castRay(const Ray& ray, const Sphere& sphere, vec3& hitLocation, float t);
     RayHit castRay(const Ray& ray, const Triangle* triangle);
     /**
      * computes intersection of ray with plane.
