@@ -22,6 +22,7 @@ namespace McRenderer {
         Ray(float originX, float originY, float originZ, float forwardX, float forwardY, float forwardZ)
             :origin{originX, originY, originZ}, forward{forwardX, forwardY, forwardZ} {};
         Ray(const vec3& originIn, const vec3& forwardIn): origin{originIn}, forward{forwardIn} {};
+        Ray(): Ray(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) { }
 
         vec3 at(float t) const{ return origin + forward * t; };
     };
@@ -30,22 +31,17 @@ namespace McRenderer {
         bool isHit {false};
         float t {0.0f};
         vec3 position { 0.0f, 0.0f, 0.0f};
-        Triangle* triangle { nullptr };
     };
 
-    RayHit castRay(const Ray& ray, const Triangle& triangle, vec3& hitLocation, float t);
-    RayHit castRay(const Ray& ray, const Sphere& sphere, vec3& hitLocation, float t);
-    RayHit castRay(const Ray& ray, const Triangle* triangle);
     /**
-     * computes intersection of ray with plane.
-     * plane equation: n*r = d
-     * ray equation: r(t) = p + vt
-     * n * r(t) = d => n*p + n*v * t = d => t = (d - n*p)/(n*v)
+     * Computes intersection of ray with a mathematical sphere of equation (x - a)^2 + (y - b)^2 + (z - c)^2 = r^2
      * @param ray
-     * @param plane
+     * @param sphere
      * @return
      */
-    RayHit castRay(const Ray& ray, const Plane plane);
+    RayHit castRay(const Ray& ray, const Sphere& sphere);
+    RayHit castRay(const Ray& ray, const Triangle& triangle);
+    RayHit castRay(const Ray& ray, const Plane& plane);
 }
 
 

@@ -6,14 +6,8 @@
 
 namespace McRenderer {
 
-    bool castRay(const Ray &ray, const Sphere &sphere, vec3 &hitLocation) {
-
-        return false;
-    }
-
-    bool castRay(const Ray &ray, const Triangle &triangle, vec3 &hitLocation) {
-
-        return false;
+    RayHit castRay(const Ray &ray, const Sphere &sphere) {
+        return RayHit();
     }
 
     /**
@@ -28,29 +22,27 @@ namespace McRenderer {
      * @param triangle
      * @return
      */
-    RayHit castRay(const Ray &ray, Triangle *triangle) {
-
+    RayHit castRay(const Ray &ray, const Triangle& triangle) {
         RayHit hit;
-        hit.triangle = triangle;
 
-        vec3 edge1 = triangle->vertices[1] - triangle->vertices[0];
-        vec3 edge2 = triangle->vertices[2] - triangle->vertices[0];
+        vec3 edge1 = triangle.vertices[1] - triangle.vertices[0];
+        vec3 edge2 = triangle.vertices[2] - triangle.vertices[0];
 
-        vec3 rayTriangle = ray.origin - triangle->vertices[0];
+        vec3 rayTriangle = ray.origin - triangle.vertices[0];
         vec3 P = glm::cross(ray.forward, edge2);
         vec3 Q = glm::cross(rayTriangle, edge1);
 
         float determinant = glm::dot(P, edge1);
 
         // determinant is zero, no intersection
-        if(determinant < -EPSILON || determinant > EPSILON) {
+        if(abs(determinant) < EPSILON) {
             return hit;
         }
         determinant = 1.0f / determinant;
         //barycentric coordinates
         float u = glm::dot(P, rayTriangle) * determinant;
         float v = glm::dot(Q, ray.forward) * determinant;
-        float t = glm::dot(Q, ray.forward) * determinant;
+        float t = glm::dot(Q, edge2) * determinant;
         // point is inside triangle if both uv coordinates are in [0, 1] and u+v < 1;
         if(u < 0.0f || u > 1.0f) {
             return hit;
@@ -61,14 +53,13 @@ namespace McRenderer {
         }
 
         hit.isHit = true;
-        hit.triangle = triangle;
         hit.t = t;
         hit.position = ray.at(t);
 
         return hit;
     }
 
-    RayHit castRay(const Ray &ray, const Plane plane) {
+    RayHit castRay(const Ray &ray, const Plane& plane) {
 
         RayHit hitStatus;
         float denom = glm::dot(ray.forward, plane.normal);

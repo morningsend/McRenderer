@@ -27,10 +27,17 @@ set(SOURCE_FILES
         src/rendering/Renderer.cpp src/rendering/Renderer.hpp
         )
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/catch.hpp tests/scene/RayTests.hpp )
+set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
+
+set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp )
+
+add_library(Catch INTERFACE)
+
+target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories("${PROJECT_SOURCE_DIR}/lib/glm/")
+include_directories(${CATCH_INCLUDE_DIR})
 
 find_package(sdl2 REQUIRED)
 
