@@ -22,7 +22,9 @@ namespace McRenderer {
                 vec4 direction = vec4(screenX, screenY, camera.focalLength,0);
                 vec3 worldCoord = camera.toWorldCoordinate(screenX, screenY);
 
-                Ray ray{camera.position, worldCoord};
+                Ray ray{camera.position, worldCoord - camera.position};
+
+
             }
 //            loop through triangles
 //            find intersection using the equation

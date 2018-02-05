@@ -4,7 +4,7 @@
 
 #ifndef RENDERER_RENDERTARGET_HPP
 #define RENDERER_RENDERTARGET_HPP
-
+#include <string>
 #include <glm/vec3.hpp>
 #include "../Exception.hpp"
 

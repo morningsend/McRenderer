@@ -132,16 +132,17 @@
 		</Build>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/Exception.cpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/Exception.hpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/SDLauxiliary.h">
 			<Option target="renderer_tests"/>
 			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/main.cpp">
-			<Option target="renderer_tests"/>
 			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RayTracer.cpp">
@@ -154,15 +155,19 @@
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RenderTarget.cpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RenderTarget.hpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/Renderer.cpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/Renderer.hpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/BoundingBox.cpp">
 			<Option target="renderer_tests"/>
@@ -198,9 +203,11 @@
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Material.cpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Material.hpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Mesh.cpp">
 			<Option target="renderer_tests"/>
@@ -248,15 +255,19 @@
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureMap.cpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureMap.hpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureSampler2D.cpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureSampler2D.hpp">
 			<Option target="renderer_tests"/>
+			<Option target="renderer"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Transform.cpp">
 			<Option target="renderer_tests"/>

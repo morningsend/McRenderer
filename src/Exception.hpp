@@ -13,8 +13,8 @@ namespace McRenderer {
     private:
         string message;
     public:
-        explicit Exception(const string& messageIn) noexcept : message{messageIn} {};
-        explicit Exception(const Exception& exception) noexcept: Exception(exception.message){}
+        Exception(string messageIn) : message{messageIn} {};
+        Exception(Exception& exception) : message(exception.message) {};
     };
 }
 

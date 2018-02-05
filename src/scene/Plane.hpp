@@ -5,10 +5,15 @@
 #ifndef RENDERER_PLANE_HPP
 #define RENDERER_PLANE_HPP
 
+#include <glm/glm.hpp>
 
-class Plane {
-
-};
+namespace McRenderer {
+    using namespace glm;
+    struct Plane {
+        vec3 normal;
+        float d;
+    };
+}
 
 
 #endif //RENDERER_PLANE_HPP

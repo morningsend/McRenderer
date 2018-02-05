@@ -20,7 +20,7 @@ namespace  McRenderer {
               aspectRatio{1.0f},
               focalLength{.04f}
     {
-
+        right = glm::cross(up, forward);
     }
 
     void Camera::rotate(float angle) {
@@ -32,7 +32,13 @@ namespace  McRenderer {
     }
 
     vec3 Camera::toWorldCoordinate(float screenX, float screenY) const {
-
-        return glm::vec3();
+        vec3 result{right};
+        result *= screenX;
+        result += forward * focalLength;
+        result += up * screenY;
+        return result;
+    }
+    vec2 Camera::toScreenCoordinate(const vec3& point) {
+        return {0.0f, 0.0f};
     }
 }
