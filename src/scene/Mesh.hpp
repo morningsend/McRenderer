@@ -8,7 +8,7 @@
 #include <vector>
 #include "Transform.hpp"
 #include "Vertex.hpp"
-#include "BoundingBox.hpp"
+#include "../tree/BoundingBox.hpp"
 
 namespace McRenderer {
     using namespace std;

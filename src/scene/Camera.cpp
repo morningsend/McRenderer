@@ -20,7 +20,7 @@ namespace  McRenderer {
               aspectRatio{1.0f},
               focalLength{.04f}
     {
-        right = glm::cross(up, forward);
+        right = glm::normalize(glm::cross(forward, up));
     }
 
     void Camera::rotate(float angle) {

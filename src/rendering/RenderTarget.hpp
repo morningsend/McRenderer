@@ -19,9 +19,12 @@ namespace McRenderer {
         RenderTarget(int widthIn = 256, int heightIn = 256);
         ~RenderTarget();
         void setColor(int x, int y, vec3 colour);
+        vec3& getColor(int x, int y);
         void fillColor(int xMin, int yMin, int xMax, int yMax, vec3 colour);
         int getWidth();
         int getHeight();
+        void saveOutput(const string& path);
+        vec3& operator()(int x, int y);
     };
 }
 

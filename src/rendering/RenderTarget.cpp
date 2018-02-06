@@ -37,12 +37,24 @@ namespace McRenderer {
         xMax = xMax >= height ? height - 1 : xMax;
         yMin = yMin < 0 ? 0 : yMin;
         yMax = yMax >= height ? height - 1 : yMax;
-
-        for(int x = xMin; x <= xMax; x++) {
-            for(int y = yMin; y <= yMax; y++) {
+        for(int y = yMin; y <= yMax; y++)
+            for(int x = xMin; x <= xMax; x++) {
+             {
                 // fill framebuffer at (x,y) with colour;
                 frameBuffer[x + y * width] = colour;
             }
         }
+    }
+
+    void RenderTarget::saveOutput(const string &path) {
+
+    }
+
+    vec3& RenderTarget::operator()(int x, int y) {
+        return frameBuffer[x + y * width];
+    }
+
+    vec3& RenderTarget::getColor(int x, int y) {
+        return frameBuffer[x + y * width];
     }
 }

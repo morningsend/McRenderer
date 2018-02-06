@@ -13,19 +13,21 @@ set(SOURCE_FILES
         src/scene/Camera.cpp src/scene/Camera.hpp
         src/scene/Vertex.cpp src/scene/Vertex.hpp
         src/scene/TestModelH.h
-        src/SDLauxiliary.h src/scene/Light.cpp src/scene/Light.hpp
+        src/SDLauxiliary.hpp src/SDLauxiliary.cpp
+        src/scene/Light.cpp src/scene/Light.hpp
         src/scene/Triangle.cpp src/scene/Triangle.hpp
         src/scene/Sphere.cpp src/scene/Sphere.hpp
         src/rendering/RayTracer.cpp src/rendering/RayTracer.hpp
         src/scene/Scene.cpp src/scene/Scene.hpp
-        src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
+        src/tree/BoundingBox.cpp src/tree/BoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp 
         src/scene/Material.cpp src/scene/Material.hpp 
         src/scene/TextureSampler2D.cpp src/scene/TextureSampler2D.hpp 
         src/scene/TextureMap.cpp src/scene/TextureMap.hpp  
         src/Exception.cpp src/Exception.hpp 
         src/rendering/Renderer.cpp src/rendering/Renderer.hpp
-        )
+        src/window/KeyboardEventHandler.cpp src/window/KeyboardEventHandler.hpp src/window/KeyboardEvent.cpp src/window/KeyboardEvent.hpp
+        src/window/Window.cpp src/window/Window.hpp src/rendering/RenderTargetDrawingFunction.cpp src/rendering/RenderTargetDrawingFunction.hpp src/window/TestDrawFunction.cpp src/window/TestDrawFunction.hpp src/tree/KdTree.cpp src/tree/KdTree.hpp src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
@@ -41,8 +43,8 @@ include_directories(${CATCH_INCLUDE_DIR})
 
 find_package(sdl2 REQUIRED)
 
-add_executable(renderer ${SOURCE_FILES} src/main.cpp)
+add_executable(renderer ${SOURCE_FILES} src/main.cpp )
 add_executable(renderer_tests ${TESTS_SOURCE_FILES} tests/testMain.cpp)
 
-target_link_libraries(renderer ${SDL_LIBRARIES})
-target_link_libraries(renderer_tests ${SDL_LIBRARIES})
+target_link_libraries(renderer ${SDL2_LIBRARIES})
+target_link_libraries(renderer_tests ${SDL2_LIBRARIES})

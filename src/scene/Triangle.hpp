@@ -11,6 +11,7 @@ namespace McRenderer {
     struct Triangle {
         vec3 vertices[3];
         vec3 normal;
+        vec3 colour;
 
         void computeNormal();
         void computeNormal(bool normalize);

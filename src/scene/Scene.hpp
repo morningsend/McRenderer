@@ -13,9 +13,10 @@
 namespace McRenderer {
     using namespace std;
     struct Scene {
-        vector <Light> lights;
-        vector <Triangle> model;
-        Camera camera;
+        vector <Light> lights{};
+        vector <Triangle> model{};
+        Camera camera {};
+        vec3 backgroundColour{0.0f, 0.0f, 0.0f};
     };
 }
 
