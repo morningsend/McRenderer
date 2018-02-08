@@ -12,13 +12,16 @@
 #include "../scene/Ray.hpp"
 
 namespace McRenderer {
-    class RayTracer : public Renderer{
+    const float INVERSE2PI = static_cast<const float>(.25f / M_PI);
+    class RayTracer : public Renderer {
     private:
         int threads;
+
     public:
         RayTracer(int threadsIn): threads{threadsIn} { };
         void render(const Scene& scene, RenderTarget& target);
         ~RayTracer(){};
+        bool traceShadow(const Scene &scene, float lightDistance, const Ray &ray);
     };
 
     void closestIntersection(const vector<Triangle> &triangles,

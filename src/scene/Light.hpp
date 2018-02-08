@@ -18,10 +18,11 @@ namespace McRenderer {
     };
 
     struct Light {
-        float intensity;
-        vec3 color;
-        AttenuationType type;
-        vec4 position;
+        float intensity{1.0f};
+        vec3 diffuseColour{1.0f, 1.0f, 1.0f};
+        vec3 specularColour{1.0f, 1.0f, 1.0f};
+        AttenuationType type{AttenuationType::InverseSquare};
+        vec3 position{0,0,0};
 
     };
 
@@ -41,7 +42,7 @@ namespace McRenderer {
 
     struct SpotLight : public Light {
         float fallOffAngle;
-        vec4 direction;
+        vec3 direction;
     };
 
 

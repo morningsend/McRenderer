@@ -6,10 +6,14 @@
 #define RENDERER_CAMERAKEYBOARDCONTROLLER_HPP
 
 #include "window/KeyboardEventHandler.hpp"
+#include "scene/Camera.hpp"
 
 namespace McRenderer {
     class CameraKeyboardController : public KeyboardEventHandler {
+    private:
+        Camera* camera;
     public:
+        explicit CameraKeyboardController(Camera* cameraIn): camera{cameraIn} { }
         ~CameraKeyboardController() override = default;
         void onKeyActive(KeyboardEvent event) override;
     };

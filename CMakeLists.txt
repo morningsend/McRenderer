@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(renderer CXX)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -26,8 +26,13 @@ set(SOURCE_FILES
         src/scene/TextureMap.cpp src/scene/TextureMap.hpp  
         src/Exception.cpp src/Exception.hpp 
         src/rendering/Renderer.cpp src/rendering/Renderer.hpp
-        src/window/KeyboardEventHandler.cpp src/window/KeyboardEventHandler.hpp src/window/KeyboardEvent.cpp src/window/KeyboardEvent.hpp
-        src/window/Window.cpp src/window/Window.hpp src/rendering/RenderTargetDrawingFunction.cpp src/rendering/RenderTargetDrawingFunction.hpp src/window/TestDrawFunction.cpp src/window/TestDrawFunction.hpp src/tree/KdTree.cpp src/tree/KdTree.hpp src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp)
+        src/window/KeyboardEventHandler.cpp src/window/KeyboardEventHandler.hpp
+        src/window/KeyboardEvent.cpp src/window/KeyboardEvent.hpp
+        src/window/Window.cpp src/window/Window.hpp
+        src/rendering/RenderTargetDrawFunction.cpp src/rendering/RenderTargetDrawFunction.hpp
+        src/window/TestDrawFunction.cpp src/window/TestDrawFunction.hpp
+        src/tree/KdTree.cpp src/tree/KdTree.hpp
+        src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 

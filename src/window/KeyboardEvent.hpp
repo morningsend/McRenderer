@@ -8,7 +8,7 @@
 #include <SDL2/SDL.h>
 
 struct KeyboardEvent {
-    uint8_t key;
+    uint32_t key;
 };
 
 

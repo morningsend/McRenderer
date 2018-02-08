@@ -3,6 +3,7 @@
 //
 
 #include "Camera.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace  McRenderer {
 
@@ -11,34 +12,45 @@ namespace  McRenderer {
         position += delta;
     }
 
-    Camera::Camera(const vec4 &positionIn, const vec4 &forwardIn, const vec4 &upIn)
+    Camera::Camera(const vec3& positionIn, const vec3& forwardIn, const vec3& upIn)
             : position(positionIn),
               forward(forwardIn),
               up(upIn),
               nearClippingDistance{0.1f},
               farClippingDistance{1000.0f},
               aspectRatio{1.0f},
-              focalLength{.04f}
+              focalLength{.02f}
     {
-        right = glm::normalize(glm::cross(forward, up));
+        computeRightVector();
     }
 
-    void Camera::rotate(float angle) {
-
-    }
 
     mat4 Camera::viewingMatrix() {
         return glm::mat4();
     }
 
     vec3 Camera::toWorldCoordinate(float screenX, float screenY) const {
-        vec3 result{right};
-        result *= screenX;
+        vec3 result{position};
+        result += right * screenX;
         result += forward * focalLength;
         result += up * screenY;
         return result;
     }
     vec2 Camera::toScreenCoordinate(const vec3& point) {
         return {0.0f, 0.0f};
+    }
+
+    void Camera::rotateY(float angle) {
+        float radians = static_cast<float>(angle / 180.0f * M_PI);
+        float cosAngle = cos(radians);
+        float sinAngle = sin(radians);
+        mat3 rotation(
+                vec3(cosAngle, 0,  -sinAngle),
+                vec3(0, 1, 0),
+                vec3(sinAngle, 0, cosAngle)
+        );
+
+        forward = rotation * forward;
+        right = rotation * right;
     }
 }

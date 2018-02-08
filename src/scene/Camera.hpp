@@ -14,20 +14,24 @@ namespace McRenderer {
         vec3 right{1.0f, 0.0f, 0.0f};
         vec3 up{0.0f, 1.0f, 0.0f};
 
-        float fieldOfViewDegrees{45.0f};
+        float fieldOfViewDegrees{40.0f};
         float aspectRatio{1.0f};
         float nearClippingDistance{0.001f};
         float farClippingDistance{100.0f};
         float focalLength{0.035f};
         mat4 viewingMatrix();
 
-        explicit Camera(const vec4& positionIn, const vec4& forwardIn, const vec4& upIn);
-        explicit Camera() { }
+        explicit Camera(const vec3& positionIn, const vec3& forwardIn, const vec3& upIn);
+        explicit Camera() = default;
         void move(vec3 translation);
-        void rotate(float angle);
-        // range -0.5 to 0.5
+        void rotateY(float angle);
+        // range -1 to 1
         vec3 toWorldCoordinate(float screenX, float screenY) const;
         vec2 toScreenCoordinate(const vec3& point);
+
+        void computeRightVector(){
+            right = glm::normalize(glm::cross(up, forward));
+        }
     };
 
 }

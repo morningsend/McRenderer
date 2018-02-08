@@ -42,12 +42,26 @@ namespace McRenderer {
         elapsedTime = currentClockTicks;
 
         int keystates = 0;
-
-        const Uint8* keys = SDL_GetKeyboardState(&keystates);
-        std::cout << keystates << " keys are pressed"<<std::endl;
+        const Uint8* states = SDL_GetKeyboardState(&keystates);
         std::cout << "last frame took " << deltaTime << " ms to render" << std::endl;
-        if(keystates > 0) {
-            notifyEventHandlers(KeyboardEvent{keys[0]});
+        if(states[SDL_SCANCODE_LEFT]) {
+            notifyEventHandlers(KeyboardEvent{SDL_SCANCODE_LEFT});
+        } else
+        if(states[SDL_SCANCODE_RIGHT]) {
+            notifyEventHandlers(KeyboardEvent{SDL_SCANCODE_RIGHT});
+        } else
+        if(states[SDL_SCANCODE_UP]) {
+            notifyEventHandlers(KeyboardEvent{SDL_SCANCODE_UP});
+        } else
+        if(states[SDL_SCANCODE_DOWN]) {
+            notifyEventHandlers(KeyboardEvent{SDL_SCANCODE_DOWN});
+        } else
+        if(states[SDL_SCANCODE_A]) {
+            notifyEventHandlers(KeyboardEvent{SDL_SCANCODE_A});
+        }else
+        if(states[SDL_SCANCODE_S]) {
+            notifyEventHandlers(KeyboardEvent{SDL_SCANCODE_S});
         }
+
     }
 }

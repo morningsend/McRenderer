@@ -7,17 +7,25 @@
 
 #include "../window/Window.hpp"
 #include "RenderTarget.hpp"
+#include "Renderer.hpp"
 
 namespace McRenderer {
     /**
      * Writes the content of render target to screen buffer to be shown in SDL window every time draw
      * method is called.
      */
-    class RenderTargetDrawingFunction : DrawFunction{
+    class RenderTargetDrawFunction : public DrawFunction{
     private:
+        Scene* scene;
         RenderTarget* renderTarget;
-
+        Renderer* renderer;
     public:
+        RenderTargetDrawFunction(Scene* sceneIn, Renderer* rendererIn, RenderTarget* renderTargetIn)
+                : scene{sceneIn},
+                  renderer{rendererIn},
+                  renderTarget{renderTargetIn}
+        {
+        }
         /**
          * Writes the content of render target to screen.
          * Will throw exception if render target and screen have different width and height.
