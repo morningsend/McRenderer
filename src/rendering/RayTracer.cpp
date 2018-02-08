@@ -68,7 +68,6 @@ namespace McRenderer {
 //                    return if any intersection exists
         }
         // hard shadow
-
     }
 
     bool RayTracer::traceShadow(const Scene &scene, float lightDistance, const Ray &ray) {

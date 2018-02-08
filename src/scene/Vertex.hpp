@@ -9,8 +9,8 @@
 namespace McRenderer {
     using namespace glm;
     struct Vertex {
-        vec4 position;
-        vec4 normal;
+        vec3 position;
+        vec3 normal;
         vec3 color;
         vec2 uvCoord;
     };

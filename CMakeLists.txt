@@ -36,7 +36,7 @@ set(SOURCE_FILES
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp )
+set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp src/obj/ObjFile.cpp src/obj/ObjFile.hpp src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp)
 
 add_library(Catch INTERFACE)
 

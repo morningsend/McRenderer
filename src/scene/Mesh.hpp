@@ -9,6 +9,7 @@
 #include "Transform.hpp"
 #include "Vertex.hpp"
 #include "../tree/BoundingBox.hpp"
+#include "Material.hpp"
 
 namespace McRenderer {
     using namespace std;
@@ -17,6 +18,7 @@ namespace McRenderer {
         Transform transform;
         vector<Vertex> vertices;
         BoundingBox boundingBox;
+        Material material;
     };
 }
 

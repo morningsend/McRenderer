@@ -161,6 +161,18 @@
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/main.cpp">
 			<Option target="renderer"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/ObjFile.cpp">
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/ObjFile.hpp">
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/ObjFileReader.cpp">
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/ObjFileReader.hpp">
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RayTracer.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>

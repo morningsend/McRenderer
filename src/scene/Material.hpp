@@ -10,14 +10,12 @@
 
 namespace McRenderer {
     using namespace glm;
-    struct Material {
-        vec3 diffuseColor;
-        vec3 specularColor;
-        vec3 reflectionColor;
-        vec3 refraction;
-
+    class Material {
+        vec3 diffuseColor {0.75f, 0.75f, 0.75f};
+        vec3 specularColor { 0.75f, 0.75f, 0.75f};
+        vec3 reflectionColor{ 0.0f, 0.0f, 0.0f};
+        vec3 refractionColor{ 0.0f, 0.0f, 0.0f};
     };
 }
-
 
 #endif //RENDERER_MATERIAL_HPP
