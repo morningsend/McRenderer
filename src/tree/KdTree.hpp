@@ -5,6 +5,8 @@
 #ifndef RENDERER_KDTREE_HPP
 #define RENDERER_KDTREE_HPP
 
+#include "../scene/Mesh.hpp"
+
 namespace McRenderFace {
 
     struct KdTreeNode {
@@ -20,6 +22,10 @@ namespace McRenderFace {
     class KdTree {
 
     };
+
+    KdTree createKdTreeFromMesh(const Mesh& mesh) {
+        return KdTree();
+    }
 }
 
 

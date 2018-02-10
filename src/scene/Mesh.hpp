@@ -8,19 +8,54 @@
 #include <vector>
 #include "Transform.hpp"
 #include "Vertex.hpp"
-#include "../tree/BoundingBox.hpp"
+#include "BoundingBox.hpp"
 #include "Material.hpp"
 
 namespace McRenderFace {
     using namespace std;
+
+    enum class MeshType{ PerFaceNormal, PerVertexNormal };
+
+    struct MeshData {
+        virtual BoundingBox computeBoundingBox() = 0;
+        ~MeshData(){};
+    };
+    struct TriangleFace {
+        int vertexIndices[3];
+        int normalIndices[3];
+        int uvIndices[3];
+    };
+
+    struct VertexFace {
+        int vertexIndices[3];
+    };
+    /**
+     * Mesh implementing per vertex normal.
+     */
     struct Mesh {
-        vec4 pivotPoint;
+        int meshId;
+        MeshType type;
         Transform transform;
-        vector<Vertex> vertices;
         BoundingBox boundingBox;
         Material material;
+        MeshData* meshData;
 
         void computeBoundingBox();
+    };
+
+    struct VertexMeshData : MeshData {
+        vector<VertexFace> triangles;
+        vector<Vertex> vertices;
+
+        BoundingBox computeBoundingBox() override;
+    };
+
+    struct FaceMeshData : MeshData {
+        vector<vec3> vertices;
+        vector<vec3> normals;
+        vector<vec2> uvCoords;
+        vector<TriangleFace> faces;
+        BoundingBox computeBoundingBox() override;
     };
 }
 

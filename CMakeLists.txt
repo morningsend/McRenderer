@@ -19,7 +19,7 @@ set(SOURCE_FILES
         src/scene/Sphere.cpp src/scene/Sphere.hpp
         src/rendering/RayTracer.cpp src/rendering/RayTracer.hpp
         src/scene/Scene.cpp src/scene/Scene.hpp
-        src/tree/BoundingBox.cpp src/tree/BoundingBox.hpp
+        src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp 
         src/scene/Material.cpp src/scene/Material.hpp 
         src/scene/TextureSampler2D.cpp src/scene/TextureSampler2D.hpp 
@@ -34,11 +34,12 @@ set(SOURCE_FILES
         src/tree/KdTree.cpp src/tree/KdTree.hpp
         src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp
         src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp
-        src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp)
+        src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
+        src/IOUtility.cpp src/IOUtility.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp )
+set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp tests/scene/MeshTests.hpp)
 
 add_library(Catch INTERFACE)
 

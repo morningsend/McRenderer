@@ -9,6 +9,7 @@
 #include "Triangle.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
+#include "BoundingBox.hpp"
 
 namespace McRenderFace {
     using namespace glm;
@@ -42,6 +43,7 @@ namespace McRenderFace {
     RayHit castRay(const Ray& ray, const Sphere& sphere);
     RayHit castRay(const Ray& ray, const Triangle& triangle);
     RayHit castRay(const Ray& ray, const Plane& plane);
+    RayHit castRay(const Ray &ray, const BoundingBox &box);
 }
 
 

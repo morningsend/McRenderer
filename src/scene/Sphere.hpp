@@ -16,7 +16,7 @@ namespace McRenderFace {
         float radius;
         vec3 origin;
 
-        void makeMesh(Mesh& result);
+        void makeMesh(Mesh& result, MeshType type);
     };
 
 }

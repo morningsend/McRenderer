@@ -4,6 +4,8 @@
 
 #include "Sphere.hpp"
 
-void McRenderFace::Sphere::makeMesh(McRenderFace::Mesh &result) {
+namespace McRenderFace {
+    void Sphere::makeMesh(McRenderFace::Mesh &result, McRenderFace::MeshType type) {
 
+    }
 }

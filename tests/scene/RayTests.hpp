@@ -10,6 +10,7 @@
 
 using namespace McRenderFace;
 using namespace glm;
+
 TEST_CASE("ray cast on triangle will not hit if ray has 0 direction", "[rayCast]") {
     Triangle triangle;
     triangle.vertices[0] = vec3(0.0f, 0.0f,0.0f);
@@ -61,4 +62,7 @@ TEST_CASE("good case", "[rayCast]") {
     REQUIRE(result.position.z < 0.0001);
 }
 
+TEST_CASE("ray not hit bounding box", "[rayCast]") {
+    BoundingBox box;
+}
 #endif
