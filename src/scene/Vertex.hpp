@@ -6,7 +6,7 @@
 #define RENDERER_VERTEX_HPP
 
 #include <glm/glm.hpp>
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     struct Vertex {
         vec3 position;

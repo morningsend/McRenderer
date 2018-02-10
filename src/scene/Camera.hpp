@@ -6,7 +6,7 @@
 #define RENDERER_CAMERA_HPP
 
 #include <glm/glm.hpp>
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     struct Camera {
         vec3 position{0.0f, 0.0f, 0.0f};
@@ -19,6 +19,7 @@ namespace McRenderer {
         float nearClippingDistance{0.001f};
         float farClippingDistance{100.0f};
         float focalLength{0.035f};
+        float apertureFStop{2.8};
         mat4 viewingMatrix();
 
         explicit Camera(const vec3& positionIn, const vec3& forwardIn, const vec3& upIn);

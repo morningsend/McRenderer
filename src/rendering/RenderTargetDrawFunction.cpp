@@ -5,7 +5,7 @@
 #include "RenderTargetDrawFunction.hpp"
 #include "../SDLauxiliary.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     void RenderTargetDrawFunction::draw(screen *screen, Uint32 deltaTime) {
         int width = renderTarget->getWidth();
         int height = renderTarget->getHeight();

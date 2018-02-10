@@ -4,7 +4,7 @@
 
 #include "Window.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     void Window::notifyEventHandlers(KeyboardEvent event) {
         for (KeyboardEventHandler *handler : handlers) {
             handler->onKeyActive(event);

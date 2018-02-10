@@ -8,7 +8,7 @@
 #include "window/KeyboardEventHandler.hpp"
 #include "scene/Camera.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     class CameraKeyboardController : public KeyboardEventHandler {
     private:
         Camera* camera;

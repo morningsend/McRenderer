@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "CameraKeyboardController.hpp"
-namespace McRenderer {
+namespace McRenderFace {
 
 
     void CameraKeyboardController::onKeyActive(KeyboardEvent event) {

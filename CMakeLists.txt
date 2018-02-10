@@ -32,11 +32,13 @@ set(SOURCE_FILES
         src/rendering/RenderTargetDrawFunction.cpp src/rendering/RenderTargetDrawFunction.hpp
         src/window/TestDrawFunction.cpp src/window/TestDrawFunction.hpp
         src/tree/KdTree.cpp src/tree/KdTree.hpp
-        src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp)
+        src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp
+        src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp
+        src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp src/obj/ObjFile.cpp src/obj/ObjFile.hpp src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp)
+set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp )
 
 add_library(Catch INTERFACE)
 

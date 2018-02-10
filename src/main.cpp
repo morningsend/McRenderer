@@ -9,14 +9,14 @@
 #include "rendering/RenderTargetDrawFunction.hpp"
 
 using namespace std;
-using namespace McRenderer;
+using namespace McRenderFace;
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
 
-void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderer::Triangle>& renderTriangles) {
+void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
     for(const ::Triangle& tri : testTriangles){
-        McRenderer::Triangle t;
+        McRenderFace::Triangle t;
         t.vertices[0] = tri.v0;
         t.vertices[1] = tri.v1;
         t.vertices[2] = tri.v2;

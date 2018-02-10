@@ -4,14 +4,14 @@
 
 #ifndef RENDERER_MESH_HPP
 #define RENDERER_MESH_HPP
-
+#include <limits>
 #include <vector>
 #include "Transform.hpp"
 #include "Vertex.hpp"
 #include "../tree/BoundingBox.hpp"
 #include "Material.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace std;
     struct Mesh {
         vec4 pivotPoint;
@@ -19,6 +19,8 @@ namespace McRenderer {
         vector<Vertex> vertices;
         BoundingBox boundingBox;
         Material material;
+
+        void computeBoundingBox();
     };
 }
 

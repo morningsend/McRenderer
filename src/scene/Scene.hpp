@@ -10,7 +10,7 @@
 #include "Triangle.hpp"
 #include "Camera.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace std;
     struct Scene {
         vector <Light> lights{};

@@ -11,7 +11,7 @@
 #include "Renderer.hpp"
 #include "../scene/Ray.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     const float INVERSE2PI = static_cast<const float>(.25f / M_PI);
     class RayTracer : public Renderer {
     private:

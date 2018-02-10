@@ -4,7 +4,7 @@
 
 #include "Triangle.hpp"
 
-void McRenderer::Triangle::computeNormal() {
+void McRenderFace::Triangle::computeNormal() {
     vec3 edge1 = vertices[1] - vertices[0];
     vec3 edge2 = vertices[2] - vertices[0];
 
@@ -12,7 +12,7 @@ void McRenderer::Triangle::computeNormal() {
 
 }
 
-void McRenderer::Triangle::computeNormal(bool normalize) {
+void McRenderFace::Triangle::computeNormal(bool normalize) {
     computeNormal();
     if(normalize) {
         normal = glm::normalize(normal);

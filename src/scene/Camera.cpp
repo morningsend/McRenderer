@@ -5,7 +5,7 @@
 #include "Camera.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace  McRenderer {
+namespace  McRenderFace {
 
 
     void Camera::move(vec3 delta) {

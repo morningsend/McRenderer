@@ -7,7 +7,7 @@
 
 #include <string>
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace std;
     class Exception {
     private:

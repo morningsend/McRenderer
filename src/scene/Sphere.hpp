@@ -9,7 +9,7 @@
 #include "Transform.hpp"
 #include "Mesh.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     struct Sphere {
         Transform transform;

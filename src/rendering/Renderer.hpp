@@ -8,7 +8,7 @@
 #include "RenderTarget.hpp"
 #include "../scene/Scene.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     class Renderer {
     public:
         virtual void render(const Scene& scene, RenderTarget& target) {};

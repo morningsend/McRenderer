@@ -9,7 +9,7 @@
 #include "RenderTarget.hpp"
 #include "Renderer.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     /**
      * Writes the content of render target to screen buffer to be shown in SDL window every time draw
      * method is called.

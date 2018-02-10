@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include "TextureSampler2D.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     class Material {
         vec3 diffuseColor {0.75f, 0.75f, 0.75f};

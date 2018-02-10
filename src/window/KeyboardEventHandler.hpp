@@ -7,7 +7,7 @@
 
 #include "KeyboardEvent.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     class KeyboardEventHandler {
     public:
         virtual void onKeyActive(KeyboardEvent event) = 0;

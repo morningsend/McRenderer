@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 
 // si
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
 
     enum class AttenuationType {

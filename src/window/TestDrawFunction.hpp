@@ -7,7 +7,7 @@
 
 #include "Window.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
 
     class TestDrawFunction : public DrawFunction {
     public:

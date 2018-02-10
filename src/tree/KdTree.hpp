@@ -5,7 +5,7 @@
 #ifndef RENDERER_KDTREE_HPP
 #define RENDERER_KDTREE_HPP
 
-namespace McRenderer {
+namespace McRenderFace {
 
     struct KdTreeNode {
 

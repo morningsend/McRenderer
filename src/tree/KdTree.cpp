@@ -4,6 +4,6 @@
 
 #include "KdTree.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
 
 }

@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     struct Plane {
         vec3 normal;

@@ -4,7 +4,7 @@
 
 #include "RenderTarget.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
 
     RenderTarget::~RenderTarget() {
 

@@ -6,7 +6,7 @@
 #define RENDERER_TRIANGLE_HPP
 
 #include <glm/glm.hpp>
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     struct Triangle {
         vec3 vertices[3];

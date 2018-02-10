@@ -4,7 +4,7 @@
 
 #include "Ray.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
 
     RayHit castRay(const Ray &ray, const Sphere &sphere) {
         return RayHit();

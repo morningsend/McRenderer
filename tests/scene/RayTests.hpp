@@ -8,7 +8,7 @@
 #include "../../src/scene/Ray.hpp"
 
 
-using namespace McRenderer;
+using namespace McRenderFace;
 using namespace glm;
 TEST_CASE("ray cast on triangle will not hit if ray has 0 direction", "[rayCast]") {
     Triangle triangle;

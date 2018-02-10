@@ -7,7 +7,7 @@
 
 #include <glm/vec4.hpp>
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     struct Transform {
         vec4 translation;

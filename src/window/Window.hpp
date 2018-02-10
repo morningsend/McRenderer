@@ -10,7 +10,7 @@
 #include "../SDLauxiliary.hpp"
 #include "KeyboardEventHandler.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     class DrawFunction {
     public:
         virtual ~DrawFunction() = default;

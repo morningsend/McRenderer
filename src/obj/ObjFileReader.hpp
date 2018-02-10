@@ -6,14 +6,30 @@
 #define RENDERER_OBJFILEREADER_HPP
 
 #include <string>
-#include "ObjFile.hpp"
+#include <vector>
+#include <glm/glm.hpp>
+#include <fstream>
+namespace McRenderFace {
 
-namespace McRenderer {
+    struct ObjFace {
+        unsigned int vertex;
+        unsigned int normal;
+        unsigned int textureCoord;
+    };
+    struct ObjFile {
+        std::string modelName;
+        std::vector<glm::vec3> vertices;
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec2> uvCoords;
+        std::vector<ObjFace> faces;
+    };
 
     class ObjFileReader {
+    private:
+        std::string filePath;
     public:
-        ObjFileReader(std::string filePath);
-        ObjFileReader(const char* filePath);
+        explicit ObjFileReader(const std::string& filePath);
+        explicit ObjFileReader(const char* filePath);
         ObjFile read();
     };
 }

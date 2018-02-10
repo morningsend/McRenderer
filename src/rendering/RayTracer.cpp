@@ -6,9 +6,9 @@
 #include "../scene/Ray.hpp"
 
 
-namespace McRenderer {
+namespace McRenderFace {
 
-    void RayTracer::render(const McRenderer::Scene &scene, McRenderer::RenderTarget &target) {
+    void RayTracer::render(const McRenderFace::Scene &scene, McRenderFace::RenderTarget &target) {
         // convert from screen space coordinate to camera coordinate.
 
         const int width = target.getWidth();

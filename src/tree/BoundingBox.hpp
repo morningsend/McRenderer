@@ -5,15 +5,13 @@
 #ifndef RENDERER_BOUNDINGBOX_HPP
 #define RENDERER_BOUNDINGBOX_HPP
 
-
-struct BoundingBox {
-    float top;
-    float bottom;
-    float left;
-    float right;
-    float front;
-    float back;
-};
+#include <glm/glm.hpp>
+namespace McRenderFace {
+    struct BoundingBox {
+        glm::vec3 min{0,0,0};
+        glm::vec3 max{1,1,1};
+    };
+}
 
 
 #endif //RENDERER_BOUNDINGBOX_HPP

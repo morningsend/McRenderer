@@ -8,7 +8,7 @@
 #include <glm/vec3.hpp>
 #include "../Exception.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     class RenderTarget {
     private:

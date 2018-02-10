@@ -10,7 +10,7 @@
 #include "Sphere.hpp"
 #include "Plane.hpp"
 
-namespace McRenderer {
+namespace McRenderFace {
     using namespace glm;
     
     const float EPSILON = 0.00001f;
