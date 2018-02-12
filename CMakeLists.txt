@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(renderer CXX)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
@@ -37,7 +39,7 @@ set(SOURCE_FILES
         src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
         src/obj/MtlFileReader.cpp src/obj/MtlFileReader.hpp
         src/IOUtility.cpp src/IOUtility.hpp src/shading/pbr/PbrMaterial.cpp src/shading/pbr/PbrMaterial.hpp src/shading/blinn/BlinnMaterial.cpp src/shading/blinn/BlinnMaterial.hpp src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp src/scene/Scene.cpp src/scene/Scene.hpp src/scene/AxisAlignedPlane.cpp src/scene/AxisAlignedPlane.hpp src/scene/RayIntersecting.hpp src/shading/UvSampler1D.hpp src/shading/UvSampler3D.hpp src/shading/ConstantColourSampler.cpp src/shading/ConstantColourSampler.hpp src/shading/ConstantFloatSampler.cpp src/shading/ConstantFloatSampler.hpp
-        src/shading/GrayScaleImageSampler.hpp src/shading/GrayScaleImageSampler.cpp src/shading/RGBImageSampler.cpp src/shading/RGBImageSampler.hpp)
+        src/shading/GrayScaleImageSampler.hpp src/shading/GrayScaleImageSampler.cpp src/shading/RGBImageSampler.cpp src/shading/RGBImageSampler.hpp src/image/PngReader.cpp src/image/PngReader.hpp src/image/Image.cpp src/image/Image.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
@@ -47,14 +49,14 @@ add_library(Catch INTERFACE)
 
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
-include_directories(${SDL2_INCLUDE_DIRS})
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${CATCH_INCLUDE_DIR})
 include_directories("${PROJECT_SOURCE_DIR}/lib/glm/")
-include_directories(${CATCH_INCLUDE_DIR})
 
+find_package(SDL2_image REQUIRED)
 find_package(sdl2 REQUIRED)
 
 add_executable(renderer ${SOURCE_FILES} src/main.cpp )
 add_executable(renderer_tests ${TESTS_SOURCE_FILES} tests/testMain.cpp)
 
-target_link_libraries(renderer ${SDL2_LIBRARIES})
-target_link_libraries(renderer_tests ${SDL2_LIBRARIES})
+target_link_libraries(renderer ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+target_link_libraries(renderer_tests ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
