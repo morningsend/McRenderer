@@ -12,6 +12,7 @@ namespace McRenderFace {
     class CameraKeyboardController : public KeyboardEventHandler {
     private:
         Camera* camera;
+        float translationSpeed{0.2f};
     public:
         explicit CameraKeyboardController(Camera* cameraIn): camera{cameraIn} { }
         ~CameraKeyboardController() override = default;

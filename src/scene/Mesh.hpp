@@ -9,21 +9,33 @@
 #include "Transform.hpp"
 #include "Vertex.hpp"
 #include "BoundingBox.hpp"
-#include "Material.hpp"
+#include "../shading/phong/PhongMaterial.hpp"
 
 namespace McRenderFace {
     using namespace std;
 
     enum class MeshType{ PerFaceNormal, PerVertexNormal };
 
-    struct MeshData {
-        virtual BoundingBox computeBoundingBox() = 0;
-        ~MeshData(){};
+    struct TriangleGeometry {
+        vec3 vertices[3];
+        vec3 normal;
+
+        TriangleGeometry(vec3 v1, vec3 v2, vec3 v3, vec3 normalIn)
+                : vertices{v1, v2, v3}, normal{normalIn} { }
+
+        vec2 barycentric();
+        void computeNormal();
     };
-    struct TriangleFace {
-        int vertexIndices[3];
-        int normalIndices[3];
-        int uvIndices[3];
+
+    struct TriangleUV{
+        vec2 r0[3];
+    };
+
+    struct MeshData {
+        vector<TriangleGeometry> triangles;
+        vector<TriangleUV> uvCoords;
+        BoundingBox computeBoundingBox();
+        ~MeshData(){};
     };
 
     struct VertexFace {
@@ -37,25 +49,16 @@ namespace McRenderFace {
         MeshType type;
         Transform transform;
         BoundingBox boundingBox;
-        Material material;
+        PhongMaterial material;
         MeshData* meshData;
 
         void computeBoundingBox();
-    };
 
-    struct VertexMeshData : MeshData {
-        vector<VertexFace> triangles;
-        vector<Vertex> vertices;
-
-        BoundingBox computeBoundingBox() override;
-    };
-
-    struct FaceMeshData : MeshData {
-        vector<vec3> vertices;
-        vector<vec3> normals;
-        vector<vec2> uvCoords;
-        vector<TriangleFace> faces;
-        BoundingBox computeBoundingBox() override;
+        ~Mesh(){
+            if(meshData != nullptr) {
+                delete meshData;
+            }
+        }
     };
 }
 

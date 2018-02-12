@@ -1,22 +1,21 @@
 //
-// Created by Zaiyang Li on 31/01/2018.
+// Created by Zaiyang Li on 10/02/2018.
 //
 
 #ifndef RENDERER_SCENE_HPP
 #define RENDERER_SCENE_HPP
 
-#include <vector>
-#include "Light.hpp"
-#include "Triangle.hpp"
 #include "Camera.hpp"
+#include "Mesh.hpp"
+#include "Light.hpp"
 
 namespace McRenderFace {
-    using namespace std;
+
     struct Scene {
-        vector <Light> lights{};
-        vector <Triangle> model{};
-        Camera camera {};
-        vec3 backgroundColour{0.0f, 0.0f, 0.0f};
+        Camera camera;
+        vector<Mesh> models{};
+        vector<Light> lights{};
+        vec3 backgroundColour{0.0f};
     };
 }
 

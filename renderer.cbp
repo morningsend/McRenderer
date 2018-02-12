@@ -169,6 +169,14 @@
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/main.cpp">
 			<Option target="renderer"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/MtlFileReader.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/MtlFileReader.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/ObjFileReader.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -217,6 +225,14 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/AxisAlignedPlane.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/AxisAlignedPlane.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/BoundingBox.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -249,14 +265,6 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Material.cpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Material.hpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Mesh.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -281,11 +289,23 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/RayIntersecting.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Scene.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Scene.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/SimpleScene.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/SimpleScene.hpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
@@ -341,6 +361,78 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/ConstantColourSampler.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/ConstantColourSampler.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/ConstantFloatSampler.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/ConstantFloatSampler.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/GrayScaleImageSampler.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/GrayScaleImageSampler.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/RGBImageSampler.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/RGBImageSampler.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/UvSampler1D.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/UvSampler3D.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/blinn/BlinnMaterial.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/blinn/BlinnMaterial.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/lambert/LamberShader.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/lambert/LamberShader.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/pbr/PbrMaterial.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/pbr/PbrMaterial.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/phong/PhongMaterial.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/phong/PhongMaterial.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/tree/KdTree.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -379,6 +471,12 @@
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/window/Window.hpp">
 			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/obj/MtlFileReaderTests.hpp">
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/obj/ObjFileReaderTests.hpp">
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/scene/MeshTests.hpp">

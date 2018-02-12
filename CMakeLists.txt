@@ -18,10 +18,10 @@ set(SOURCE_FILES
         src/scene/Triangle.cpp src/scene/Triangle.hpp
         src/scene/Sphere.cpp src/scene/Sphere.hpp
         src/rendering/RayTracer.cpp src/rendering/RayTracer.hpp
-        src/scene/Scene.cpp src/scene/Scene.hpp
+        src/scene/SimpleScene.cpp src/scene/SimpleScene.hpp
         src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
-        src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp 
-        src/scene/Material.cpp src/scene/Material.hpp 
+        src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp
+        src/shading/phong/PhongMaterial.cpp src/shading/phong/PhongMaterial.hpp
         src/scene/TextureSampler2D.cpp src/scene/TextureSampler2D.hpp 
         src/scene/TextureMap.cpp src/scene/TextureMap.hpp  
         src/Exception.cpp src/Exception.hpp 
@@ -35,11 +35,13 @@ set(SOURCE_FILES
         src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp
         src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp
         src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
-        src/IOUtility.cpp src/IOUtility.hpp)
+        src/obj/MtlFileReader.cpp src/obj/MtlFileReader.hpp
+        src/IOUtility.cpp src/IOUtility.hpp src/shading/pbr/PbrMaterial.cpp src/shading/pbr/PbrMaterial.hpp src/shading/blinn/BlinnMaterial.cpp src/shading/blinn/BlinnMaterial.hpp src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp src/scene/Scene.cpp src/scene/Scene.hpp src/scene/AxisAlignedPlane.cpp src/scene/AxisAlignedPlane.hpp src/scene/RayIntersecting.hpp src/shading/UvSampler1D.hpp src/shading/UvSampler3D.hpp src/shading/ConstantColourSampler.cpp src/shading/ConstantColourSampler.hpp src/shading/ConstantFloatSampler.cpp src/shading/ConstantFloatSampler.hpp
+        src/shading/GrayScaleImageSampler.hpp src/shading/GrayScaleImageSampler.cpp src/shading/RGBImageSampler.cpp src/shading/RGBImageSampler.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp tests/scene/MeshTests.hpp)
+set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp tests/scene/MeshTests.hpp tests/obj/ObjFileReaderTests.hpp tests/obj/MtlFileReaderTests.hpp )
 
 add_library(Catch INTERFACE)
 

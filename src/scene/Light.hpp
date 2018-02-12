@@ -11,19 +11,21 @@
 namespace McRenderFace {
     using namespace glm;
 
-    enum class AttenuationType {
-        InverseSquare,
-        Linear,
-        InverseExponential
+    enum class LightType {
+        PointLight,
+        AreaLight,
+        SpotLight,
+        DirectionalLight,
+        AmbientLight
     };
 
     struct Light {
+        LightType type{LightType::PointLight};
         float intensity{1.0f};
-        vec3 diffuseColour{1.0f, 1.0f, 1.0f};
-        vec3 specularColour{1.0f, 1.0f, 1.0f};
-        AttenuationType type{AttenuationType::InverseSquare};
-        vec3 position{0,0,0};
-
+        float exposure{1.0f};
+        vec3 colour{1.0f};
+        vec3 position{0.0f};
+        bool castShadow{true};
     };
 
     struct AmbientLight : Light {
@@ -36,7 +38,7 @@ namespace McRenderFace {
         vec4 direction;
     };
 
-    struct PointLightSource: public Light {
+    struct PointLight: public Light {
 
     };
 
@@ -45,7 +47,9 @@ namespace McRenderFace {
         vec3 direction;
     };
 
-
+    struct DirectionalLight {
+        vec3 direction;
+    };
 }
 
 

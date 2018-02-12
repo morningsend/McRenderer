@@ -10,17 +10,16 @@ namespace McRenderFace {
     void CameraKeyboardController::onKeyActive(KeyboardEvent event) {
         switch(event.key) {
             case SDL_SCANCODE_UP:
-                camera -> position.y += 0.1f;
-            std::cout << camera->position.y << std::endl;
+                camera -> position += camera->forward * translationSpeed;
                 break;
             case SDL_SCANCODE_DOWN:
-                camera -> position.y -= 0.1f;
+                camera -> position -= camera->forward * translationSpeed;
                 break;
             case SDL_SCANCODE_LEFT:
-                camera -> position.x -= 0.1f;
+                camera -> position -= camera->right * translationSpeed;
                 break;
             case SDL_SCANCODE_RIGHT:
-                camera -> position.x += 0.1f;
+                camera -> position += camera->right * translationSpeed;
                 break;
             case SDL_SCANCODE_A:
                 camera->rotateY(5.0f);

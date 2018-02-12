@@ -8,7 +8,7 @@
 
 namespace McRenderFace {
 
-    void RayTracer::render(const McRenderFace::Scene &scene, McRenderFace::RenderTarget &target) {
+    void RayTracer::render(const McRenderFace::SimpleScene &scene, McRenderFace::RenderTarget &target) {
         // convert from screen space coordinate to camera coordinate.
 
         const int width = target.getWidth();
@@ -45,7 +45,7 @@ namespace McRenderFace {
                     toLight /= distance;
                     //ray position needs a bias to avoid shadow acne.
                     //https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/ligth-and-shadows
-                    Ray shadowRay{hit.position + tri.normal * 0.001f, toLight};
+                    Ray shadowRay{hit.position + tri.normal * config.shadowBias, toLight};
                         // material: (diffuse, specular, ambient)
                         // light: (diffuse, specular, ambient, distance)
 
@@ -70,7 +70,7 @@ namespace McRenderFace {
         // hard shadow
     }
 
-    bool RayTracer::traceShadow(const Scene &scene, float lightDistance, const Ray &ray) {
+    bool RayTracer::traceShadow(const SimpleScene &scene, float lightDistance, const Ray &ray) {
         RayHit hit;
         int index = -1;
         closestIntersection(scene.model, ray, hit, index);

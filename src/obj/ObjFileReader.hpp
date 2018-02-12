@@ -9,19 +9,26 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <fstream>
+#include <unordered_map>
+
 namespace McRenderFace {
 
     struct ObjFace {
-        unsigned int vertex;
-        unsigned int normal;
-        unsigned int textureCoord;
+        int vertex[3];
+        int normal[3];
+        int uvCoord[3];
     };
-    struct ObjFile {
+    struct ObjModel {
         std::string modelName;
+        std::string materialName;
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> normals;
         std::vector<glm::vec2> uvCoords;
         std::vector<ObjFace> faces;
+
+        ObjModel() = default;
+        explicit ObjModel(const std::string& name): modelName{name}{}
+        explicit ObjModel(const char* name): modelName{name}{}
     };
 
     class ObjFileReader {
@@ -30,7 +37,7 @@ namespace McRenderFace {
     public:
         explicit ObjFileReader(const std::string& filePath);
         explicit ObjFileReader(const char* filePath);
-        ObjFile read();
+        std::unordered_map<std::string, ObjModel*> read();
     };
 }
 

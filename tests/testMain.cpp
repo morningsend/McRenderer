@@ -7,3 +7,5 @@
 // include all the test files here.
 #include "./scene/RayTests.hpp"
 #include "./scene/MeshTests.hpp"
+
+#include "./obj/ObjFileReaderTests.hpp"

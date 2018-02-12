@@ -1,7 +1,7 @@
 #include <iostream>
 #include "window/Window.hpp"
 #include "window/TestDrawFunction.hpp"
-#include "scene/Scene.hpp"
+#include "scene/SimpleScene.hpp"
 #include "scene/TestModelH.h"
 #include "CameraKeyboardController.hpp"
 #include "rendering/RenderTarget.hpp"
@@ -26,7 +26,7 @@ void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFa
     }
 }
 
-void setupCornellBoxScene(Scene& scene) {
+void setupCornellBoxScene(SimpleScene& scene) {
     vector<::Triangle> triangles;
     LoadTestModel(triangles);
 
@@ -38,14 +38,16 @@ void setupCornellBoxScene(Scene& scene) {
     //35mm camera lens.
     scene.camera.focalLength = .55;
 
-    PointLightSource light1;
+    PointLight light1;
+    light1.type = LightType::PointLight;
     light1.position = vec3(-.2f, 0.7f, -0.8f);
     light1.intensity = 20.0f;
     scene.lights.push_back(light1);
 
-    PointLightSource light2;
+    PointLight light2;
+    light2.type = LightType::PointLight;
     light2.position = vec3(0, 0.99f, 0.0f);
-
+    light2.intensity = 15.0f;
     scene.lights.push_back(light2);
 
     convertTriangles(triangles, scene.model);
@@ -53,12 +55,22 @@ void setupCornellBoxScene(Scene& scene) {
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    Scene scene;
+    SimpleScene scene;
     setupCornellBoxScene(scene);
 
     CameraKeyboardController cameraKeyboardController{&scene.camera};
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);
-    RayTracer rayTracer{4};
+
+    RayTracerConfigBuilder builder;
+    RayTracerConfig config = builder.useMultithreading(4)
+            .maxRayDepth(5)
+            .maxSamplingLevel(0)
+            .minSamplingLevel(-3)
+            .traceShadowsWithBias(.001f)
+            .softShadow(true)
+            .build();
+
+    RayTracer rayTracer{config};
     RenderTargetDrawFunction drawFunction{&scene, &rayTracer, &renderTarget};
 
     Window window{"", SCREEN_WIDTH, SCREEN_HEIGHT, false};

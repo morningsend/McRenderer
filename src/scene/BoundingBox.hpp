@@ -16,6 +16,7 @@ namespace McRenderFace {
 
         BoundingBox() = default;
         BoundingBox(glm::vec3 minIn, glm::vec3 maxIn): min{minIn}, max{maxIn} { }
+        BoundingBox(const BoundingBox& box) = default;
     };
 }
 
