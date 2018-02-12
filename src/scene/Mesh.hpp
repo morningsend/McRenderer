@@ -50,7 +50,7 @@ namespace McRenderFace {
         MeshType type;
         Transform transform;
         BoundingBox boundingBox;
-        void* material;
+        int materialId;
         MeshData* meshData;
 
         void computeBoundingBox();

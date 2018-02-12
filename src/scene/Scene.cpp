@@ -3,6 +3,7 @@
 //
 
 #include "Scene.hpp"
+#include "../shading/lambert/LamberShader.hpp"
 namespace McRenderFace {
 
     void createTestScene(Scene &scene) {
@@ -15,8 +16,23 @@ namespace McRenderFace {
         light->colour = vec3(1.0f, 1.0f, 1.0f);
         light->intensity = 10.0f;
         light->position = vec3(0.0f, 0.98f, 0.0f);
-        scene.lights.push_back(shared_ptr<Light>(light));
+        scene.lights.push_back(shared_ptr<PointLight>(light));
 
+        // default material;
+        LambertMaterial* grayMaterial = new LambertMaterial;
+
+        LambertMaterial* redMaterial = new LambertMaterial;
+        redMaterial->diffuseColour = vec3(0.75f, 0.1f, 0.1f);
+
+        LambertMaterial* blueMaterial = new LambertMaterial;
+        blueMaterial->diffuseColour = vec3(0.1f, 0.1, 0.75f);
+
+        scene.materials.push_back(shared_ptr<LambertMaterial>(grayMaterial));
+        scene.materials.push_back(shared_ptr<LambertMaterial>(redMaterial));
+        scene.materials.push_back(shared_ptr<LambertMaterial>(blueMaterial));
+
+        Mesh* room = new Mesh;
+        MeshData* data = new MeshData;
 
     }
 }

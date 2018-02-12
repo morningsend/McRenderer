@@ -6,14 +6,15 @@
 #define RENDERER_LAMBERSHADER_HPP
 #include <glm/glm.hpp>
 #include "../UvSampler3D.hpp"
+#include "../Material.hpp"
 
 namespace McRenderFace{
     namespace Shading {
         using namespace glm;
 
-        struct LambertMaterial {
-            UvSampler3D* diffuseMap {nullptr};
+        struct LambertMaterial : Material {
             vec3 diffuseColour { 0.75f};
+            UvSampler3D* diffuseMap {nullptr};
         };
 
         struct LambertParameters {

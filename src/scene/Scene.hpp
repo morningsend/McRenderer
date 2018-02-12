@@ -10,7 +10,7 @@
 #include "Light.hpp"
 
 namespace McRenderFace {
-
+    using namespace Shading;
     struct Scene {
         Camera camera;
         vector<Mesh> models{};
