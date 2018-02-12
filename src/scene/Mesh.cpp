@@ -7,13 +7,29 @@
 namespace McRenderFace {
     void Mesh::computeBoundingBox() {
         boundingBox = (meshData != nullptr) ? meshData->computeBoundingBox() : BoundingBox();
+    }
 
+    RayHit Mesh::castRay(const Ray &ray) {
+        // optimization: if ray does not hit bounding box, terminate.
+        RayHit hit = boundingBox.castRay(ray);
+        if(!hit.isHit) {
+            return hit;
+        }
+        const auto& triangles = meshData -> triangles;
+        RayHit closest;
+        for(auto tri : triangles) {
+            hit = tri.castRay(ray);
+            if(hit.isHit && hit.t > 0 && hit.t < closest.t) {
+                closest = hit;
+            }
+        }
+        return closest;
     }
 
     BoundingBox MeshData::computeBoundingBox() {
         BoundingBox boundingBox;
 
-        if(triangles.size() < 2) {
+        if(triangles.size() < 1) {
             return boundingBox;
         }
         boundingBox.max = vec3(FLT_MIN);
@@ -31,13 +47,15 @@ namespace McRenderFace {
         return boundingBox;
     }
 
-    vec2 TriangleGeometry::barycentric() {
-        return glm::vec2(0, 1);
+    void MeshData::invertNormals() {
+        for(auto& tri : triangles) {
+            tri.invertNormal();
+        }
     }
 
-    void TriangleGeometry::computeNormal() {
-        vec3 e1 = vertices[1] - vertices[0];
-        vec3 e2 = vertices[2] - vertices[0];
-        normal = glm::normalize(glm::cross(e1, e2));
+    void MeshData::computeNormals() {
+        for(auto& tri: triangles) {
+            tri.computeNormal();
+        }
     }
 }

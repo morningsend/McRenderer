@@ -13,8 +13,8 @@
 namespace McRenderFace {
     class Renderer {
     public:
-        virtual void render(const SimpleScene& scene, RenderTarget& target) {};
-        virtual void render(const Scene& scene, RenderTarget& target) { }
+        virtual void render(SimpleScene& scene, RenderTarget& target) {};
+        virtual void render(Scene& scene, RenderTarget& target) { }
         virtual ~Renderer() = default;;
     };
 }

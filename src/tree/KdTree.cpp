@@ -21,7 +21,7 @@ namespace McRenderFace {
         return nullptr;
     }
 
-    KdTreeNode *KdTree::createTree(vector<TriangleGeometry> &trianges, vector<TriangleGeometry> &right) {
+    KdTreeNode *KdTree::createTree(vector<Triangle>& trianges, vector<Triangle>& right) {
         return nullptr;
     }
 

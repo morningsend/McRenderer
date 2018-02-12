@@ -10,7 +10,7 @@
 namespace McRenderFace {
     struct RayIntersecting {
         virtual RayHit castRay(const Ray& ray) = 0;
-        virtual ~IRayIntersecting() = default;
+        virtual ~RayIntersecting() = default;
     };
 }
 

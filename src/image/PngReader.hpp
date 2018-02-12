@@ -5,6 +5,7 @@
 #ifndef RENDERER_PNGREADER_HPP
 #define RENDERER_PNGREADER_HPP
 
+#include <stdexcept>
 #include <string>
 #include "Image.hpp"
 

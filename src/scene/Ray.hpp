@@ -5,15 +5,16 @@
 #ifndef RENDERER_RAY_HPP
 #define RENDERER_RAY_HPP
 
+#include <cmath>
 #include <glm/glm.hpp>
-#include "Triangle.hpp"
+#include <limits>
 #include "Sphere.hpp"
 #include "Plane.hpp"
-#include "BoundingBox.hpp"
 
 namespace McRenderFace {
     using namespace glm;
-    
+    using namespace std;
+
     const float EPSILON = 0.00001f;
 
     struct Ray {
@@ -30,8 +31,9 @@ namespace McRenderFace {
 
     struct RayHit {
         bool isHit {false};
-        float t {0.0f};
+        float t = MAXFLOAT;
         vec3 position { 0.0f, 0.0f, 0.0f};
+        vec3 normal { 0.0f};
     };
 
     /**
@@ -41,9 +43,7 @@ namespace McRenderFace {
      * @return
      */
     RayHit castRay(const Ray& ray, const Sphere& sphere);
-    RayHit castRay(const Ray& ray, const Triangle& triangle);
     RayHit castRay(const Ray& ray, const Plane& plane);
-    RayHit castRay(const Ray &ray, const BoundingBox &box);
 }
 
 

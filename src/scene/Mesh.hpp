@@ -6,37 +6,35 @@
 #define RENDERER_MESH_HPP
 #include <limits>
 #include <vector>
+#include <glm/glm.hpp>
+
 #include "Transform.hpp"
 #include "Vertex.hpp"
 #include "BoundingBox.hpp"
-#include "../shading/Material.hpp"
+#include "Triangle.hpp"
 
 namespace McRenderFace {
     using namespace std;
-    using namespace Shading;
+    using namespace glm;
+
     enum class MeshType{ PerFaceNormal, PerVertexNormal };
-
-    struct TriangleGeometry {
-        vec3 vertices[3];
-        vec3 normal;
-
-        TriangleGeometry(vec3 v1, vec3 v2, vec3 v3, vec3 normalIn)
-                : vertices{v1, v2, v3}, normal{normalIn} { }
-
-        vec2 barycentric();
-        void computeNormal();
-    };
 
     struct TriangleUV{
         vec2 r0[3];
-        int materialId;
+        int materialId {0};
+
+        TriangleUV(): r0{vec2(0), vec2(0), vec2(0)} {}
+        TriangleUV(vec2 u0, vec2 u1, vec2 u2): r0{ u0, u1, u2} {}
     };
 
     struct MeshData {
-        vector<TriangleGeometry> triangles;
+        vector<Triangle> triangles;
         vector<TriangleUV> uvCoords;
+
+        void invertNormals();
         BoundingBox computeBoundingBox();
-        ~MeshData(){};
+        void computeNormals();
+        ~MeshData() = default;;
     };
 
     struct VertexFace {
@@ -45,22 +43,22 @@ namespace McRenderFace {
     /**
      * Mesh implementing per vertex normal.
      */
-    struct Mesh {
+    struct Mesh : RayIntersecting{
         int meshId;
-        MeshType type;
-        Transform transform;
-        BoundingBox boundingBox;
-        int materialId;
+        MeshType type {MeshType::PerFaceNormal};
+        Transform transform {};
+        BoundingBox boundingBox {};
+        int materialId {0};
         MeshData* meshData;
-
+        bool visible {true};
         void computeBoundingBox();
 
-        ~Mesh(){
+        ~Mesh() override {
             if(meshData != nullptr) {
                 delete meshData;
             }
         }
-        void setMaterial(Material* material);
+        RayHit castRay(const Ray& ray) override ;
     };
 }
 

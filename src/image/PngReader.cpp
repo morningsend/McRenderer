@@ -16,6 +16,12 @@ namespace McRenderFace {
         int width = image->w;
         int height = image->h;
         long max = (1 << image->format->BitsPerPixel) - 1;
+        int channels = image->format->BytesPerPixel;
+        vec3* imageData = new vec3[width * height];
+
+        if(imageData == nullptr) {
+            throw runtime_error("error allocating memory for image data");
+        }
 
         IMG_Quit();
         SDL_FreeSurface(image);

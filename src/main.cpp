@@ -1,3 +1,4 @@
+#define GLM_SWIZZLE
 #include <iostream>
 #include "window/Window.hpp"
 #include "window/TestDrawFunction.hpp"
@@ -14,14 +15,14 @@ using namespace McRenderFace;
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 256
 
+
 void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
     for(const ::Triangle& tri : testTriangles){
         McRenderFace::Triangle t;
-        t.vertices[0] = tri.v0;
-        t.vertices[1] = tri.v1;
-        t.vertices[2] = tri.v2;
-        t.normal = tri.normal;
-        t.colour = tri.color;
+        t.vertices[0] = vec3(tri.v0[0],tri.v0[1],tri.v0[2]);
+        t.vertices[1] = vec3(tri.v1[0],tri.v1[1], tri.v1[2]);
+        t.vertices[2] = vec3(tri.v2[0],tri.v2[1], tri.v2[2]);
+        t.normal = vec3(tri.normal[0], tri.normal[1], tri.normal[2]);
         renderTriangles.push_back(t);
     }
 }
@@ -56,6 +57,9 @@ void setupCornellBoxScene(SimpleScene& scene) {
 int main() {
     std::cout << "Hello, World!" << std::endl;
     SimpleScene scene;
+    Scene scene2;
+    createTestScene(scene2);
+
     setupCornellBoxScene(scene);
 
     CameraKeyboardController cameraKeyboardController{&scene.camera};
@@ -71,7 +75,7 @@ int main() {
             .build();
 
     RayTracer rayTracer{config};
-    RenderTargetDrawFunction drawFunction{&scene, &rayTracer, &renderTarget};
+    RenderTargetDrawFunction drawFunction{&scene2, &rayTracer, &renderTarget};
 
     Window window{"", SCREEN_WIDTH, SCREEN_HEIGHT, false};
     window.registerDrawFunction(&drawFunction);

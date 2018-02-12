@@ -13,14 +13,17 @@
 
 TEST_CASE("Computing bounding box is axis aligned", "[FaceMeshData computeBoundingBox]") {
     MeshData data;
-    TriangleGeometry triangle(vec3(1, -1, 1), vec3(-1, 1, -1), vec3(-1, 1, -1), vec3(0));
+    Triangle triangle(vec3(1, -1, 1), vec3(-1, 1, -1), vec3(-1, 1, -1), vec3(0));
     data.triangles.push_back(triangle);
     BoundingBox box = data.computeBoundingBox();
 
-    REQUIRE((box.min[0] == -1.0f && box.min[1] == -1.0f && box.min[2] == -1.0f));
-    REQUIRE((box.max[0] == 1.0f && box.max[1] == 1.0f && box.max[2] == 1.0f));
+    CHECK(box.min[0] == -1.0f);
+    CHECK(box.min[1] == -1.0f);
+    CHECK(box.min[2] == -1.0f);
 
-
+    CHECK(box.max[0] == 1.0f);
+    CHECK(box.max[1] == 1.0f);
+    CHECK(box.max[2] == 1.0f);
 }
 
 TEST_CASE("computing bounding box on empty mesh return (0,0,0,0,0,0)", "[FaceMeshData computeBoundingBox") {
@@ -31,7 +34,9 @@ TEST_CASE("computing bounding box on empty mesh return (0,0,0,0,0,0)", "[FaceMes
             box.min.z == 0
             ));
 
-    REQUIRE((box.max.x == 0 && box.max.y == 0 && box.max.z == 0));
+    CHECK(box.max.x == 0);
+    CHECK(box.max.y == 0);
+    CHECK(box.max.z == 0);
 }
 
 #endif //RENDERER_MESHTESTS_HPP

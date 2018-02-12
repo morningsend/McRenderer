@@ -16,11 +16,11 @@ namespace McRenderFace {
      */
     class RenderTargetDrawFunction : public DrawFunction{
     private:
-        SimpleScene* scene;
+        Scene* scene;
         RenderTarget* renderTarget;
         Renderer* renderer;
     public:
-        RenderTargetDrawFunction(SimpleScene* sceneIn, Renderer* rendererIn, RenderTarget* renderTargetIn)
+        RenderTargetDrawFunction(Scene* sceneIn, Renderer* rendererIn, RenderTarget* renderTargetIn)
                 : scene{sceneIn},
                   renderer{rendererIn},
                   renderTarget{renderTargetIn}

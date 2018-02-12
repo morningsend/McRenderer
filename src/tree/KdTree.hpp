@@ -37,7 +37,7 @@ namespace McRenderFace {
 
         KdTreeNode* ceateTree(const Mesh& mesh);
 
-        KdTreeNode* createTree(vector<TriangleGeometry>& trianges, vector<TriangleGeometry>& right);
+        KdTreeNode* createTree(vector<Triangle>& trianges, vector<Triangle>& right);
     public:
         KdTree(const Mesh* mesh);
         ~KdTree();

@@ -10,13 +10,13 @@ namespace McRenderFace {
         scene.camera.position = vec3(0,0,1);
         scene.camera.forward = vec3(0,0,-1);
         scene.camera.up = vec3(0, 1, 0);
-        scene.camera.right = vec3(-1, 0, 0);
+        scene.camera.computeRightVector();
 
         PointLight* light = new PointLight();
         light->colour = vec3(1.0f, 1.0f, 1.0f);
         light->intensity = 10.0f;
         light->position = vec3(0.0f, 0.98f, 0.0f);
-        scene.lights.push_back(shared_ptr<PointLight>(light));
+        scene.addLight(light);
 
         // default material;
         LambertMaterial* grayMaterial = new LambertMaterial;
@@ -27,12 +27,49 @@ namespace McRenderFace {
         LambertMaterial* blueMaterial = new LambertMaterial;
         blueMaterial->diffuseColour = vec3(0.1f, 0.1, 0.75f);
 
-        scene.materials.push_back(shared_ptr<LambertMaterial>(grayMaterial));
-        scene.materials.push_back(shared_ptr<LambertMaterial>(redMaterial));
-        scene.materials.push_back(shared_ptr<LambertMaterial>(blueMaterial));
+        scene.addMaterial(grayMaterial);
+        scene.addMaterial(redMaterial);
+        scene.addMaterial(blueMaterial);
 
-        Mesh* room = new Mesh;
+        Mesh* model = new Mesh;
         MeshData* data = new MeshData;
 
+        Triangle tri{
+                vec3(0,0,0),
+                vec3(1,0,0),
+                vec3(1,1,0),
+                vec3(0,0,1)
+        };
+        Triangle tri2{
+                vec3(0),
+                vec3(2,2,0),
+                vec3(0,2,0),
+                vec3(0,0,1)
+        };
+        TriangleUV uv;
+
+        data->triangles.push_back(tri);
+        data->triangles.push_back(tri2);
+        data->uvCoords.push_back(uv);
+        data->uvCoords.push_back(uv);
+
+        model->meshData = data;
+
+        model->computeBoundingBox();
+        model->materialId = 0;
+
+        scene.addMesh(model);
+    }
+
+    void Scene::addMesh(Mesh *mesh) {
+        models.push_back(shared_ptr<Mesh>(mesh));
+    }
+
+    void Scene::addLight(Light *light) {
+        lights.push_back(shared_ptr<Light>(light));
+    }
+
+    void Scene::addMaterial(Material *material) {
+        materials.push_back(shared_ptr<Material>(material));
     }
 }

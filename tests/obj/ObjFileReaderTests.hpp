@@ -29,17 +29,17 @@ TEST_CASE("cube file should return 8 vertices and 24 triangles", "[ObjFileReader
     CHECK(models["cube"]->faces.size() == 12);
     ObjFace& face = models["cube"]->faces[0];
 
-    CHECK(face.vertex[0] == 1);
-    CHECK(face.uvCoord[0] == 1);
-    CHECK(face.normal[0] == 1);
+    CHECK(face.vertex[0] == 0);
+    CHECK(face.uvCoord[0] == 0);
+    CHECK(face.normal[0] == 0);
 
-    CHECK(face.vertex[1] == 2);
-    CHECK(face.uvCoord[1] == 2);
-    CHECK(face.normal[1] == 1);
+    CHECK(face.vertex[1] == 1);
+    CHECK(face.uvCoord[1] == 1);
+    CHECK(face.normal[1] == 0);
 
-    CHECK(face.vertex[2] == 3);
-    CHECK(face.uvCoord[2] == 3);
-    CHECK(face.normal[2] == 1);
+    CHECK(face.vertex[2] == 2);
+    CHECK(face.uvCoord[2] == 2);
+    CHECK(face.normal[2] == 0);
 }
 
 TEST_CASE("face data with missing texture coordinate should work", "[ObjFileReader read()3]") {
