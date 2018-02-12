@@ -5,9 +5,12 @@
 #ifndef RENDERER_CAMERA_HPP
 #define RENDERER_CAMERA_HPP
 
+#include <cmath>
+
 #include <glm/glm.hpp>
 namespace McRenderFace {
     using namespace glm;
+    using namespace std;
     struct Camera {
         vec3 position{0.0f, 0.0f, 0.0f};
         vec3 forward{0.0f, 0.0f, -1.0f};

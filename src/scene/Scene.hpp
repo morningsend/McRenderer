@@ -8,6 +8,7 @@
 #include "Camera.hpp"
 #include "Mesh.hpp"
 #include "Light.hpp"
+#include <memory>
 
 namespace McRenderFace {
     using namespace Shading;

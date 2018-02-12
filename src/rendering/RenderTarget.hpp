@@ -7,9 +7,12 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include "../Exception.hpp"
+#include <stdexcept>
+
 
 namespace McRenderFace {
     using namespace glm;
+    using namespace std;
     class RenderTarget {
     private:
         int width;

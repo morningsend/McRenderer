@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <fstream>
 #include <unordered_map>
+#include <ctype.h>
 
 namespace McRenderFace {
 

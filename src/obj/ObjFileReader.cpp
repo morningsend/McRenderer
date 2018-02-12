@@ -31,7 +31,7 @@ namespace McRenderFace {
             if(stream.peek() == '/') {
                 stream.get();
                 charTemp = static_cast<char>(stream.get());
-                if(isnumber(charTemp)) {
+                if(isdigit(charTemp)) {
                     stream.unget();
                     stream >> ti;
                 }

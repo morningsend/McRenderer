@@ -11,6 +11,11 @@
 #include "Renderer.hpp"
 #include "../scene/Ray.hpp"
 #include "RayTracerConfig.hpp"
+#include <cmath>
+
+#ifndef MAXFLOAT
+#define MAXFLOAT 999999999
+#endif
 
 namespace McRenderFace {
     const float INVERSE2PI = static_cast<const float>(.25f / M_PI);
