@@ -28,7 +28,7 @@ void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFa
     }
 }
 
-void setupCornellBoxScene(SimpleScene& scene) {
+void setupCornellBoxScene(Scene& scene) {
     vector<::Triangle> triangles;
     LoadTestModel(triangles);
 
@@ -36,38 +36,39 @@ void setupCornellBoxScene(SimpleScene& scene) {
     scene.camera.forward = vec3(0,0,1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
+    LambertMaterial* mat = new LambertMaterial;
+    mat->diffuseColour = vec3(0.75f);
+    scene.addMaterial(mat);
 
+    mat = new LambertMaterial;
+    mat->diffuseColour = vec3(0.2f);
+    scene.addMaterial(mat);
     //35mm camera lens.
     scene.camera.focalLength = .55;
 
-    PointLight light1;
-    light1.type = LightType::PointLight;
-    light1.position = vec3(-.2f, 0.7f, -0.8f);
-    light1.intensity = 20.0f;
-    scene.lights.push_back(light1);
-
-    PointLight light2;
-    light2.type = LightType::PointLight;
-    light2.position = vec3(0, 0.99f, 0.0f);
-    light2.intensity = 15.0f;
-    scene.lights.push_back(light2);
-
-    convertTriangles(triangles, scene.model);
+    PointLight* light1 = new PointLight;
+    light1->type = LightType::PointLight;
+    light1->position = vec3(-.2f, 0.7f, -0.8f);
+    light1->intensity = 5.0f;
+    scene.addLight(light1);
+    Mesh* mesh = new Mesh;
+    mesh->materialId = 0;
+    mesh->meshData = new MeshData;
+    convertTriangles(triangles, mesh->meshData->triangles);
+    mesh->computeBoundingBox();
+    scene.addMesh(mesh);
 }
 
 void addObjectToTestScene(Scene& scene){
-    ObjFileReader objReader("models/icosahedron.obj");
+    ObjFileReader objReader("models/cube.obj");
     unordered_map<string, shared_ptr<ObjModel>> namedModels = objReader.read();
     Mesh* mesh {nullptr};
-    LambertMaterial* mat = new LambertMaterial;
-    mat->diffuseColour = vec3(0.0, 1.0f, 0.0f);
-    scene.addMaterial(mat);
 
     for (auto model = namedModels.begin(); model != namedModels.end(); ++model) {
         const ObjModel& obj = *(model->second);
         mesh = new Mesh;
-        mesh->materialId = mat->materialId;
         Mesh::initializeMeshFromObj(*mesh, obj);
+        mesh->materialId = 1;
         scene.addMesh(mesh);
     }
 }
@@ -75,9 +76,9 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     //SimpleScene scene;
     Scene scene2;
-    createTestScene(scene2);
+    //createTestScene(scene2);
+    setupCornellBoxScene(scene2);
     addObjectToTestScene(scene2);
-    //setupCornellBoxScene(scene);
 
     CameraKeyboardController cameraKeyboardController{&scene2.camera};
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);

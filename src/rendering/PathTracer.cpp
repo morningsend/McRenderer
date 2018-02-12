@@ -82,32 +82,31 @@ namespace McRenderFace {
     void PathTracer::render(Scene &scene, RenderTarget &target) {
         const int width = target.getWidth();
         const int height = target.getHeight();
-
+        target.clear();
         float focalLength = scene.camera.focalLength;
         const Camera& camera = scene.camera;
         Light* light = scene.lights[0].get();
         Ray ray{camera.position, vec3(0, 0, 0)};
-        cout << "camera position" << camera.position.x << ','<< camera.position.y<<',' << camera.position.z << endl;
         RayHit hit;
         int closestIndex = 0;
-        const int raysPerPixel = config.samplingLevel;
         float fovLength = tan(0.5f * camera.fieldOfViewDegrees / 180.0f * (float) M_PI);
+        vec3 meshColour(0.75, 0.75, 0.75);
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 float screenX = (float(x) / float(width - 1) - 0.5f) * 2.0f * fovLength;
                 float screenY = -(float(y) / float(height - 1) - 0.5f) * 2.0f * fovLength;
-                vec3 direction = vec3(screenX, screenY, focalLength);
+                vec3 direction = vec3(screenX, screenY, camera.focalLength);
                 vec3 worldCoord = camera.toWorldCoordinate(screenX, screenY);
 
                 ray.forward = glm::normalize(worldCoord - camera.position);
-                closestIntersection(scene.models, ray, hit, closestIndex);
+                closestIntersection(scene.meshes, ray, hit, closestIndex);
 
                 // ray escaped, set pixel colour to background colour: assume black;
-                if(!hit.isHit) {
+                if(!hit.isHit || closestIndex < 0) {
                     target.setColor(x, y, scene.backgroundColour);
                 }
                 else {
-                    auto model = scene.models[closestIndex];
+                    auto model = scene.meshes[closestIndex];
                     vec3 toLight = light->position - hit.position;
                     float distance2 = glm::dot(toLight, toLight);
                     float distance = sqrt(distance2);
@@ -115,12 +114,11 @@ namespace McRenderFace {
                     //ray position needs a bias to avoid shadow acne.
                     //https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/ligth-and-shadows
                     Ray shadowRay{hit.position + hit.normal * config.shadowBias, toLight};
-                    // material: (diffuse, specular, ambient)
-                    // light: (diffuse, specular, ambient, distance)
+
                     Material* material = scene.materials[model->materialId].get();
                     float cosine = glm::dot(toLight, hit.normal) / distance;
                     cosine = cosine > 0 ? cosine : 0;
-                    vec3 lightColour = light->colour / ( cosine * (distance2) * INVERSE2PI * light->intensity);
+                    vec3 lightColour = light->colour * ( cosine * (distance2) * INVERSE2PI * light->intensity);
                     vec3 colour = lightColour * dynamic_cast<LambertMaterial*>(material)->diffuseColour;
 
                     if(traceShadow(scene, distance, shadowRay)) {
@@ -147,7 +145,7 @@ namespace McRenderFace {
         int closest = -1;
         closestHit.t = MAXFLOAT;
         RayHit hitResult;
-        int size = static_cast<int>(triangles.size());
+        const int size = static_cast<int>(triangles.size());
         for(int i = 0; i < size; i++) {
             hitResult = triangles[i].castRay(ray);
             if(hitResult.isHit && hitResult.t > 0.0f && hitResult.t < closestHit.t) {
@@ -164,10 +162,13 @@ namespace McRenderFace {
         RayHit closestHit;
         closestHit.t = MAXFLOAT;
         RayHit hitResult;
+        Mesh* mesh;
         int modelCount = static_cast<int>(models.size());
         for(int i = 0; i < modelCount; i++) {
-            hitResult = models[0]->castRay(ray);
-            if(hitResult.isHit && hitResult.t > 0.0f && hitResult.t < closestHit.t) {
+            mesh = models[0].get();
+            cout << mesh->materialId;
+            hitResult = mesh->castRay(ray);
+            if(hitResult.isHit && hitResult.t < closestHit.t) {
                 closestHit = hit;
                 closest = i;
             }

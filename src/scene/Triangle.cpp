@@ -28,11 +28,10 @@ namespace McRenderFace {
      */
     RayHit McRenderFace::Triangle::castRay(const McRenderFace::Ray &ray) {
         RayHit hit;
-        const Triangle& triangle = *this;
-        vec3 edge1 = triangle.vertices[1] - triangle.vertices[0];
-        vec3 edge2 = triangle.vertices[2] - triangle.vertices[0];
+        vec3 edge1 = vertices[1] - vertices[0];
+        vec3 edge2 = vertices[2] - vertices[0];
 
-        vec3 rayTriangle = ray.origin - triangle.vertices[0];
+        vec3 rayTriangle = ray.origin - vertices[0];
         vec3 P = glm::cross(ray.forward, edge2);
         vec3 Q = glm::cross(rayTriangle, edge1);
 
@@ -47,6 +46,7 @@ namespace McRenderFace {
         float u = glm::dot(P, rayTriangle) * determinant;
         float v = glm::dot(Q, ray.forward) * determinant;
         float t = glm::dot(Q, edge2) * determinant;
+
         // point is inside triangle if both uv coordinates are in [0, 1] and u+v < 1;
         if(u < 0.0f || u > 1.0f) {
             return hit;
@@ -59,7 +59,7 @@ namespace McRenderFace {
         hit.isHit = true;
         hit.t = t;
         hit.position = ray.at(t);
-
+        hit.normal = normal;
         return hit;
     }
 

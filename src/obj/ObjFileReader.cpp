@@ -38,13 +38,17 @@ namespace McRenderFace {
             }
             if(stream.peek() == '/') {
                 stream.get();
+            }
+            if(isdigit(stream.peek())) {
                 stream >> ni;
             }
             face.vertex[i] = vi - 1;
             face.normal[i] = ni - 1;
             face.uvCoord[i] = ti - 1;
             i++;
+            cout << vi << ' ';
         }
+        cout << endl;
         faces.push_back(face);
     }
     ObjFileReader::ObjFileReader(const std::string& filePath): filePath{filePath} {

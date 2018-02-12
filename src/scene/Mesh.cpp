@@ -2,6 +2,7 @@
 // Created by Zaiyang Li on 25/01/2018.
 //
 
+#include <iostream>
 #include "Mesh.hpp"
 
 namespace McRenderFace {
@@ -19,7 +20,7 @@ namespace McRenderFace {
         RayHit closest;
         for(auto tri : triangles) {
             hit = tri.castRay(ray);
-            if(hit.isHit && hit.t > 0 && hit.t < closest.t) {
+            if(hit.isHit && hit.t < closest.t) {
                 closest = hit;
             }
         }
@@ -38,9 +39,13 @@ namespace McRenderFace {
         Triangle tri;
         TriangleUV triUv;
 
+        for(vec3 v: obj.vertices) {
+            std::cout << v.x << ' ' << v.y << ' ' << v.z << endl;
+        }
         const vector<vec3> vertices = obj.vertices;
         const vector<vec3> normals = obj.normals;
         const vector<vec2> uvCoords = obj.uvCoords;
+        int i = 0;
         for(auto& face: obj.faces) {
 
             tri.vertices[0] = vertices[face.vertex[0]];
@@ -53,7 +58,7 @@ namespace McRenderFace {
                 triUv.uvCoords[2] = uvCoords[face.uvCoord[0]];
             }
 
-            if(computeNormalAsNeeded)
+            if(computeNormalAsNeeded && normals.size() < 1)
                 tri.computeNormal(true);
             else if(normals.size() > 0){
                 tri.normal = vertices[face.normal[0]];
@@ -61,6 +66,22 @@ namespace McRenderFace {
 
             meshData->triangles.push_back(tri);
             meshData->uvCoords.push_back(triUv);
+
+            cout << i << ':' << face.vertex[0] << ' ' << face.vertex[1] << ' ' << face.vertex[2] << endl;
+            cout << i << ':' << tri.vertices[0].x << ' '
+                    << tri.vertices[0].y << ' '
+                    << tri.vertices[0].z << ' '
+                    <<endl;
+            cout << i << ':' << tri.vertices[1].x << ' '
+                 << tri.vertices[1].y << ' '
+                 << tri.vertices[1].z << ' '
+                 <<endl;
+            cout << i << ':' << tri.vertices[2].x << ' '
+                 << tri.vertices[2].y << ' '
+                 << tri.vertices[2].z << ' '
+                 <<endl;
+            i++;
+
         }
         mesh.computeBoundingBox();
     }

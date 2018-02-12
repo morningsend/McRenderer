@@ -209,14 +209,6 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RayTracer.cpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RayTracer.hpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RayTracerConfig.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
