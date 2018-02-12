@@ -7,7 +7,7 @@
 #include "scene/TestModelH.h"
 #include "CameraKeyboardController.hpp"
 #include "rendering/RenderTarget.hpp"
-#include "rendering/RayTracer.hpp"
+#include "rendering/PathTracer.hpp"
 #include "rendering/RenderTargetDrawFunction.hpp"
 
 using namespace std;
@@ -90,7 +90,7 @@ int main() {
             .softShadow(true)
             .build();
 
-    RayTracer rayTracer{config};
+    PathTracer rayTracer{config};
     RenderTargetDrawFunction drawFunction{&scene2, &rayTracer, &renderTarget};
 
     Window window{"", SCREEN_WIDTH, SCREEN_HEIGHT, false};

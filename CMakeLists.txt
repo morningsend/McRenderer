@@ -19,7 +19,7 @@ set(SOURCE_FILES
         src/scene/Light.cpp src/scene/Light.hpp
         src/scene/Triangle.cpp src/scene/Triangle.hpp
         src/scene/Sphere.cpp src/scene/Sphere.hpp
-        src/rendering/RayTracer.cpp src/rendering/RayTracer.hpp
+        src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp
         src/scene/SimpleScene.cpp src/scene/SimpleScene.hpp
         src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp
@@ -51,7 +51,7 @@ set(SOURCE_FILES
         src/image/PngReader.cpp src/image/PngReader.hpp
         src/image/Image.cpp src/image/Image.hpp
         src/shading/Material.hpp
-        src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp)
+        )
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
