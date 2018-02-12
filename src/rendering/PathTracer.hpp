@@ -29,15 +29,12 @@ namespace McRenderFace {
         RayTracerConfig config;
     public:
         PathTracer(RayTracerConfig configIn): config{configIn}{ };
-        void render(SimpleScene& scene, RenderTarget& target) override;
         void render(Scene& scene, RenderTarget& target) override;
         ~PathTracer(){};
         bool traceShadow(SimpleScene &scene, float lightDistance, const Ray &ray);
         bool traceShadow(Scene& scene, float lightDistance, const Ray& ray);
     };
-
-    void closestIntersection(vector<Triangle> &triangles, const Ray &ray, RayHit& hit, int& closestIndex);
-    void closestIntersection(vector<shared_ptr<Mesh>> models, const Ray& ray, RayHit& hit, int& closestIndex);
+    void closestIntersection(vector<shared_ptr<Mesh>> models, const Ray& ray, RayHit& hitResult, int& closestIndex);
 }
 
 

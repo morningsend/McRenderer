@@ -41,7 +41,7 @@ void setupCornellBoxScene(Scene& scene) {
     scene.addMaterial(mat);
 
     mat = new LambertMaterial;
-    mat->diffuseColour = vec3(0.2f);
+    mat->diffuseColour = vec3(0.3f);
     scene.addMaterial(mat);
     //35mm camera lens.
     scene.camera.focalLength = .55;
@@ -49,7 +49,7 @@ void setupCornellBoxScene(Scene& scene) {
     PointLight* light1 = new PointLight;
     light1->type = LightType::PointLight;
     light1->position = vec3(-.2f, 0.7f, -0.8f);
-    light1->intensity = 5.0f;
+    light1->intensity = 10.4f;
     scene.addLight(light1);
     Mesh* mesh = new Mesh;
     mesh->materialId = 0;
@@ -60,18 +60,19 @@ void setupCornellBoxScene(Scene& scene) {
 }
 
 void addObjectToTestScene(Scene& scene){
-    ObjFileReader objReader("models/cube.obj");
+    ObjFileReader objReader("models/icosahedron.obj");
     unordered_map<string, shared_ptr<ObjModel>> namedModels = objReader.read();
     Mesh* mesh {nullptr};
 
-    for (auto model = namedModels.begin(); model != namedModels.end(); ++model) {
-        const ObjModel& obj = *(model->second);
-        mesh = new Mesh;
-        Mesh::initializeMeshFromObj(*mesh, obj);
-        mesh->materialId = 1;
-        scene.addMesh(mesh);
-    }
+    const ObjModel& obj = *namedModels["icosahedron"];
+    mesh = new Mesh;
+    Mesh::initializeMeshFromObj(*mesh, obj);
+    mesh->materialId = 1;
+    mesh->transform.scale = vec3(0.4f, 0.4f, 0.4f);
+    scene.addMesh(mesh);
+    //
 }
+
 int main() {
     std::cout << "Hello, World!" << std::endl;
     //SimpleScene scene;
@@ -79,7 +80,7 @@ int main() {
     //createTestScene(scene2);
     setupCornellBoxScene(scene2);
     addObjectToTestScene(scene2);
-
+    scene2.preprocessMeshes();
     CameraKeyboardController cameraKeyboardController{&scene2.camera};
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);
 

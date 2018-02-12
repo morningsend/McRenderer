@@ -12,6 +12,7 @@ namespace McRenderFace {
 
     RayHit Mesh::castRay(const Ray &ray) {
         // optimization: if ray does not hit bounding box, terminate.
+        //cout << "number of triangles" << meshData->triangles.size() << endl;
         RayHit hit = boundingBox.castRay(ray);
         if(!hit.isHit) {
             return hit;
@@ -20,7 +21,7 @@ namespace McRenderFace {
         RayHit closest;
         for(auto tri : triangles) {
             hit = tri.castRay(ray);
-            if(hit.isHit && hit.t < closest.t) {
+            if(hit.isHit&& hit.t > 0 && hit.t < closest.t) {
                 closest = hit;
             }
         }
@@ -58,11 +59,7 @@ namespace McRenderFace {
                 triUv.uvCoords[2] = uvCoords[face.uvCoord[0]];
             }
 
-            if(computeNormalAsNeeded && normals.size() < 1)
-                tri.computeNormal(true);
-            else if(normals.size() > 0){
-                tri.normal = vertices[face.normal[0]];
-            }
+            tri.computeNormal();
 
             meshData->triangles.push_back(tri);
             meshData->uvCoords.push_back(triUv);
@@ -84,6 +81,40 @@ namespace McRenderFace {
 
         }
         mesh.computeBoundingBox();
+    }
+
+    void Mesh::applyTransform() {
+        vec4 transformedVertices[3];
+        vec4 transformedNormal;
+        mat4 transformationMatrix = transform.matrix();
+        bool shouldNormalize = !(transform.scale.x == 1.0f && transform.scale.y == 1.0f && transform.scale.z == 1.0f);
+        if(shouldNormalize) {
+            for (Triangle &tri: meshData->triangles) {
+                for (int i = 0; i < 3; i++) {
+                    // vertex has position, so we multiply matrix with (x,y,z,1)
+                    transformedVertices[i] = transformationMatrix * vec4(tri.vertices[i], 1.0f);
+                    tri.vertices[i] = vec3(transformedVertices[i].x, transformedVertices[i].y,
+                                           transformedVertices[i].z);
+                }
+                // normal represents direction only, so we multiply matrix with (x, y, z, 0);
+                // we must re-normalize a normal vector in case of scaling.
+                transformedNormal = glm::normalize(transformationMatrix * vec4(tri.normal, 0.0f));
+                tri.normal = vec3(transformedNormal.x, transformedNormal.y, transformedNormal.z);
+            }
+        } else {
+            for (Triangle &tri: meshData->triangles) {
+                for (int i = 0; i < 3; i++) {
+                    // vertex has position, so we multiply matrix with (x,y,z,1)
+                    transformedVertices[i] = transformationMatrix * vec4(tri.vertices[i], 1.0f);
+                    tri.vertices[i] = vec3(transformedVertices[i].x, transformedVertices[i].y,
+                                           transformedVertices[i].z);
+                }
+                // normal represents direction only, so we multiply matrix with (x, y, z, 0);
+                transformedNormal = transformationMatrix * vec4(tri.normal, 0.0f);
+                tri.normal = vec3(transformedNormal.x, transformedNormal.y, transformedNormal.z);
+            }
+        }
+        transform.reset();
     }
 
     BoundingBox MeshData::computeBoundingBox() {

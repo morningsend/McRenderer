@@ -10,7 +10,7 @@ namespace McRenderFace {
         vec3 edge1 = vertices[1] - vertices[0];
         vec3 edge2 = vertices[2] - vertices[0];
 
-        normal = glm::cross(edge1, edge2);
+        normal = vec4(glm::cross(edge1, edge2), 0.0f);
         if (normalize) {
             normal = glm::normalize(normal);
         }

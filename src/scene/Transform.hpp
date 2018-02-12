@@ -15,6 +15,11 @@ namespace McRenderFace {
         vec3 scale {1,1,1};
 
         mat4 matrix();
+        void reset() {
+            translation = vec3(0);
+            rotation = vec3(0);
+            scale = vec3(1);
+        }
     };
 }
 

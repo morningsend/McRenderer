@@ -65,6 +65,7 @@ namespace McRenderFace {
         }
         void computeBoundingBox();
         RayHit castRay(const Ray& ray) override ;
+        void applyTransform();
         static void initializeMeshFromObj(Mesh &mesh, const ObjModel &obj, bool computeNormalAsNeeded = true);
     };
 }

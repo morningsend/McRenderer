@@ -64,8 +64,6 @@ namespace McRenderFace {
         model->materialId = 0;
 
         scene.addMesh(model);
-
-
     }
 
     void Scene::addMesh(Mesh *mesh) {
@@ -80,5 +78,12 @@ namespace McRenderFace {
     void Scene::addMaterial(Material *material) {
         materials.push_back(shared_ptr<Material>(material));
         material->materialId = static_cast<int>(materials.size() - 1);
+    }
+
+    void Scene::preprocessMeshes() {
+
+        for(auto& mesh : meshes) {
+            mesh->applyTransform();
+        }
     }
 }

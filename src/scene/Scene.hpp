@@ -23,6 +23,7 @@ namespace McRenderFace {
         void addMesh(Mesh* mesh);
         void addLight(Light* light);
         void addMaterial(Material* material);
+        void preprocessMeshes();
     };
 
     void createTestScene(Scene& scene);
