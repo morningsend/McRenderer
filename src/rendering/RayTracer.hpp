@@ -16,11 +16,11 @@ namespace McRenderFace {
     const float INVERSE2PI = static_cast<const float>(.25f / M_PI);
     class RayTracer : public Renderer {
     private:
-        int threads;
         RayTracerConfig config;
     public:
         RayTracer(RayTracerConfig configIn): config{configIn}{ };
-        void render(const SimpleScene& scene, RenderTarget& target);
+        void render(const SimpleScene& scene, RenderTarget& target) override;
+        void render(const Scene& scene, RenderTarget& target) override;
         ~RayTracer(){};
         bool traceShadow(const SimpleScene &scene, float lightDistance, const Ray &ray);
     };

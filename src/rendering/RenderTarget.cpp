@@ -57,4 +57,8 @@ namespace McRenderFace {
     vec3& RenderTarget::getColor(int x, int y) {
         return frameBuffer[x + y * width];
     }
+
+    void RenderTarget::clear() {
+        memset(static_cast<void*>(frameBuffer), 0, sizeof(vec3) * width * height);
+    }
 }

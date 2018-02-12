@@ -2,8 +2,8 @@
 // Created by Zaiyang Li on 31/01/2018.
 //
 
-#ifndef RENDERER_SCENE_HPP
-#define RENDERER_SCENE_HPP
+#ifndef RENDERER_SIMPLE_SCENE_HPP
+#define RENDERER_SIMPLE_SCENE_HPP
 
 #include <vector>
 #include "Light.hpp"

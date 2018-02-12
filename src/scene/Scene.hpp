@@ -14,9 +14,12 @@ namespace McRenderFace {
     struct Scene {
         Camera camera;
         vector<Mesh> models{};
-        vector<Light> lights{};
+        vector<std::shared_ptr<Light>> lights{};
+        vector<std::shared_ptr<Material>> materials;
         vec3 backgroundColour{0.0f};
     };
+
+    void createTestScene(Scene& scene);
 }
 
 

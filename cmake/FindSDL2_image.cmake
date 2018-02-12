@@ -54,6 +54,7 @@ FIND_LIBRARY(SDL2IMAGE_LIBRARY
         ~/Library/Frameworks
         /Library/Frameworks
         /usr/local
+        /usr/local/lib
         /usr
         /sw
         /opt/local

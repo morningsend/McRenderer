@@ -8,9 +8,11 @@
 #include "../phong/PhongMaterial.hpp"
 
 namespace McRenderFace {
-    struct BlinnMaterial : public PhongMaterial {
+    namespace Shading {
+        struct BlinnMaterial : public PhongMaterial {
 
-    };
+        };
+    }
 }
 
 

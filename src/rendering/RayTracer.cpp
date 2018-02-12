@@ -51,7 +51,7 @@ namespace McRenderFace {
 
                     float cosine = glm::dot(toLight, tri.normal) / distance;
                     cosine = cosine > 0 ? cosine : 0;
-                    vec3 lightColour = light.diffuseColour * cosine / (distance2) * INVERSE2PI * light.intensity;
+                    vec3 lightColour = light.colour * cosine / (distance2) * INVERSE2PI * light.intensity;
                     vec3 colour = lightColour * tri.colour;
 
                     if(traceShadow(scene, distance, shadowRay)) {
@@ -75,6 +75,10 @@ namespace McRenderFace {
         int index = -1;
         closestIntersection(scene.model, ray, hit, index);
         return hit.isHit && (hit.t < lightDistance);
+    }
+
+    void RayTracer::render(const Scene &scene, RenderTarget &target) {
+
     }
 
     void closestIntersection(const vector<Triangle> &triangles, const Ray &ray, RayHit& hit, int& closestIndex) {

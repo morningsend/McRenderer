@@ -5,7 +5,5 @@
 #include "Sphere.hpp"
 
 namespace McRenderFace {
-    void Sphere::makeMesh(McRenderFace::Mesh &result, McRenderFace::MeshType type) {
 
-    }
 }

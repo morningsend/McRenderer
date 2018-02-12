@@ -8,16 +8,16 @@
 namespace McRenderFace {
     struct AxisAlignedPlane {
         int axis;
-        static const X_AXIS;
-        static const Y_AXIS;
-        static const Z_AXIS;
-        static const W_AXIS;
+        static const int X_AXIS;
+        static const int Y_AXIS;
+        static const int Z_AXIS;
+        static const int W_AXIS;
         float value;
     };
-    static const X_AXIS = 0;
-    static const Y_AXIS = 1;
-    static const Z_AXIS = 2;
-    static const W_AXIS = 3;
+    static const int X_AXIS = 0;
+    static const int Y_AXIS = 1;
+    static const int Z_AXIS = 2;
+    static const int W_AXIS = 3;
 }
 
 

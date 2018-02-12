@@ -4,7 +4,7 @@ project(renderer CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/lib -lSDL2_image -lSDL2")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -24,9 +24,7 @@ set(SOURCE_FILES
         src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp
         src/shading/phong/PhongMaterial.cpp src/shading/phong/PhongMaterial.hpp
-        src/scene/TextureSampler2D.cpp src/scene/TextureSampler2D.hpp 
-        src/scene/TextureMap.cpp src/scene/TextureMap.hpp  
-        src/Exception.cpp src/Exception.hpp 
+        src/Exception.cpp src/Exception.hpp
         src/rendering/Renderer.cpp src/rendering/Renderer.hpp
         src/window/KeyboardEventHandler.cpp src/window/KeyboardEventHandler.hpp
         src/window/KeyboardEvent.cpp src/window/KeyboardEvent.hpp
@@ -38,12 +36,31 @@ set(SOURCE_FILES
         src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp
         src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
         src/obj/MtlFileReader.cpp src/obj/MtlFileReader.hpp
-        src/IOUtility.cpp src/IOUtility.hpp src/shading/pbr/PbrMaterial.cpp src/shading/pbr/PbrMaterial.hpp src/shading/blinn/BlinnMaterial.cpp src/shading/blinn/BlinnMaterial.hpp src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp src/scene/Scene.cpp src/scene/Scene.hpp src/scene/AxisAlignedPlane.cpp src/scene/AxisAlignedPlane.hpp src/scene/RayIntersecting.hpp src/shading/UvSampler1D.hpp src/shading/UvSampler3D.hpp src/shading/ConstantColourSampler.cpp src/shading/ConstantColourSampler.hpp src/shading/ConstantFloatSampler.cpp src/shading/ConstantFloatSampler.hpp
-        src/shading/GrayScaleImageSampler.hpp src/shading/GrayScaleImageSampler.cpp src/shading/RGBImageSampler.cpp src/shading/RGBImageSampler.hpp src/image/PngReader.cpp src/image/PngReader.hpp src/image/Image.cpp src/image/Image.hpp)
+        src/IOUtility.cpp src/IOUtility.hpp
+        src/shading/pbr/PbrMaterial.cpp src/shading/pbr/PbrMaterial.hpp
+        src/shading/blinn/BlinnMaterial.cpp src/shading/blinn/BlinnMaterial.hpp
+        src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp
+        src/scene/Scene.cpp src/scene/Scene.hpp
+        src/scene/AxisAlignedPlane.cpp src/scene/AxisAlignedPlane.hpp
+        src/scene/RayIntersecting.hpp src/shading/UvSampler1D.hpp
+        src/shading/UvSampler3D.hpp
+        src/shading/ConstantColourSampler.cpp src/shading/ConstantColourSampler.hpp
+        src/shading/ConstantFloatSampler.cpp src/shading/ConstantFloatSampler.hpp
+        src/shading/GrayScaleImageSampler.hpp src/shading/GrayScaleImageSampler.cpp
+        src/shading/RGBImageSampler.cpp src/shading/RGBImageSampler.hpp
+        src/image/PngReader.cpp src/image/PngReader.hpp
+        src/image/Image.cpp src/image/Image.hpp
+        src/shading/Material.hpp
+        src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
-set(TESTS_SOURCE_FILES ${SOURCE_FILES} tests/scene/RayTests.hpp tests/scene/MeshTests.hpp tests/obj/ObjFileReaderTests.hpp tests/obj/MtlFileReaderTests.hpp )
+set(TESTS_SOURCE_FILES ${SOURCE_FILES}
+        tests/scene/RayTests.hpp
+        tests/scene/MeshTests.hpp
+        tests/obj/ObjFileReaderTests.hpp
+        tests/obj/MtlFileReaderTests.hpp
+        )
 
 add_library(Catch INTERFACE)
 
@@ -58,5 +75,6 @@ find_package(sdl2 REQUIRED)
 add_executable(renderer ${SOURCE_FILES} src/main.cpp )
 add_executable(renderer_tests ${TESTS_SOURCE_FILES} tests/testMain.cpp)
 
-target_link_libraries(renderer ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
-target_link_libraries(renderer_tests ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+target_link_libraries(renderer ${SDL2_LIBRARIES})
+target_link_libraries(renderer ${SDL2_IMAGE_LIBRARY})
+target_link_libraries(renderer_tests ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARY})

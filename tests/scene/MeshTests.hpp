@@ -9,12 +9,12 @@
 
 #include <catch.hpp>
 #include "../../src/IOUtility.hpp"
+#include "../../src/scene/Mesh.hpp"
 
 TEST_CASE("Computing bounding box is axis aligned", "[FaceMeshData computeBoundingBox]") {
-    FaceMeshData data;
-    data.vertices.push_back(vec3(1, -1, 1));
-    data.vertices.push_back(vec3(-1, 1, -1));
-    data.vertices.push_back(vec3(0, 0, 0));
+    MeshData data;
+    TriangleGeometry triangle(vec3(1, -1, 1), vec3(-1, 1, -1), vec3(-1, 1, -1), vec3(0));
+    data.triangles.push_back(triangle);
     BoundingBox box = data.computeBoundingBox();
 
     REQUIRE((box.min[0] == -1.0f && box.min[1] == -1.0f && box.min[2] == -1.0f));
@@ -24,7 +24,7 @@ TEST_CASE("Computing bounding box is axis aligned", "[FaceMeshData computeBoundi
 }
 
 TEST_CASE("computing bounding box on empty mesh return (0,0,0,0,0,0)", "[FaceMeshData computeBoundingBox") {
-    FaceMeshData data;
+    MeshData data;
     BoundingBox box = data.computeBoundingBox();
     REQUIRE((box.min.x == 0 &&
             box.min.y == 0 &&

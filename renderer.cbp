@@ -28,7 +28,7 @@
 					<Add directory="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/lib/glm"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
 					<Add directory="/usr/include"/>
 					<Add directory="/System/Library/Frameworks"/>
@@ -52,7 +52,7 @@
 					<Add directory="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/lib/glm"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
 					<Add directory="/usr/include"/>
 					<Add directory="/System/Library/Frameworks"/>
@@ -96,7 +96,7 @@
 					<Add directory="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/lib/glm"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
 					<Add directory="/usr/include"/>
 					<Add directory="/System/Library/Frameworks"/>
@@ -120,7 +120,7 @@
 					<Add directory="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/lib/glm"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
 					<Add directory="/usr/include"/>
 					<Add directory="/System/Library/Frameworks"/>
@@ -198,6 +198,14 @@
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/ObjFileReader.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/PathTracer.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/PathTracer.hpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
@@ -337,22 +345,6 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureMap.cpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureMap.hpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureSampler2D.cpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/TextureSampler2D.hpp">
-			<Option target="renderer"/>
-			<Option target="renderer_tests"/>
-		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/Transform.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -398,6 +390,10 @@
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/GrayScaleImageSampler.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/Material.hpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>

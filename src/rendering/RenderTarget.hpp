@@ -25,6 +25,7 @@ namespace McRenderFace {
         int getHeight();
         void saveOutput(const string& path);
         vec3& operator()(int x, int y);
+        void clear();
     };
 }
 

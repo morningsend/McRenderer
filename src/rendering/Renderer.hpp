@@ -6,13 +6,16 @@
 #define RENDERER_RENDERER_HPP
 
 #include "RenderTarget.hpp"
+
 #include "../scene/SimpleScene.hpp"
+#include "../scene/Scene.hpp"
 
 namespace McRenderFace {
     class Renderer {
     public:
         virtual void render(const SimpleScene& scene, RenderTarget& target) {};
-        virtual ~Renderer(){};
+        virtual void render(const Scene& scene, RenderTarget& target) { }
+        virtual ~Renderer() = default;;
     };
 }
 

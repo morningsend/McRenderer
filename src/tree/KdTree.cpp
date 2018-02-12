@@ -18,7 +18,11 @@ namespace McRenderFace {
     }
 
     KdTreeNode* KdTree::ceateTree(const Mesh &mesh) {
+        return nullptr;
+    }
 
+    KdTreeNode *KdTree::createTree(vector<TriangleGeometry> &trianges, vector<TriangleGeometry> &right) {
+        return nullptr;
     }
 
     void KdTreeNode::freeChildren() {

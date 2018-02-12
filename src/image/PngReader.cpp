@@ -15,7 +15,7 @@ namespace McRenderFace {
         }
         int width = image->w;
         int height = image->h;
-        long max = 1 << image->format->BitsPerPixel - 1;
+        long max = (1 << image->format->BitsPerPixel) - 1;
 
         IMG_Quit();
         SDL_FreeSurface(image);

@@ -7,7 +7,6 @@
 
 #include <glm/glm.hpp>
 #include "Transform.hpp"
-#include "Mesh.hpp"
 
 namespace McRenderFace {
     using namespace glm;
@@ -16,7 +15,6 @@ namespace McRenderFace {
         float radius;
         vec3 origin;
 
-        void makeMesh(Mesh& result, MeshType type);
     };
 
 }

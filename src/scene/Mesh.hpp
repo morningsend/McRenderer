@@ -9,11 +9,11 @@
 #include "Transform.hpp"
 #include "Vertex.hpp"
 #include "BoundingBox.hpp"
-#include "../shading/phong/PhongMaterial.hpp"
+#include "../shading/Material.hpp"
 
 namespace McRenderFace {
     using namespace std;
-
+    using namespace Shading;
     enum class MeshType{ PerFaceNormal, PerVertexNormal };
 
     struct TriangleGeometry {
@@ -29,6 +29,7 @@ namespace McRenderFace {
 
     struct TriangleUV{
         vec2 r0[3];
+        int materialId;
     };
 
     struct MeshData {
@@ -49,7 +50,7 @@ namespace McRenderFace {
         MeshType type;
         Transform transform;
         BoundingBox boundingBox;
-        PhongMaterial material;
+        void* material;
         MeshData* meshData;
 
         void computeBoundingBox();
@@ -59,6 +60,7 @@ namespace McRenderFace {
                 delete meshData;
             }
         }
+        void setMaterial(Material* material);
     };
 }
 
