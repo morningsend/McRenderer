@@ -55,14 +55,14 @@ namespace McRenderFace {
 
     }
 
-    std::unordered_map<string, ObjModel*> ObjFileReader::read() {
+    std::unordered_map<string, shared_ptr<ObjModel>> ObjFileReader::read() {
         ifstream inputFile(filePath, ios::in);
         if(!inputFile) {
             throw runtime_error("file not found: " +filePath);
         }
 
         char lineBuffer[256];
-        std::unordered_map<string, ObjModel*> models;
+        std::unordered_map<string, shared_ptr<ObjModel>> models;
         ObjModel* model = new ObjModel();
         glm::vec3 vec3Temp;
         glm::vec2 vec2Temp;
@@ -80,7 +80,7 @@ namespace McRenderFace {
             else if(prefix == "g") {
                 stream >> stringTemp;
                 if(models.find(stringTemp) == models.end()) {
-                    models[stringTemp] = model;
+                    models[stringTemp] = shared_ptr<ObjModel>(model);
                     model->modelName = stringTemp;
                 }
             }

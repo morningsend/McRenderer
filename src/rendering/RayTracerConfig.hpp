@@ -14,10 +14,7 @@ namespace McRenderFace {
         bool softShadow{true};
         float shadowBias{0.001};
         int maxRayDepth{2};
-        int maxSamplingLevel{0}; // 2^sampling level
-        int minSamplingLevel{-2};
-
-
+        int samplingLevel{0}; // we sample (2^sampling level) many rays per pixel.
     };
     /**
      * Fluent Builder API
@@ -32,12 +29,8 @@ namespace McRenderFace {
             config.threadCount = threadsCount > 1 ? threadsCount : 1;
             return *this;
         }
-        RayTracerConfigBuilder& minSamplingLevel(int level){
-            config.minSamplingLevel = level;
-            return *this;
-        }
-        RayTracerConfigBuilder& maxSamplingLevel(int level){
-            config.maxSamplingLevel = level;
+        RayTracerConfigBuilder& samplingLevel(int level){
+            config.samplingLevel = level;
             return *this;
         }
         RayTracerConfigBuilder& maxRayDepth(int depth) {

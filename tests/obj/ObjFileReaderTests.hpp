@@ -47,7 +47,7 @@ TEST_CASE("face data with missing texture coordinate should work", "[ObjFileRead
     auto models = reader.read();
     CHECK(models.size() == 1);
 
-    ObjModel* model = models["icosahedron"];
+    ObjModel* model = models["icosahedron"].get();
     CHECK(model->faces.size() == 20);
     CHECK(model->vertices.size() == 12);
 

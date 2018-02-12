@@ -7,15 +7,16 @@
 namespace McRenderFace {
 
     void createTestScene(Scene &scene) {
-        scene.camera.position = vec3(0,0,1);
-        scene.camera.forward = vec3(0,0,-1);
-        scene.camera.up = vec3(0, 1, 0);
+        scene.camera.position = vec3(0,0, 1);
+        scene.camera.forward = vec3(0,0, -1);
+        scene.camera.up = vec3(0,1,0);
         scene.camera.computeRightVector();
+        scene.camera.focalLength = .035;
 
         PointLight* light = new PointLight();
         light->colour = vec3(1.0f, 1.0f, 1.0f);
-        light->intensity = 10.0f;
-        light->position = vec3(0.0f, 0.98f, 0.0f);
+        light->intensity = 5.0f;
+        light->position = vec3(0.0f, 1.98f, 0.0f);
         scene.addLight(light);
 
         // default material;
@@ -35,16 +36,16 @@ namespace McRenderFace {
         MeshData* data = new MeshData;
 
         Triangle tri{
-                vec3(0,0,0),
-                vec3(1,0,0),
-                vec3(1,1,0),
-                vec3(0,0,1)
+                vec3(-5,-5, -2),
+                vec3(5,-5, -2),
+                vec3(5,5, -2),
+                vec3(0, 0, 1)
         };
         Triangle tri2{
-                vec3(0),
-                vec3(2,2,0),
-                vec3(0,2,0),
-                vec3(0,0,1)
+                vec3(-5, -5, -2),
+                vec3(5, 5, -2),
+                vec3(-5, 5, -2),
+                vec3(0, 0, 1)
         };
         TriangleUV uv;
 
@@ -63,6 +64,7 @@ namespace McRenderFace {
 
     void Scene::addMesh(Mesh *mesh) {
         models.push_back(shared_ptr<Mesh>(mesh));
+        mesh->meshId = static_cast<int>(models.size() - 1);
     }
 
     void Scene::addLight(Light *light) {
@@ -71,5 +73,6 @@ namespace McRenderFace {
 
     void Scene::addMaterial(Material *material) {
         materials.push_back(shared_ptr<Material>(material));
+        material->materialId = static_cast<int>(materials.size() - 1);
     }
 }

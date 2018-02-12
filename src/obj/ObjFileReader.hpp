@@ -5,6 +5,7 @@
 #ifndef RENDERER_OBJFILEREADER_HPP
 #define RENDERER_OBJFILEREADER_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
@@ -13,6 +14,7 @@
 #include <ctype.h>
 
 namespace McRenderFace {
+    using namespace std;
 
     struct ObjFace {
         int vertex[3];
@@ -38,7 +40,7 @@ namespace McRenderFace {
     public:
         explicit ObjFileReader(const std::string& filePath);
         explicit ObjFileReader(const char* filePath);
-        std::unordered_map<std::string, ObjModel*> read();
+        std::unordered_map<string, shared_ptr<ObjModel>> read();
     };
 }
 

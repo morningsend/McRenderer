@@ -63,10 +63,6 @@ namespace McRenderFace {
         return hit;
     }
 
-    vec2 Triangle::barycentric() {
-        return glm::vec2(0.0f, 1.0f);
-    }
-
     void Triangle::invertNormal(bool recompute) {
         vec3 temp = vertices[1];
         vertices[1] = vertices[2];
@@ -75,5 +71,21 @@ namespace McRenderFace {
         if(recompute) {
             computeNormal();
         }
+    }
+
+    /**
+     * p = u(v1 - v0) + v(v2 - v0)
+     * p = u*v1 + v*v2 - (u + v)*v0
+     * @param u
+     * @param v
+     * @return
+     */
+
+    vec3 Triangle::positionOf(float u, float v) {
+        return vertices[1] * u + vertices[2] * v - vertices[0] * (u+v);
+    }
+
+    vec2 Triangle::barycentricCoordOf(vec3 point) {
+        return glm::vec2();
     }
 }

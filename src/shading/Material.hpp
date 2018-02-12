@@ -7,8 +7,8 @@
 
 namespace McRenderFace {
     namespace Shading {
-        class Material {
-        public:
+        struct Material {
+            int materialId {0};
             virtual ~Material() = default;
         };
     }

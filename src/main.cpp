@@ -1,5 +1,6 @@
 #define GLM_SWIZZLE
 #include <iostream>
+#include <unordered_map>
 #include "window/Window.hpp"
 #include "window/TestDrawFunction.hpp"
 #include "scene/SimpleScene.hpp"
@@ -54,22 +55,37 @@ void setupCornellBoxScene(SimpleScene& scene) {
     convertTriangles(triangles, scene.model);
 }
 
+void addObjectToTestScene(Scene& scene){
+    ObjFileReader objReader("models/icosahedron.obj");
+    unordered_map<string, shared_ptr<ObjModel>> namedModels = objReader.read();
+    Mesh* mesh {nullptr};
+    LambertMaterial* mat = new LambertMaterial;
+    mat->diffuseColour = vec3(0.0, 1.0f, 0.0f);
+    scene.addMaterial(mat);
+
+    for (auto model = namedModels.begin(); model != namedModels.end(); ++model) {
+        const ObjModel& obj = *(model->second);
+        mesh = new Mesh;
+        mesh->materialId = mat->materialId;
+        Mesh::initializeMeshFromObj(*mesh, obj);
+        scene.addMesh(mesh);
+    }
+}
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    SimpleScene scene;
+    //SimpleScene scene;
     Scene scene2;
     createTestScene(scene2);
+    addObjectToTestScene(scene2);
+    //setupCornellBoxScene(scene);
 
-    setupCornellBoxScene(scene);
-
-    CameraKeyboardController cameraKeyboardController{&scene.camera};
+    CameraKeyboardController cameraKeyboardController{&scene2.camera};
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
             .maxRayDepth(5)
-            .maxSamplingLevel(0)
-            .minSamplingLevel(-3)
+            .samplingLevel(0)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();

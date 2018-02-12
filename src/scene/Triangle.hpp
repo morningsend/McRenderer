@@ -13,7 +13,8 @@ namespace McRenderFace {
     struct Triangle : RayIntersecting{
         vec3 vertices[3];
         vec3 normal {0,0,1};
-        vec2 barycentric();
+        vec2 barycentricCoordOf(vec3 point);
+        vec3 positionOf(float u, float v);
         void computeNormal(bool normalize = true);
         void invertNormal(bool recompute = false);
         RayHit castRay(const Ray& ray) override;

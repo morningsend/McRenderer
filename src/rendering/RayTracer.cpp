@@ -2,8 +2,8 @@
 // Created by Zaiyang Li on 31/01/2018.
 //
 #include <cmath>
+#include <iostream>
 #include "RayTracer.hpp"
-#include "../scene/Ray.hpp"
 
 
 namespace McRenderFace {
@@ -87,14 +87,16 @@ namespace McRenderFace {
         const Camera& camera = scene.camera;
         Light* light = scene.lights[0].get();
         Ray ray{camera.position, vec3(0, 0, 0)};
+        cout << "camera position" << camera.position.x << ','<< camera.position.y<<',' << camera.position.z << endl;
         RayHit hit;
         int closestIndex = 0;
+        const int raysPerPixel = config.samplingLevel;
         float fovLength = tan(0.5f * camera.fieldOfViewDegrees / 180.0f * (float) M_PI);
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 float screenX = (float(x) / float(width - 1) - 0.5f) * 2.0f * fovLength;
                 float screenY = -(float(y) / float(height - 1) - 0.5f) * 2.0f * fovLength;
-                vec3 direction = vec3(screenX, screenY, camera.focalLength);
+                vec3 direction = vec3(screenX, screenY, focalLength);
                 vec3 worldCoord = camera.toWorldCoordinate(screenX, screenY);
 
                 ray.forward = glm::normalize(worldCoord - camera.position);
@@ -165,11 +167,9 @@ namespace McRenderFace {
         int modelCount = static_cast<int>(models.size());
         for(int i = 0; i < modelCount; i++) {
             hitResult = models[0]->castRay(ray);
-            if(hitResult.t && hitResult.t > 0) {
-                if(hitResult.t < closestHit.t) {
-                    closestHit = hit;
-                    closest = i;
-                }
+            if(hitResult.isHit && hitResult.t > 0.0f && hitResult.t < closestHit.t) {
+                closestHit = hit;
+                closest = i;
             }
         }
         closestIndex = closest;

@@ -10,9 +10,8 @@
 namespace McRenderFace {
 
     class PathTracer : public Renderer {
-
+        
     };
 }
-
 
 #endif //RENDERER_PATHTRACER_HPP
