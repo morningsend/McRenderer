@@ -15,10 +15,15 @@ namespace McRenderFace {
     private:
         mt19937 generator;
         normal_distribution<float> dist{0.0f, 1.0f};
+        unsigned int seed;
     public:
-        GaussianSampler(unsigned int seed): generator{seed} {}
+        GaussianSampler(unsigned int seed): generator{seed},seed{seed} {}
         void sample(vec2 &v, vec2 mean, vec2 sigma);
         void sample(vec3 &v, vec3 mean, vec3 sigma);
+        void reset() {
+            generator.seed(seed);
+            dist.reset();
+        }
     };
 }
 

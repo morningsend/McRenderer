@@ -1,26 +1,18 @@
 //
-// Created by Zaiyang Li on 31/01/2018.
+// Created by Zaiyang Li on 13/02/2018.
 //
 
-#ifndef RENDERER_RAYTRACER_HPP
-#define RENDERER_RAYTRACER_HPP
+#ifndef RENDERER_PATHTRACER_HPP
+#define RENDERER_PATHTRACER_HPP
 
-#include <cmath>
 #include <glm/glm.hpp>
-#include <random>
-#include "../scene/SimpleScene.hpp"
-#include "RenderTarget.hpp"
-#include "Renderer.hpp"
 #include "../scene/Ray.hpp"
+#include "../scene/Scene.hpp"
+#include "../scene/Mesh.hpp"
 #include "RayTracerConfig.hpp"
-
-#include "../shading/lambert/LamberShader.hpp"
 #include "GaussianSampler.hpp"
-
-#ifndef MAXFLOAT
-#define MAXFLOAT 999999999
-#endif
-
+#include "RenderTarget.hpp"
+#include "../shading/pbr/PbrShader.hpp"
 
 namespace McRenderFace {
     using namespace std;
@@ -28,27 +20,34 @@ namespace McRenderFace {
     using namespace Shading;
 
     const float INVERSE2PI = static_cast<const float>(.25f / M_PI);
-    class PathTracer : public Renderer {
+
+    struct LightPath {
+        Ray incomingRay;
+        int meshId;
+        vec3 pointOfIntersection;
+        vec3 surfaceNormal;
+        float surfaceColour;
+        float lightDistance;
+    };
+    class PathTracer {
     private:
         RayTracerConfig config;
-        vector<vec3> cameraRaySamples;
-        GaussianSampler sampler;
+        PbrShader pbrShader;
+        PbrLightParameters lightParameters;
+        PbrSurfaceParameters surfaceParameters;
 
-        void generateRayDirectionsAtPixel(int width,
-                                          int height,
-                                          int x,
-                                          int y,
-                                          const Camera& camera,
-                                          vector<vec3> rayDirecitons);
     public:
-        PathTracer(RayTracerConfig configIn): config{configIn}, cameraRaySamples(1 << configIn.samplingLevel), sampler{1000}{
-        };
-        void render(Scene& scene, RenderTarget& target) override;
+        explicit PathTracer(RayTracerConfig configIn)
+                : config{configIn}, pbrShader{}, lightParameters{}, surfaceParameters{}
+        {};
+
         ~PathTracer(){};
-        bool traceShadow(Scene& scene, float lightDistance, const Ray& ray);
+
+        vec3 traceRay(Scene &scene, const Ray &ray);
     };
-    void closestIntersection(vector<shared_ptr<Mesh>> models, const Ray& ray, RayHit& hitResult, int& closestIndex);
+
+    void closestIntersection(vector<shared_ptr<Mesh>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);
 }
 
 
-#endif //RENDERER_RAYTRACER_HPP
+#endif //RENDERER_PATHTRACER_HPP

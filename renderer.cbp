@@ -217,6 +217,14 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/PathTracingRenderer.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/PathTracingRenderer.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/RayTracerConfig.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>

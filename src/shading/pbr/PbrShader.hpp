@@ -66,7 +66,7 @@ namespace McRenderFace {
         };
         struct PbrShader {
         private:
-            mt19937 gen {};
+            mt19937 gen {0};
         public:
             constexpr float SQRT_2_PI () const;
             constexpr float INVERSE_2_PI() const;

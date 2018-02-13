@@ -7,14 +7,14 @@
 #include "scene/TestModelH.h"
 #include "CameraKeyboardController.hpp"
 #include "rendering/RenderTarget.hpp"
-#include "rendering/PathTracer.hpp"
+#include "rendering/PathTracingRenderer.hpp"
 #include "rendering/RenderTargetDrawFunction.hpp"
 
 using namespace std;
 using namespace McRenderFace;
 
-#define SCREEN_WIDTH 256
-#define SCREEN_HEIGHT 256
+#define SCREEN_WIDTH 192
+#define SCREEN_HEIGHT 192
 
 
 void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
@@ -86,13 +86,13 @@ int main() {
 
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
-            .maxRayDepth(5)
-            .samplingLevel(3)
+            .maxRayDepth(2)
+            .samplingLevel(0)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();
 
-    PathTracer rayTracer{config};
+    PathTracingRenderer rayTracer{config};
     RenderTargetDrawFunction drawFunction{&scene2, &rayTracer, &renderTarget};
 
     Window window{"", SCREEN_WIDTH, SCREEN_HEIGHT, false};
