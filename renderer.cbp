@@ -421,11 +421,11 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/pbr/PbrMaterial.cpp">
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/pbr/PbrShader.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/pbr/PbrMaterial.hpp">
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/shading/pbr/PbrShader.hpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>

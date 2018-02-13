@@ -37,7 +37,7 @@ set(SOURCE_FILES
         src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
         src/obj/MtlFileReader.cpp src/obj/MtlFileReader.hpp
         src/IOUtility.cpp src/IOUtility.hpp
-        src/shading/pbr/PbrMaterial.cpp src/shading/pbr/PbrMaterial.hpp
+        src/shading/pbr/PbrShader.cpp src/shading/pbr/PbrShader.hpp
         src/shading/blinn/BlinnShader.cpp src/shading/blinn/BlinnShader.hpp
         src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp
         src/scene/Scene.cpp src/scene/Scene.hpp
