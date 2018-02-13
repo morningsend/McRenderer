@@ -44,17 +44,19 @@ namespace McRenderFace {
         determinant = 1.0f / determinant;
         //barycentric coordinates
         float u = glm::dot(P, rayTriangle) * determinant;
+        if(u < 0.0f || u > 1.0f) {
+          return hit;
+        }
         float v = glm::dot(Q, ray.forward) * determinant;
+        if(v < 0.0f || v > 1.0f) {
+          return hit;
+        }
+        if(v + u > 1.0f) {
+          return hit;
+        }
         float t = glm::dot(Q, edge2) * determinant;
 
         // point is inside triangle if both uv coordinates are in [0, 1] and u+v < 1;
-        if(u < 0.0f || u > 1.0f) {
-            return hit;
-        } else if(v < 0.0f || v > 1.0f) {
-            return hit;
-        } else if(v + u > 1.0f) {
-            return hit;
-        }
 
         hit.isHit = true;
         hit.t = t;
