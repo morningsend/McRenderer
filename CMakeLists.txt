@@ -51,7 +51,7 @@ set(SOURCE_FILES
         src/image/PngReader.cpp src/image/PngReader.hpp
         src/image/Image.cpp src/image/Image.hpp
         src/shading/Material.hpp
-        )
+        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 

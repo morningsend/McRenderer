@@ -22,6 +22,7 @@ namespace McRenderFace {
         float nearClippingDistance{0.001f};
         float farClippingDistance{100.0f};
         float focalLength{0.035f};
+        float fovLength{0.0f};
         float apertureFStop{2.8};
         mat4 viewingMatrix();
 
@@ -35,6 +36,11 @@ namespace McRenderFace {
 
         void computeRightVector(){
             right = glm::normalize(glm::cross(up, forward));
+        }
+
+        float computeFovLength() {
+            fovLength = tan(0.5f * fieldOfViewDegrees / 180.0f * (float) M_PI);
+            return fovLength;
         }
     };
 

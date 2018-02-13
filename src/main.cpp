@@ -87,7 +87,7 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
             .maxRayDepth(5)
-            .samplingLevel(0)
+            .samplingLevel(3)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();

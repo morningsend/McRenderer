@@ -30,11 +30,11 @@ namespace McRenderFace {
             return *this;
         }
         RayTracerConfigBuilder& samplingLevel(int level){
-            config.samplingLevel = level;
+            config.samplingLevel = level >= 0 ? level : 0;
             return *this;
         }
         RayTracerConfigBuilder& maxRayDepth(int depth) {
-            config.maxRayDepth = depth;
+            config.maxRayDepth = depth > 0 ? depth : 1;
             return *this;
         }
         RayTracerConfigBuilder& traceShadowsWithBias(float bias) {
