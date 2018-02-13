@@ -23,7 +23,7 @@ set(SOURCE_FILES
         src/scene/SimpleScene.cpp src/scene/SimpleScene.hpp
         src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp
-        src/shading/phong/PhongMaterial.cpp src/shading/phong/PhongMaterial.hpp
+        src/shading/phong/PhongShader.cpp src/shading/phong/PhongShader.hpp
         src/Exception.cpp src/Exception.hpp
         src/rendering/Renderer.cpp src/rendering/Renderer.hpp
         src/window/KeyboardEventHandler.cpp src/window/KeyboardEventHandler.hpp
@@ -38,7 +38,7 @@ set(SOURCE_FILES
         src/obj/MtlFileReader.cpp src/obj/MtlFileReader.hpp
         src/IOUtility.cpp src/IOUtility.hpp
         src/shading/pbr/PbrMaterial.cpp src/shading/pbr/PbrMaterial.hpp
-        src/shading/blinn/BlinnMaterial.cpp src/shading/blinn/BlinnMaterial.hpp
+        src/shading/blinn/BlinnShader.cpp src/shading/blinn/BlinnShader.hpp
         src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp
         src/scene/Scene.cpp src/scene/Scene.hpp
         src/scene/AxisAlignedPlane.cpp src/scene/AxisAlignedPlane.hpp

@@ -4,6 +4,7 @@
 
 #ifndef RENDERER_LAMBERSHADER_HPP
 #define RENDERER_LAMBERSHADER_HPP
+#include <cmath>
 #include <glm/glm.hpp>
 #include "../UvSampler3D.hpp"
 #include "../Material.hpp"
@@ -20,13 +21,16 @@ namespace McRenderFace{
         struct LambertParameters {
             vec3 lightDirection;
             vec3 lightDiffuse;
+            float lightDistance;
+            float lightIntensity;
             vec3 lightPosition;
             vec3 surfaceNormal;
+            vec2 uvCoord;
         };
 
         class LamberShader {
         public:
-            vec3 compute(const LambertParameters &parameters) const;
+            inline vec3 compute(const LambertMaterial& material, const LambertParameters &parameters) const;
         };
     }
 }

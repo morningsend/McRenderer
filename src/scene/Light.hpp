@@ -74,7 +74,7 @@ namespace McRenderFace {
         DirectionalLight() = default;
         ~DirectionalLight() override = default;
     };
-
+    
 }
 
 

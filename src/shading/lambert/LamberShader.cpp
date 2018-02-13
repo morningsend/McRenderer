@@ -6,8 +6,19 @@
 
 namespace McRenderFace {
     namespace Shading {
-        glm::vec3 LamberShader::compute(const LambertParameters &parameters) const {
-            return glm::vec3();
+
+        vec3 LamberShader::compute(const LambertMaterial &material, const LambertParameters &parameters) const {
+            float distance2 = parameters.lightDistance * parameters.lightDistance;
+            float cosineAngle = glm::dot(parameters.surfaceNormal, parameters.lightDirection);
+            cosineAngle = cosineAngle > 0 ? cosineAngle : 0;
+            vec3 lightColour = parameters.lightDiffuse * (cosineAngle * parameters.lightIntensity) / distance2;
+            vec3 materialColour;
+            if(material.diffuseMap!= nullptr) {
+                materialColour = material.diffuseMap->sample(parameters.uvCoord);
+            } else {
+                materialColour = material.diffuseColour;
+            }
+            return materialColour * lightColour;
         }
     }
 }
