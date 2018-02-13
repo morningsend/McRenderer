@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include "../UvSampler3D.hpp"
 #include "../UvSampler1D.hpp"
+#include "../Material.hpp"
 
 namespace McRenderFace {
     namespace Shading {
@@ -17,7 +18,7 @@ namespace McRenderFace {
         /**
          * Simple physically based shading model.
          */
-        struct PbrMaterial {
+        struct PbrMaterial : Material{
             vec3 diffuseColour{0.75};
             vec3 specularColour{0.0f};
             vec3 reflectionColour{0.0f};
@@ -44,13 +45,15 @@ namespace McRenderFace {
             float specularWeight;
             float refractionWeight;
             float reflectionWeight;
+
+            ~PbrMaterial() = default;
         };
 
         struct PbrLightParameters {
             vec3 lightColour;
             vec3 lightDirection;
             vec3 viewerDirection;
-            vec3 lightDistance;
+            float lightDistance;
             float lightIntensity;
             float lightExposure;
         };
@@ -59,7 +62,7 @@ namespace McRenderFace {
             vec3 surfaceNormal;
             vec3 rayIncoming;
         };
-        struct PbrOutput {
+        struct PbrShaderOutput {
             vec3 colour;
             vec3 reflectedRayDirection;
             float pdf;
@@ -90,7 +93,7 @@ namespace McRenderFace {
             void compute(const PbrMaterial& material,
                          const PbrLightParameters& lightParameters,
                          const PbrSurfaceParameters& surfaceParameters,
-                         PbrOutput& output);
+                         PbrShaderOutput& output);
         };
     }
 }

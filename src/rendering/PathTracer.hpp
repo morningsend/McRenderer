@@ -44,6 +44,11 @@ namespace McRenderFace {
         ~PathTracer(){};
 
         vec3 traceRay(Scene &scene, const Ray &ray);
+        int selectLight(vector <shared_ptr<Light>> lights, const int size, vec3 position);
+
+        float sampleUniform(float min, float max);
+
+        bool tracePrimaryRay(const Ray &ray, Scene &scene, vec3 &colour);
     };
 
     void closestIntersection(vector<shared_ptr<Mesh>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);

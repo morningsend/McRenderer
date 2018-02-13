@@ -13,6 +13,7 @@ namespace McRenderFace {
         bool renderShadows{true};
         bool softShadow{true};
         float shadowBias{0.001};
+        float secondaryBias{0.001};
         int maxRayDepth{2};
         int samplingLevel{0}; // we sample (2^sampling level) many rays per pixel.
     };
@@ -43,6 +44,10 @@ namespace McRenderFace {
         }
         RayTracerConfigBuilder& softShadow(bool soft) {
             config.softShadow = soft;
+            return *this;
+        }
+        RayTracerConfigBuilder& secondaryBias(float bias) {
+            config.secondaryBias = bias;
             return *this;
         }
         RayTracerConfig build() {

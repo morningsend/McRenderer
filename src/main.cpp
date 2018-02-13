@@ -36,12 +36,23 @@ void setupCornellBoxScene(Scene& scene) {
     scene.camera.forward = vec3(0,0,1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
-    LambertMaterial* mat = new LambertMaterial;
-    mat->diffuseColour = vec3(0.75f);
+
+    PbrMaterial* mat = new PbrMaterial;
+
+    mat->diffuseColour = vec3(0.8f);
+    mat->specularColour = vec3(0.5f);
+    mat->reflectionColour = vec3(0.0f);
+    mat->fresnelReflection = false;
+
     scene.addMaterial(mat);
 
-    mat = new LambertMaterial;
-    mat->diffuseColour = vec3(0.3f);
+    mat = new PbrMaterial;
+
+    mat->diffuseColour = vec3(0.3f, 1.0f, 0.3f);
+    mat->specularColour = vec3(1.0f);
+    mat->reflectionColour = vec3(0.0f);
+    mat->fresnelReflection = false;
+
     scene.addMaterial(mat);
     //35mm camera lens.
     scene.camera.focalLength = .55;

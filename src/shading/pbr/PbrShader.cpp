@@ -8,13 +8,17 @@ namespace McRenderFace {
         void PbrShader::compute(const PbrMaterial &material,
                                 const PbrLightParameters &lightParameters,
                                 const PbrSurfaceParameters &surfaceParameters,
-                                PbrOutput &output)
+                                PbrShaderOutput &output)
         {
+
             vec3 halfVector = glm::normalize(lightParameters.lightDirection + surfaceParameters.surfaceNormal);
             float cosineLightAngle = glm::dot(lightParameters.lightDirection, surfaceParameters.surfaceNormal);
             float cosineViewAngle = glm::dot(lightParameters.viewerDirection, surfaceParameters.surfaceNormal);
             cosineLightAngle = cosineLightAngle > 0 ? cosineLightAngle : 0;
             cosineViewAngle = cosineViewAngle> 0 ? cosineViewAngle : 0;
+
+            output.colour = material.diffuseColour * lightParameters.lightColour * (cosineLightAngle / lightParameters.lightDistance);
+            return;
             float alpha = material.diffuseRoughness * material.diffuseRoughness;
 
             float g = smithG1Shlick(cosineViewAngle, alpha);
@@ -37,6 +41,12 @@ namespace McRenderFace {
             vec3 diffuseColour = material.diffuseColour * cosineLightAngle;
             diffuseColour *= (1-fresnel);
             output.colour = specularColour + diffuseColour;
+            // use perfect reflective surface for now, no microfacet sampling yet.
+            output.reflectedRayDirection = surfaceParameters.surfaceNormal *
+                                           (2.0f * glm::dot(surfaceParameters.rayIncoming,
+                                                            surfaceParameters.surfaceNormal)
+                                           )
+                                            - lightParameters.lightDirection;
         }
 
         float PbrShader::fresnelF0(float fresnelIOR) {
