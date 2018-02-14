@@ -5,11 +5,6 @@
 #include "Ray.hpp"
 
 namespace McRenderFace {
-
-    RayHit castRay(const Ray &ray, const Sphere &sphere) {
-        return RayHit();
-    }
-
     RayHit castRay(const Ray &ray, const Plane& plane) {
 
         RayHit hitStatus;

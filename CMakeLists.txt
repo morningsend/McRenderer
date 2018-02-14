@@ -4,7 +4,7 @@ project(renderer CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/lib -lSDL2_image -lSDL2 -std=c++11 -lm -lstdc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/lib -lSDL2_image -lSDL2 -std=c++11 -lm -lstdc++ -O3")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -51,7 +51,7 @@ set(SOURCE_FILES
         src/image/PngReader.cpp src/image/PngReader.hpp
         src/image/Image.cpp src/image/Image.hpp
         src/shading/Material.hpp
-        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp)
+        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
@@ -60,7 +60,7 @@ set(TESTS_SOURCE_FILES ${SOURCE_FILES}
         tests/scene/MeshTests.hpp
         tests/obj/ObjFileReaderTests.hpp
         tests/obj/MtlFileReaderTests.hpp
-        )
+        tests/scene/SphereTest.hpp)
 
 add_library(Catch INTERFACE)
 

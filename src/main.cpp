@@ -9,6 +9,7 @@
 #include "rendering/RenderTarget.hpp"
 #include "rendering/PathTracingRenderer.hpp"
 #include "rendering/RenderTargetDrawFunction.hpp"
+#include "scene/Sphere.hpp"
 
 using namespace std;
 using namespace McRenderFace;
@@ -67,7 +68,7 @@ void setupCornellBoxScene(Scene& scene) {
     mesh->meshData = new MeshData;
     convertTriangles(triangles, mesh->meshData->triangles);
     mesh->computeBoundingBox();
-    scene.addMesh(mesh);
+    scene.addObject(mesh);
 }
 
 void addObjectToTestScene(Scene& scene){
@@ -79,9 +80,12 @@ void addObjectToTestScene(Scene& scene){
     mesh = new Mesh;
     Mesh::initializeMeshFromObj(*mesh, obj);
     mesh->materialId = 1;
-    mesh->transform.scale = vec3(0.4f, 0.4f, 0.4f);
-    scene.addMesh(mesh);
+    mesh->transform.scale = vec3(0.5f, 0.5f, 0.5f);
+    scene.addObject(mesh);
     //
+    Sphere* sphere = new Sphere(0.4, vec3(-0.5, -0.6, 0));
+    sphere->materialId = 0;
+    scene.addObject(sphere);
 }
 
 int main() {
@@ -97,7 +101,7 @@ int main() {
 
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
-            .maxRayDepth(2)
+            .maxRayDepth(5)
             .samplingLevel(0)
             .traceShadowsWithBias(.001f)
             .softShadow(true)

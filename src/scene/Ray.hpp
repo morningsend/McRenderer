@@ -8,7 +8,6 @@
 #include <cmath>
 #include <glm/glm.hpp>
 #include <limits>
-#include "Sphere.hpp"
 #include "Plane.hpp"
 
 namespace McRenderFace {
@@ -32,7 +31,7 @@ namespace McRenderFace {
     struct RayHit {
         bool isHit {false};
         float t = MAXFLOAT;
-        vec3 position { 0.0f, 0.0f, 0.0f};
+        vec3 position { 0.0f };
         vec3 normal { 0.0f};
     };
 
@@ -42,7 +41,6 @@ namespace McRenderFace {
      * @param sphere
      * @return
      */
-    RayHit castRay(const Ray& ray, const Sphere& sphere);
     RayHit castRay(const Ray& ray, const Plane& plane);
 }
 

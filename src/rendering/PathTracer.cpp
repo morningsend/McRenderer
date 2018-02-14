@@ -23,7 +23,7 @@ namespace McRenderFace {
 
         PbrShaderOutput output;
 
-        Mesh* model = scene.meshes[closestIndex].get();
+        SceneObject* model = scene.meshes[closestIndex].get();
         PbrMaterial *material = dynamic_cast<PbrMaterial *>(scene.materials[model->materialId].get());
 
         // pure coloure
@@ -32,7 +32,6 @@ namespace McRenderFace {
 
         surfaceParameters.surfaceNormal = hit.normal;
         surfaceParameters.rayIncoming = ray.forward;
-
         lightParameters.lightColour = light->colour;
 
         vec3 toLight = light->position - hit.position;
@@ -113,17 +112,17 @@ namespace McRenderFace {
 
     }
 
-    void closestIntersection(vector<shared_ptr<Mesh>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex) {
+    void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex) {
         int closest = -1;
         RayHit closestHit;
         closestHit.t = MAXFLOAT;
         RayHit hit;
-        shared_ptr<Mesh> mesh;
+        SceneObject* obj;
         int modelCount = static_cast<int>(models.size());
         for(int i = 0; i < modelCount; i++) {
-            mesh = models[i];
-            hit = mesh->castRay(ray);
-            if(hit.isHit && hit.t < closestHit.t) {
+            obj = models[i].get();
+            hit = obj->castRay(ray);
+            if(hit.isHit && hit.t > 0 && hit.t < closestHit.t) {
                 closestHit = hit;
                 closest = i;
             }

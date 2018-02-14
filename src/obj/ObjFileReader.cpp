@@ -46,9 +46,9 @@ namespace McRenderFace {
             face.normal[i] = ni - 1;
             face.uvCoord[i] = ti - 1;
             i++;
-            cout << vi << ' ';
+            //cout << vi << ' ';
         }
-        cout << endl;
+        //cout << endl;
         faces.push_back(face);
     }
     ObjFileReader::ObjFileReader(const std::string& filePath): filePath{filePath} {

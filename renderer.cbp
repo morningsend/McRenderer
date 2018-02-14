@@ -333,6 +333,10 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/SceneObject.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/scene/SimpleScene.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -503,6 +507,9 @@
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/scene/RayTests.hpp">
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/scene/SphereTest.hpp">
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/testMain.cpp">

@@ -63,12 +63,12 @@ namespace McRenderFace {
         model->computeBoundingBox();
         model->materialId = 0;
 
-        scene.addMesh(model);
+        scene.addObject(model);
     }
 
-    void Scene::addMesh(Mesh *mesh) {
-        meshes.push_back(shared_ptr<Mesh>(mesh));
-        mesh->meshId = static_cast<int>(meshes.size() - 1);
+    void Scene::addObject(SceneObject *mesh) {
+        meshes.push_back(shared_ptr<SceneObject>(mesh));
+        mesh->objectId = static_cast<int>(meshes.size() - 1);
     }
 
     void Scene::addLight(Light *light) {
@@ -84,6 +84,7 @@ namespace McRenderFace {
 
         for(auto& mesh : meshes) {
             mesh->applyTransform();
+            mesh->computeBoundingBox();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace McRenderFace {
         bool tracePrimaryRay(const Ray &ray, Scene &scene, vec3 &colour);
     };
 
-    void closestIntersection(vector<shared_ptr<Mesh>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);
+    void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);
 }
 
 

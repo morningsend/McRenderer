@@ -13,6 +13,7 @@
 #include "BoundingBox.hpp"
 #include "Triangle.hpp"
 #include "../obj/ObjFileReader.hpp"
+#include "SceneObject.hpp"
 
 namespace McRenderFace {
     using namespace std;
@@ -44,14 +45,9 @@ namespace McRenderFace {
     /**
      * Mesh implementing per vertex normal.
      */
-    struct Mesh : RayIntersecting{
-        int meshId {0};
+    struct Mesh : SceneObject{
         MeshType type {MeshType::PerFaceNormal};
-        Transform transform {};
-        BoundingBox boundingBox {};
-        int materialId {0};
         MeshData* meshData {nullptr};
-        bool visible {true};
 
         // disallowing copying
         Mesh(const Mesh& otherMeth) = delete;
@@ -63,9 +59,9 @@ namespace McRenderFace {
                 delete meshData;
             }
         }
-        void computeBoundingBox();
+        void computeBoundingBox() override;
         RayHit castRay(const Ray& ray) override ;
-        void applyTransform();
+        void applyTransform() override;
         static void initializeMeshFromObj(Mesh &mesh, const ObjModel &obj, bool computeNormalAsNeeded = true);
     };
 }

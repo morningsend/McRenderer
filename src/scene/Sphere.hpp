@@ -6,15 +6,20 @@
 #define RENDERER_SPHERE_HPP
 
 #include <glm/glm.hpp>
-#include "Transform.hpp"
+#include "SceneObject.hpp"
 
 namespace McRenderFace {
     using namespace glm;
-    struct Sphere {
-        Transform transform;
+    struct Sphere : public SceneObject{
         float radius;
         vec3 origin;
+        Sphere(float radiusIn, vec3 originIn): radius{radiusIn}, origin{originIn}{ }
+        ~Sphere() override = default;
 
+        // SceneObject virtual methods implementation
+        RayHit castRay(const Ray& ray) override ;
+        void computeBoundingBox() override ;
+        void applyTransform() override ;
     };
 
 }
