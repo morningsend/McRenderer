@@ -15,49 +15,64 @@ namespace McRenderFace {
         RayHit hit;
         int closestIndex = -1;
         // primary ray
-        closestIntersection(scene.meshes, ray, hit, closestIndex);
+        closestIntersection(scene.objects, ray, hit, closestIndex);
         // ray escaped, set pixel colour to background colour: assume black;
         if (!hit.isHit || closestIndex < 0) {
             return scene.backgroundColour;
         }
 
-        PbrShaderOutput output;
+        // for each light, determine if it is occluded,
+        // if not in shadow, compute the lights contribution to surface by evaluating BDRF.
+        vec3 shadowRayOrigin = hit.position + hit.normal * 0.001f;
+        vector<shared_ptr<Light>>& lights = scene.lights;
+        vec3 colourOutput = vec3(0);
+        for(int i = 0; i < lights.size(); i++) {
 
-        SceneObject* model = scene.meshes[closestIndex].get();
-        PbrMaterial *material = dynamic_cast<PbrMaterial *>(scene.materials[model->materialId].get());
+            vec3 toLight = light->position - hit.position;
+            float distance2 = glm::dot(toLight, toLight);
+            float distance = sqrt(distance2);
+            toLight /= distance;
 
-        // pure coloure
-        //target.setColor(x, y, dynamic_cast<LambertMaterial*>(material)->diffuseColour);
-        //continue;
+            RayHit shadowRayHit = traceShadowRay(shadowRayOrigin, scene, *(scene.lights[i].get()), distance);
+            if (shadowRayHit.isHit && shadowRayHit.t < distance) {
+                continue;
+            }
 
-        surfaceParameters.surfaceNormal = hit.normal;
-        surfaceParameters.rayIncoming = ray.forward;
-        lightParameters.lightColour = light->colour;
+            PbrShaderOutput output;
 
-        vec3 toLight = light->position - hit.position;
-        float distance2 = glm::dot(toLight, toLight);
-        float distance = sqrt(distance2);
-        toLight /= distance;
+            SceneObject *model = scene.objects[closestIndex].get();
+            PbrMaterial *material = dynamic_cast<PbrMaterial *>(scene.materials[model->materialId].get());
 
-        lightParameters.lightDirection = toLight;
-        lightParameters.lightDistance = distance;
-        lightParameters.lightExposure = light->exposure;
-        // light intensity inverse square attenuation.
-        lightParameters.lightIntensity = static_cast<float>(light->intensity * 0.25 * M_1_PI / distance2);
-        lightParameters.lightColour = light->colour;
-        lightParameters.viewerDirection = glm::normalize(camera.position - hit.position);
+            // pure colour
+            // target.setColor(x, y, dynamic_cast<LambertMaterial*>(material)->diffuseColour);
+            // continue;
 
-        pbrShader.compute(*material, lightParameters, surfaceParameters, output);
-                //ray position needs a bias to avoid shadow acne.
-        //https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/ligth-and-shadows
-        //Ray shadowRay{hit.position + hit.normal * config.shadowBias, toLight};
+            surfaceParameters.surfaceNormal = hit.normal;
+            surfaceParameters.rayIncoming = ray.forward;
+            lightParameters.lightColour = light->colour;
 
-        //float cosine = glm::dot(toLight, hit.normal);
-        //cosine = cosine > 0 ? cosine : 0;
-        //vec3 lightColour = light->colour * cosine * INVERSE2PI * light->intensity / (distance2);
-        //vec3 colour = lightColour * dynamic_cast<LambertMaterial *>(material)->diffuseColour;
 
-        return output.colour;
+
+            lightParameters.lightDirection = toLight;
+            lightParameters.lightDistance = distance;
+            lightParameters.lightExposure = light->exposure;
+            // light intensity inverse square attenuation.
+            lightParameters.lightIntensity = static_cast<float>(light->intensity * 0.25 * M_1_PI / distance2);
+            lightParameters.lightColour = light->colour;
+            lightParameters.viewerDirection = glm::normalize(camera.position - hit.position);
+
+            pbrShader.compute(*material, lightParameters, surfaceParameters, output);
+            //ray position needs a bias to avoid shadow acne.
+            //https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/ligth-and-shadows
+            //Ray shadowRay{hit.position + hit.normal * config.shadowBias, toLight};
+
+            //float cosine = glm::dot(toLight, hit.normal);
+            //cosine = cosine > 0 ? cosine : 0;
+            //vec3 lightColour = light->colour * cosine * INVERSE2PI * light->intensity / (distance2);
+            //vec3 colour = lightColour * dynamic_cast<LambertMaterial *>(material)->diffuseColour;
+            colourOutput += output.colour;
+        }
+        return colourOutput;
     }
 
     int PathTracer::selectLight(vector<shared_ptr<Light>> lights, const int size, vec3 position) {
@@ -104,11 +119,30 @@ namespace McRenderFace {
         RayHit hit;
         int closestIndex = -1;
         // primary ray
-        closestIntersection(scene.meshes, ray, hit, closestIndex);
+        closestIntersection(scene.objects, ray, hit, closestIndex);
         if(!hit.isHit || closestIndex < 0){
             colour = scene.backgroundColour;
         }
         return true;
+    }
+
+    /**
+     * Terminate early if a closer intersection point is find.
+     * @param position
+     * @param scene
+     * @param light
+     * @return
+     */
+    RayHit PathTracer::traceShadowRay(vec3 position, Scene &scene, Light &light, float lightDistance) {
+        Ray ray{position, glm::normalize(light.position - position)};
+        RayHit hit;
+        for(auto& obj : scene.objects) {
+            hit = obj->castRay(ray);
+            if(hit.isHit && hit.t < lightDistance) {
+                return hit;
+            }
+        }
+        return hit;
     }
 
     void traceSecondary(const Ray& ray, Scene& scene) {

@@ -16,7 +16,7 @@ namespace McRenderFace {
     using namespace std;
     struct Scene {
         Camera camera;
-        vector<shared_ptr<SceneObject>> meshes{};
+        vector<shared_ptr<SceneObject>> objects{};
         vector<shared_ptr<Light>> lights{};
         vector<shared_ptr<Material>> materials;
         vec3 backgroundColour{0.0f};

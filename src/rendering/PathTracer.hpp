@@ -49,6 +49,7 @@ namespace McRenderFace {
         float sampleUniform(float min, float max);
 
         bool tracePrimaryRay(const Ray &ray, Scene &scene, vec3 &colour);
+        RayHit traceShadowRay(vec3 position, Scene& scene, Light& light, float lightDistance);
     };
 
     void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);

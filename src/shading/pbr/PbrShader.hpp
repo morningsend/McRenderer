@@ -27,7 +27,7 @@ namespace McRenderFace {
             float diffuseAlbedo {0.8f};
             float diffuseRoughness{0.0f};
             float specularRoughness{0.1f};
-            float specuarlGlossiness{20.0f};
+            float specularGlossiness{20.0f};
             float reflectionRoughness{0.0f};
 
             UvSampler3D* diffuseMap{nullptr};

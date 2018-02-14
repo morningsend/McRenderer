@@ -40,7 +40,7 @@ namespace McRenderFace {
     void PathTracingRenderer::generateRayDirectionsAtPixel(int width, int height, int x, int y, const Camera& camera, vector<vec3>& rayDirecitons) {
         //sampler.reset();
         vec2 pixelCenter(x + 0.5f, y + 0.5f);
-        vec2 variance(.75f);
+        vec2 variance(.26f);
         vec2 pointSample;
 
         for(int i = 0; i < rayDirecitons.size(); i++) {
