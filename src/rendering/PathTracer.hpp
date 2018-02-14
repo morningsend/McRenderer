@@ -22,10 +22,10 @@ namespace McRenderFace {
     constexpr float INVERSE2PI = static_cast<const float>(.25f / M_PI);
 
     struct RayPath {
-        Ray incomingRay;
-        RayHit hit;
-        vec3 lightContribution;
-        int objectIndex;
+        Ray incomingRay { vec3(0), vec3(0)};
+        RayHit hit{};
+        vec3 lightContribution{0,0,0};
+        int objectIndex {-1};
     };
 
     class PathTracer {

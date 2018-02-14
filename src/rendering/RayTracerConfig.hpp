@@ -37,7 +37,7 @@ namespace McRenderFace {
             return *this;
         }
         RayTracerConfigBuilder& maxRayDepth(int depth) {
-            config.maxRayDepth = depth > 0 ? depth : 1;
+            config.maxRayDepth = depth >= 0 ? depth : 0;
             return *this;
         }
         RayTracerConfigBuilder& traceShadowsWithBias(float bias) {

@@ -30,50 +30,139 @@ void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFa
 }
 
 void setupCornellBoxScene(Scene& scene) {
-    vector<::Triangle> triangles;
-    LoadTestModel(triangles);
 
-    scene.camera.position = vec3(0,0,-2);
-    scene.camera.forward = vec3(0,0,1);
+    scene.camera.position = vec3(0,0,2);
+    scene.camera.forward = vec3(0,0,-1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
 
     PbrMaterial* mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(1.0f);
+    // gray diffuse = 0
+    mat->diffuseColour = vec3(.80f);
     mat->diffuseRoughness = 0.5f;
-    mat->specularColour = vec3(1.0f);
-    mat->diffuseRoughness= .3f;
-    mat->reflectionColour = vec3(0.0f);
+    mat->specularColour = vec3(0.0f);
+    mat->reflectionColour = vec3(0.1f);
     mat->fresnelSpecularReflection = false;
 
     scene.addMaterial(mat);
 
     mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(1.0f);
+    // red diffuse = 1
+    mat->diffuseColour = vec3(0.953f, 0.357f, 0.212f);
+    mat->specularColour = vec3(0.1f);
+    mat->reflectionColour = vec3(0.0f);
+    mat->specularGlossiness = 0.0f;
+    mat->specularRoughness = 1.0f;
+    mat->fresnelSpecularReflection = false;
+
+    scene.addMaterial(mat);
+
+    // cyan diffuse = 2
+    mat = new PbrMaterial;
+
+    mat->diffuseColour = vec3(0.486f, 0.631f, 0.663f);
+    mat->specularColour = vec3(.1f);
+    mat->reflectionColour = vec3(0.0f);
+    mat->specularGlossiness = 0.0f;
+    mat->specularRoughness = 1.0f;
+
+    scene.addMaterial(mat);
+
+
+    // dark specular = 3
+    mat = new PbrMaterial;
+
+    mat->diffuseColour = vec3(0.3);
     mat->specularColour = vec3(1.0f);
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = 0.08f;
-    mat->fresnelSpecularReflection = true;
-    mat->fresnelIOR = 2.4;
-
+    mat->specularRoughness = .01f;
     scene.addMaterial(mat);
+
     //35mm camera lens.
     scene.camera.focalLength = .55;
 
     PointLight* light1 = new PointLight;
     light1->type = LightType::PointLight;
-    light1->position = vec3(0.2, 0.69, -0.7f);
-    light1->intensity = 4.4f;
+    light1->position = vec3(0, 0.9, 0);
+    light1->intensity = 8.4f;
     scene.addLight(light1);
-    Mesh* mesh = new Mesh;
-    mesh->materialId = 0;
-    mesh->meshData = new MeshData;
-    convertTriangles(triangles, mesh->meshData->triangles);
-    mesh->computeBoundingBox();
-    scene.addObject(mesh);
+
+    vec3 vertices[] = {
+            vec3(-1, 1, 1),
+            vec3(1, 1, 1),
+            vec3(1, 1, -1),
+            vec3(-1, 1, -1),
+
+            vec3(-1, -1, 1),
+            vec3(1, -1, 1),
+            vec3(1, -1, -1),
+            vec3(-1, -1, -1),
+    };
+    vec3 normals[] = {
+            vec3(1, 0, 0),
+            vec3(0, 1, 0),
+            vec3(0, 0, 1),
+            vec3(-1, 0, 0),
+            vec3(0, -1, 0),
+            vec3(0, 0, -1),
+    };
+
+    Mesh* mesh[] = {
+            new Mesh,
+            new Mesh,
+            new Mesh,
+            new Mesh,
+            new Mesh,
+    };
+    //bottom -> gray
+    mesh[0]->materialId = 0;
+    mesh[0]->meshData = new MeshData();
+    mesh[0]->meshData
+            ->triangles
+            .push_back(McRenderFace::Triangle(vertices[4],vertices[5],vertices[7],normals[1]));
+    mesh[0]->meshData
+            ->triangles
+            .push_back(McRenderFace::Triangle(vertices[5],vertices[6],vertices[7],normals[1]));
+
+    //left -> red
+    mesh[1]->materialId = 1;
+    mesh[1]->meshData = new MeshData();
+    mesh[1]->meshData
+            ->triangles
+            .push_back(McRenderFace::Triangle(vertices[0],vertices[4],vertices[3],normals[0]));
+    mesh[1]->meshData
+            ->triangles
+            .push_back(McRenderFace::Triangle(vertices[4],vertices[7],vertices[3],normals[0]));
+    //top -> gray
+    mesh[2]->meshData = new MeshData();
+    mesh[2]->materialId = 0;
+    mesh[2]->meshData
+            ->triangles.push_back(McRenderFace::Triangle(vertices[0],vertices[3],vertices[1],normals[4]));
+    mesh[2]->meshData
+            ->triangles.push_back(McRenderFace::Triangle(vertices[1],vertices[3],vertices[2],normals[4]));
+    //right -> cyan
+    mesh[3]->materialId = 2;
+    mesh[3]->meshData = new MeshData();
+    mesh[3]->meshData
+            ->triangles.push_back(McRenderFace::Triangle(vertices[1],vertices[2],vertices[5],normals[3]));
+    mesh[3]->meshData
+            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[6],vertices[5],normals[3]));
+    //back -> gray
+    mesh[4]->materialId = 0;
+    mesh[4]->meshData = new MeshData();
+    mesh[4]->meshData
+            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[3],vertices[7],normals[2]));
+    mesh[4]->meshData
+            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[7],vertices[6],normals[2]));
+
+    scene.addObject(mesh[0]);
+    scene.addObject(mesh[1]);
+    scene.addObject(mesh[2]);
+    scene.addObject(mesh[3]);
+    scene.addObject(mesh[4]);
 }
 
 void addObjectToTestScene(Scene& scene){
@@ -87,9 +176,8 @@ void addObjectToTestScene(Scene& scene){
     mesh->materialId = 0;
     mesh->transform.scale = vec3(0.5f, 0.5f, 0.5f);
     //scene.addObject(mesh);
-    //
-    Sphere* sphere = new Sphere(0.4, vec3(0.5, -0.2, .4));
-    sphere->materialId = 1;
+    Sphere* sphere = new Sphere(0.3, vec3(0, -.7f, 0));
+    sphere->materialId = 3;
     scene.addObject(sphere);
 }
 
@@ -104,8 +192,8 @@ int main() {
 
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
-            .maxRayDepth(5)
-            .samplingLevel(0)
+            .maxRayDepth(3)
+            .samplingLevel(2)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();

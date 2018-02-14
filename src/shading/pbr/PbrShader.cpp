@@ -35,7 +35,6 @@ namespace McRenderFace {
                                  * brdfSpecular
                                  * cosineLightAngle);
 
-
             vec3 specularColour = material.specularColour * specularLight;
             // cook-torrance ends here.
 

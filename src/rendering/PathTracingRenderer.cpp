@@ -45,7 +45,7 @@ namespace McRenderFace {
 
         for(int i = 0; i < rayDirecitons.size(); i++) {
             sampler.sample(pointSample, pixelCenter, variance);
-            float screenX = (pointSample.x / float(width - 1) - 0.5f) * 2.0f * camera.fovLength;
+            float screenX = -(pointSample.x / float(width - 1) - 0.5f) * 2.0f * camera.fovLength;
             float screenY = -(pointSample.y / float(height - 1) - 0.5f) * 2.0f * camera.fovLength;
             vec3 worldCoord = camera.toWorldCoordinate(screenX, screenY);
 
