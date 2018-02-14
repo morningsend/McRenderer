@@ -42,9 +42,10 @@ namespace McRenderFace {
         lightParameters.lightDirection = toLight;
         lightParameters.lightDistance = distance;
         lightParameters.lightExposure = light->exposure;
-        lightParameters.lightIntensity = light->intensity;
+        // light intensity inverse square attenuation.
+        lightParameters.lightIntensity = static_cast<float>(light->intensity * 0.25 * M_1_PI / distance2);
         lightParameters.lightColour = light->colour;
-        lightParameters.viewerDirection = camera.position - hit.position;
+        lightParameters.viewerDirection = glm::normalize(camera.position - hit.position);
 
         pbrShader.compute(*material, lightParameters, surfaceParameters, output);
                 //ray position needs a bias to avoid shadow acne.

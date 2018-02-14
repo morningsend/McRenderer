@@ -40,8 +40,10 @@ void setupCornellBoxScene(Scene& scene) {
 
     PbrMaterial* mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(0.8f);
-    mat->specularColour = vec3(0.0f);
+    mat->diffuseColour = vec3(1.0f);
+    mat->diffuseRoughness = 0.3f;
+    mat->specularColour = vec3(1.0f);
+    mat->diffuseRoughness= .3f;
     mat->reflectionColour = vec3(0.0f);
     mat->fresnelSpecularReflection = false;
 
@@ -53,7 +55,7 @@ void setupCornellBoxScene(Scene& scene) {
     mat->specularColour = vec3(1.0f);
     mat->reflectionColour = vec3(0.0f);
     mat->specuarlGlossiness = 0.0f;
-    mat->specularRoughness = 0.02f;
+    mat->specularRoughness = 0.4f;
     mat->fresnelSpecularReflection = true;
     mat->fresnelIOR = 2.4;
 
@@ -103,7 +105,7 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
             .maxRayDepth(5)
-            .samplingLevel(2)
+            .samplingLevel(0)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();

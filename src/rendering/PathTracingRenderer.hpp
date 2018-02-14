@@ -45,7 +45,7 @@ namespace McRenderFace {
                                           int x,
                                           int y,
                                           const Camera& camera,
-                                          vector<vec3> rayDirecitons);
+                                          vector<vec3>& rayDirecitons);
     public:
         PathTracingRenderer(RayTracerConfig configIn):
                 pathTracer{configIn},

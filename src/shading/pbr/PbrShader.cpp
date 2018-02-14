@@ -11,6 +11,7 @@ namespace McRenderFace {
                                 PbrShaderOutput &output)
         {
 
+            // cook-torrance specular begins here ====
             vec3 halfVector = glm::normalize(lightParameters.lightDirection + surfaceParameters.surfaceNormal);
             float cosineLightAngle = glm::dot(lightParameters.lightDirection, surfaceParameters.surfaceNormal);
             float cosineViewAngle = glm::dot(lightParameters.viewerDirection, surfaceParameters.surfaceNormal);
@@ -34,18 +35,38 @@ namespace McRenderFace {
                                  * brdfSpecular
                                  * cosineLightAngle);
 
+
+
             vec3 specularColour = material.specularColour * specularLight;
+            // cook-torrance ends here.
 
             // TODO: replace diffuse colour calculation with Oren-Nayar sampling.
-            vec3 diffuseColour = material.diffuseColour * lightParameters.lightColour * (cosineLightAngle / lightParameters.lightDistance);
+            // https://en.wikipedia.org/wiki/Oren%E2%80%93Nayar_reflectance_model
+
+            float alpha2 = material.diffuseRoughness * material.diffuseRoughness;
+
+            float A = 1 - 0.5f * alpha2 / (alpha2 + 0.33f);
+            float B = 0.45f * alpha2 / (alpha2 + 0.09f);
+
+            float thetaIn = acos(cosineLightAngle);
+            float thetaOut = acos(cosineViewAngle);
+            float a = thetaIn > thetaOut ? thetaIn : thetaOut;
+            float b = thetaIn < thetaOut ? thetaIn : thetaOut;
+
+            vec3 u = glm::normalize(-lightParameters.viewerDirection - surfaceParameters.surfaceNormal * cosineViewAngle);
+            vec3 v = glm::normalize(-lightParameters.lightDirection - surfaceParameters.surfaceNormal * cosineLightAngle);
+            float phiDiff = glm::dot(u, v);
+            phiDiff = phiDiff > 0 ? phiDiff : 0;
+            vec3 diffuseColour = material.diffuseColour * (A + B * phiDiff * sin(a) * tan(b));
+            diffuseColour = material.diffuseColour* lightParameters.lightColour * lightIntensity * cosineLightAngle;
+            // combine diffuse and specular.
             diffuseColour *= (1-f0);
             output.colour = specularColour + diffuseColour;
             // use perfect reflective surface for now, no microfacet sampling yet.
-            output.reflectedRayDirection = surfaceParameters.surfaceNormal *
+            output.reflectedRayDirection = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
                                            (2.0f * glm::dot(surfaceParameters.rayIncoming,
                                                             surfaceParameters.surfaceNormal)
-                                           )
-                                            - lightParameters.lightDirection;
+                                           );
         }
 
         float PbrShader::fresnelF0(float fresnelIOR) {
