@@ -74,7 +74,7 @@ void setupCornellBoxScene(Scene& scene) {
     // dark specular = 3
     mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(0.3);
+    mat->diffuseColour = vec3(0.3, 0.3, 0.8);
     mat->specularColour = vec3(1.0f);
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;

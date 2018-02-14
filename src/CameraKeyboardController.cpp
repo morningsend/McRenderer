@@ -16,10 +16,10 @@ namespace McRenderFace {
                 camera -> position -= camera->forward * translationSpeed;
                 break;
             case SDL_SCANCODE_LEFT:
-                camera -> position -= camera->right * translationSpeed;
+                camera -> position += camera->right * translationSpeed;
                 break;
             case SDL_SCANCODE_RIGHT:
-                camera -> position += camera->right * translationSpeed;
+                camera -> position -= camera->right * translationSpeed;
                 break;
             case SDL_SCANCODE_A:
                 camera->rotateY(-5.0f);

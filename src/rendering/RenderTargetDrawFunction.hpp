@@ -19,6 +19,8 @@ namespace McRenderFace {
         Scene* scene;
         RenderTarget* renderTarget;
         Renderer* renderer;
+        bool gammaCorrect {true};
+        vec3 gamma{2.2f, 2.2f, 2.2f};
     public:
         RenderTargetDrawFunction(Scene* sceneIn, Renderer* rendererIn, RenderTarget* renderTargetIn)
                 : scene{sceneIn},
