@@ -16,20 +16,19 @@ namespace McRenderFace {
             float cosineViewAngle = glm::dot(lightParameters.viewerDirection, surfaceParameters.surfaceNormal);
             cosineLightAngle = cosineLightAngle > 0 ? cosineLightAngle : 0;
             cosineViewAngle = cosineViewAngle> 0 ? cosineViewAngle : 0;
-
-            output.colour = material.diffuseColour * lightParameters.lightColour * (cosineLightAngle / lightParameters.lightDistance);
-            return;
-            float alpha = material.diffuseRoughness * material.diffuseRoughness;
-
+            float lightIntensity = lightParameters.lightIntensity * pow(2.0f, lightParameters.lightExposure);
+            float alpha = material.specularRoughness * material.specularRoughness;
+            alpha = alpha >= 0.0001f ? alpha : 0.0001f;
             float g = smithG1Shlick(cosineViewAngle, alpha);
             float f0 = fresnelF0(material.fresnelIOR);
             float fresnel = f0;
-            if(material.fresnelReflection) {
+            if(material.fresnelSpecularReflection) {
                 fresnel = fresnelShlick(f0, lightParameters.lightDirection, halfVector);
             }
-            float theta = blinnSampleTheta(material.specuarlGlossiness);
-            float d = blinnNormalNdf(theta, alpha);
-            float brdfSpecular = g * fresnel * d;
+            //float theta = blinnSampleTheta(material.specuarlGlossiness);
+            float m = 2.0f / (alpha) - 2.0f;
+            float d = blinnPhong(surfaceParameters.surfaceNormal, halfVector, m);
+            float brdfSpecular = g * fresnel * d / (4.0f * cosineLightAngle * cosineViewAngle);
             vec3 specularLight = lightParameters.lightColour
                                  * (lightParameters.lightIntensity
                                  * brdfSpecular
@@ -38,8 +37,8 @@ namespace McRenderFace {
             vec3 specularColour = material.specularColour * specularLight;
 
             // TODO: replace diffuse colour calculation with Oren-Nayar sampling.
-            vec3 diffuseColour = material.diffuseColour * cosineLightAngle;
-            diffuseColour *= (1-fresnel);
+            vec3 diffuseColour = material.diffuseColour * lightParameters.lightColour * (cosineLightAngle / lightParameters.lightDistance);
+            diffuseColour *= (1-f0);
             output.colour = specularColour + diffuseColour;
             // use perfect reflective surface for now, no microfacet sampling yet.
             output.reflectedRayDirection = surfaceParameters.surfaceNormal *
@@ -76,7 +75,10 @@ namespace McRenderFace {
             float dot2 = dot * dot;
             return f0 + (1 - f0) * dot2 * dot2 * dot;
         }
-
+        float PbrShader::fresnelShlick(float f0, float cosineLH) {
+            float cosineLH2 = cosineLH * cosineLH;
+            return f0 + (1.0f - f0) * cosineLH2 * cosineLH2 * cosineLH;
+        }
         float PbrShader::smithG1Shlick(vec3 v1, vec3 v2, float alpha) {
             float k = alpha * SQRT_2_PI();
             float cosineAngle = glm::dot(v1, v2);
@@ -106,5 +108,12 @@ namespace McRenderFace {
             float power = pow(rand, 1 / (alpha + 2));
             return acos(power);
         }
+
+        float PbrShader::blinnPhong(vec3 normal, vec3 half, float m) {
+            float cosine = glm::dot(normal, half);
+            cosine = cosine > 0 ? cosine : 0;
+            return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
+        }
+
     }
 }

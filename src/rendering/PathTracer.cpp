@@ -42,6 +42,8 @@ namespace McRenderFace {
         lightParameters.lightDirection = toLight;
         lightParameters.lightDistance = distance;
         lightParameters.lightExposure = light->exposure;
+        lightParameters.lightIntensity = light->intensity;
+        lightParameters.lightColour = light->colour;
         lightParameters.viewerDirection = camera.position - hit.position;
 
         pbrShader.compute(*material, lightParameters, surfaceParameters, output);

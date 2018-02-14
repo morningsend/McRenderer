@@ -35,9 +35,9 @@ namespace McRenderFace {
             UvSampler3D* reflectionMap{nullptr};
             UvSampler3D* refractionMap{nullptr};
 
-            float indexOfRefraction;
-            bool fresnelReflection;
-            float fresnelIOR;
+            float indexOfRefraction{1.0f};
+            bool fresnelSpecularReflection{false};
+            float fresnelIOR{1.0f};
 
             UvSampler3D *normalMap;
 
@@ -76,6 +76,7 @@ namespace McRenderFace {
             float G(float omega_i, float omega_o, vec3 halfDirection);
             float sampleNormalDistribution(vec3 halfDirection);
             float fresnelShlick(float f0, vec3 lightDirection, vec3 halfVector);
+            float fresnelShlick(float f0, float cosineLH);
             float fresnelF0(float fresnelIOR);
             float diffuseOrenNayarDistribution(vec3 diffuseColour, float roughness, float albedo);
             vec3 torranceSparrowSpecular(vec3 specuarColour, float roughtness);
@@ -88,6 +89,7 @@ namespace McRenderFace {
 
             float blinnNormalNdf(float theta, float alpha);
             float blinnSampleTheta(float alpha);
+            float blinnPhong(vec3 normal, vec3 half, float m);
             vec3 sampleBlinnNormalPdf(float theta);
 
             void compute(const PbrMaterial& material,

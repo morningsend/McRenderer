@@ -14,8 +14,8 @@
 using namespace std;
 using namespace McRenderFace;
 
-#define SCREEN_WIDTH 192
-#define SCREEN_HEIGHT 192
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 256
 
 
 void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
@@ -41,18 +41,21 @@ void setupCornellBoxScene(Scene& scene) {
     PbrMaterial* mat = new PbrMaterial;
 
     mat->diffuseColour = vec3(0.8f);
-    mat->specularColour = vec3(0.5f);
+    mat->specularColour = vec3(0.0f);
     mat->reflectionColour = vec3(0.0f);
-    mat->fresnelReflection = false;
+    mat->fresnelSpecularReflection = false;
 
     scene.addMaterial(mat);
 
     mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(0.3f, 1.0f, 0.3f);
+    mat->diffuseColour = vec3(0.3f, 0.3f, 0.3f);
     mat->specularColour = vec3(1.0f);
     mat->reflectionColour = vec3(0.0f);
-    mat->fresnelReflection = false;
+    mat->specuarlGlossiness = 0.0f;
+    mat->specularRoughness = 0.02f;
+    mat->fresnelSpecularReflection = true;
+    mat->fresnelIOR = 2.4;
 
     scene.addMaterial(mat);
     //35mm camera lens.
@@ -60,8 +63,8 @@ void setupCornellBoxScene(Scene& scene) {
 
     PointLight* light1 = new PointLight;
     light1->type = LightType::PointLight;
-    light1->position = vec3(-.2f, 0.7f, -0.8f);
-    light1->intensity = 10.4f;
+    light1->position = vec3(0.5, -0.2, -1.0f);
+    light1->intensity = 5.4f;
     scene.addLight(light1);
     Mesh* mesh = new Mesh;
     mesh->materialId = 0;
@@ -79,20 +82,18 @@ void addObjectToTestScene(Scene& scene){
     const ObjModel& obj = *namedModels["icosahedron"];
     mesh = new Mesh;
     Mesh::initializeMeshFromObj(*mesh, obj);
-    mesh->materialId = 1;
+    mesh->materialId = 0;
     mesh->transform.scale = vec3(0.5f, 0.5f, 0.5f);
-    scene.addObject(mesh);
+    //scene.addObject(mesh);
     //
-    Sphere* sphere = new Sphere(0.4, vec3(-0.5, -0.6, 0));
-    sphere->materialId = 0;
+    Sphere* sphere = new Sphere(0.4, vec3(0.5, -0.2, .4));
+    sphere->materialId = 1;
     scene.addObject(sphere);
 }
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    //SimpleScene scene;
     Scene scene2;
-    //createTestScene(scene2);
     setupCornellBoxScene(scene2);
     addObjectToTestScene(scene2);
     scene2.preprocessMeshes();
@@ -102,7 +103,7 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
             .maxRayDepth(5)
-            .samplingLevel(0)
+            .samplingLevel(2)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();
