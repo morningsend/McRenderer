@@ -51,11 +51,11 @@ void setupCornellBoxScene(Scene& scene) {
 
     mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(0.3f, 0.3f, 0.8f);
+    mat->diffuseColour = vec3(1.0f);
     mat->specularColour = vec3(1.0f);
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = 0.18f;
+    mat->specularRoughness = 0.08f;
     mat->fresnelSpecularReflection = true;
     mat->fresnelIOR = 2.4;
 
@@ -66,7 +66,7 @@ void setupCornellBoxScene(Scene& scene) {
     PointLight* light1 = new PointLight;
     light1->type = LightType::PointLight;
     light1->position = vec3(0.2, 0.69, -0.7f);
-    light1->intensity = 3.4f;
+    light1->intensity = 4.4f;
     scene.addLight(light1);
     Mesh* mesh = new Mesh;
     mesh->materialId = 0;

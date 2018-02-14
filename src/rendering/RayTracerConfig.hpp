@@ -12,10 +12,12 @@ namespace McRenderFace {
         int threadCount{1};
         bool renderShadows{true};
         bool softShadow{true};
-        float shadowBias{0.001};
-        float secondaryBias{0.001};
+        float shadowRayBias{0.001};
+        float secondaryRayBias{0.001};
         int maxRayDepth{2};
         int samplingLevel{0}; // we sample (2^sampling level) many rays per pixel.
+        // allow path to continue x% of time, when probabilty > x, kill path.
+        float killProbabilityThreshold{0.74};
     };
     /**
      * Fluent Builder API
@@ -39,7 +41,7 @@ namespace McRenderFace {
             return *this;
         }
         RayTracerConfigBuilder& traceShadowsWithBias(float bias) {
-            config.shadowBias = bias;
+            config.shadowRayBias = bias;
             return *this;
         }
         RayTracerConfigBuilder& softShadow(bool soft) {
@@ -47,7 +49,7 @@ namespace McRenderFace {
             return *this;
         }
         RayTracerConfigBuilder& secondaryBias(float bias) {
-            config.secondaryBias = bias;
+            config.secondaryRayBias = bias;
             return *this;
         }
         RayTracerConfig build() {

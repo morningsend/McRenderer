@@ -19,26 +19,30 @@ namespace McRenderFace {
     using namespace glm;
     using namespace Shading;
 
-    const float INVERSE2PI = static_cast<const float>(.25f / M_PI);
+    constexpr float INVERSE2PI = static_cast<const float>(.25f / M_PI);
 
-    struct LightPath {
+    struct RayPath {
         Ray incomingRay;
-        int meshId;
-        vec3 pointOfIntersection;
-        vec3 surfaceNormal;
-        float surfaceColour;
-        float lightDistance;
+        RayHit hit;
+        vec3 lightContribution;
+        int objectIndex;
     };
+
     class PathTracer {
     private:
         RayTracerConfig config;
         PbrShader pbrShader;
         PbrLightParameters lightParameters;
         PbrSurfaceParameters surfaceParameters;
-
+        PbrMaterial* currentMaterial {nullptr};
+        vector<RayPath> indirectRayPaths;
     public:
         explicit PathTracer(RayTracerConfig configIn)
-                : config{configIn}, pbrShader{}, lightParameters{}, surfaceParameters{}
+                : config{configIn},
+                  pbrShader{},
+                  lightParameters{},
+                  surfaceParameters{},
+                  indirectRayPaths{static_cast<unsigned long>(configIn.maxRayDepth)}
         {};
 
         ~PathTracer(){};
@@ -48,8 +52,11 @@ namespace McRenderFace {
 
         float sampleUniform(float min, float max);
 
-        bool tracePrimaryRay(const Ray &ray, Scene &scene, vec3 &colour);
+        void traceDirectRay(const Ray &ray, Scene &scene, RayHit& hit, vec3 &colour);
+        void traceIndirectRay(Scene& scene, const RayHit& hit, vec3 &indirect);
         RayHit traceShadowRay(vec3 position, Scene& scene, Light& light, float lightDistance);
+        vec3 evaluateLightContributions(const PbrSurfaceParameters &surface, Scene &scene);
+        float sampleRussianRoulette();
     };
 
     void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);

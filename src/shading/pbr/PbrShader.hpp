@@ -53,18 +53,22 @@ namespace McRenderFace {
             vec3 lightColour;
             vec3 lightDirection;
             vec3 viewerDirection;
-            float lightDistance;
             float lightIntensity;
             float lightExposure;
         };
 
+
+
         struct PbrSurfaceParameters {
             vec3 surfaceNormal;
             vec3 rayIncoming;
+            vec3 position;
         };
         struct PbrShaderOutput {
             vec3 colour;
-            vec3 reflectedRayDirection;
+        };
+        struct PbrBrdfSampleOutput {
+            vec3 direction;
             float pdf;
         };
         struct PbrShader {
@@ -96,6 +100,10 @@ namespace McRenderFace {
                          const PbrLightParameters& lightParameters,
                          const PbrSurfaceParameters& surfaceParameters,
                          PbrShaderOutput& output);
+
+            void sample(const PbrMaterial& material,
+                        const PbrSurfaceParameters& surfaceParameters,
+                        PbrBrdfSampleOutput& output);
         };
     }
 }

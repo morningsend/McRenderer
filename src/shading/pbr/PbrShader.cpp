@@ -36,7 +36,6 @@ namespace McRenderFace {
                                  * cosineLightAngle);
 
 
-
             vec3 specularColour = material.specularColour * specularLight;
             // cook-torrance ends here.
 
@@ -62,11 +61,6 @@ namespace McRenderFace {
             // combine diffuse and specular.
             diffuseColour *= (1-f0);
             output.colour = specularColour + diffuseColour;
-            // use perfect reflective surface for now, no microfacet sampling yet.
-            output.reflectedRayDirection = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
-                                           (2.0f * glm::dot(surfaceParameters.rayIncoming,
-                                                            surfaceParameters.surfaceNormal)
-                                           );
         }
 
         float PbrShader::fresnelF0(float fresnelIOR) {
@@ -134,6 +128,15 @@ namespace McRenderFace {
             float cosine = glm::dot(normal, half);
             cosine = cosine > 0 ? cosine : 0;
             return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
+        }
+
+        void PbrShader::sample(const PbrMaterial &material,
+                               const PbrSurfaceParameters &surfaceParameters,
+                               PbrBrdfSampleOutput& output) {
+            output.direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
+                                            (2.0f * glm::dot(surfaceParameters.rayIncoming,
+                                                             surfaceParameters.surfaceNormal)
+                                            );
         }
 
     }
