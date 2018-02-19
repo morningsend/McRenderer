@@ -18,5 +18,4 @@ namespace McRenderFace {
     };
 }
 
-
 #endif //RENDERER_RENDERER_HPP

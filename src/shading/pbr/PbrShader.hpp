@@ -73,8 +73,13 @@ namespace McRenderFace {
         };
         struct PbrShader {
         private:
-            mt19937 gen {0};
+            mt19937 generator;
+            uniform_real_distribution<float> dist{0.0f, 1.0f};
         public:
+            PbrShader() {
+                random_device rd;
+                generator = mt19937(rd());
+            }
             constexpr float SQRT_2_PI () const;
             constexpr float INVERSE_2_PI() const;
             float G(float omega_i, float omega_o, vec3 halfDirection);
@@ -93,7 +98,7 @@ namespace McRenderFace {
 
             float blinnNormalNdf(float theta, float alpha);
             float blinnSampleTheta(float alpha);
-            float blinnPhong(vec3 normal, vec3 half, float m);
+            float blinnPdf(vec3 normal, vec3 half, float m);
             vec3 sampleBlinnNormalPdf(float theta);
 
             void compute(const PbrMaterial& material,

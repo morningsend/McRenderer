@@ -15,9 +15,8 @@
 using namespace std;
 using namespace McRenderFace;
 
-#define SCREEN_WIDTH 256
-#define SCREEN_HEIGHT 256
-
+#define SCREEN_WIDTH 300
+#define SCREEN_HEIGHT 300
 
 void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
     for(const ::Triangle& tri : testTriangles){
@@ -80,7 +79,7 @@ void setupCornellBoxScene(Scene& scene) {
     mat->specularColour = vec3(1.0f);
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = .001f;
+    mat->specularRoughness = .5f;
     mat->diffuseRoughness = .001f;
     scene.addMaterial(mat);
 
@@ -91,13 +90,13 @@ void setupCornellBoxScene(Scene& scene) {
     light1->type = LightType::PointLight;
     light1->position = vec3(0, 0.9, 0);
     light1->intensity = 8.0f;
-    light1->colour = vec3(1.0f, 0.9f, 0.9f);
+    light1->colour = vec3(1.0f, 1.0f, 0.997f);
     scene.addLight(light1);
 
     PointLight* light2 = new PointLight;
     light2->position = vec3(0.8,0.8,0.8);
     light2->intensity = 5.0f;
-    light2->colour = vec3(0.9f, 0.8f, 0.9f);
+    light2->colour = vec3(1.0f, 1.0f, 0.987f);
     scene.addLight(light2);
     vec3 vertices[] = {
             vec3(-1, 1, 1),
@@ -205,8 +204,8 @@ int main() {
 
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
-            .maxRayDepth(1)
-            .samplingLevel(2)
+            .maxRayDepth(2)
+            .samplingLevel(1)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();

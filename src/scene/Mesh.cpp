@@ -13,10 +13,7 @@ namespace McRenderFace {
     RayHit Mesh::castRay(const Ray &ray) {
         // optimization: if ray does not hit bounding box, terminate.
         //cout << "number of triangles" << meshData->triangles.size() << endl;
-        RayHit hit = boundingBox.castRay(ray);
-        if(!hit.isHit) {
-            return hit;
-        }
+        RayHit hit;
         const auto& triangles = meshData -> triangles;
         RayHit closest;
         for(auto tri : triangles) {

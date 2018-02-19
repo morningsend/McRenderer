@@ -28,7 +28,7 @@ namespace McRenderFace {
             }
             //float theta = blinnSampleTheta(material.specuarlGlossiness);
             float m = 2.0f / (alpha) - 2.0f;
-            float d = blinnPhong(surfaceParameters.surfaceNormal, halfVector, m);
+            float d = blinnPdf(surfaceParameters.surfaceNormal, halfVector, m);
             float brdfSpecular = g * fresnel * d / (4.0f * cosineLightAngle * cosineViewAngle);
             vec3 specularLight = lightParameters.lightColour
                                  * (lightParameters.lightIntensity
@@ -58,7 +58,7 @@ namespace McRenderFace {
             vec3 diffuseColour = material.diffuseColour * (A + B * phiDiff * sin(a) * tan(b));
             diffuseColour = material.diffuseColour* lightParameters.lightColour * lightIntensity * cosineLightAngle;
             // combine diffuse and specular.
-            diffuseColour *= (1-f0);
+            diffuseColour *= (1-fresnel);
             output.colour = specularColour + diffuseColour;
         }
 
@@ -118,12 +118,12 @@ namespace McRenderFace {
         }
 
         float PbrShader::blinnSampleTheta(float alpha) {
-            float rand = generate_canonical<float, 10>(gen);
+            float rand = dist(generator);
             float power = pow(rand, 1 / (alpha + 2));
             return acos(power);
         }
 
-        float PbrShader::blinnPhong(vec3 normal, vec3 half, float m) {
+        float PbrShader::blinnPdf(vec3 normal, vec3 half, float m) {
             float cosine = glm::dot(normal, half);
             cosine = cosine > 0 ? cosine : 0;
             return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
@@ -132,10 +132,16 @@ namespace McRenderFace {
         void PbrShader::sample(const PbrMaterial &material,
                                const PbrSurfaceParameters &surfaceParameters,
                                PbrBrdfSampleOutput& output) {
-            output.direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
-                                            (2.0f * glm::dot(surfaceParameters.rayIncoming,
+            vec3 half = glm::normalize(surfaceParameters.surfaceNormal-surfaceParameters.rayIncoming);
+            float alpha = material.specularRoughness * material.specularRoughness;
+            float theta = blinnSampleTheta(alpha);
+            float phi = dist(generator) * 2 * static_cast<float>(M_PI);
+
+            vec3 direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
+                                           (2.0f * glm::dot(surfaceParameters.rayIncoming,
                                                              surfaceParameters.surfaceNormal)
                                             );
+            float angle = acos(glm::dot(direction, surfaceParameters.rayIncoming));
         }
 
     }

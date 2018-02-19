@@ -9,18 +9,84 @@
 namespace McRenderFace {
 
     vec3 PathTracer::traceRay(Scene &scene, const Ray& ray) {
-        Light* light = scene.lights[0].get();
+        PbrBrdfSampleOutput output;
+        int closestObjectIndex = -1;
+        int bounces;
+        RayPath path;
         RayHit hit;
-        vector<RayPath>paths(static_cast<unsigned long>(config.maxRayDepth));
-        vec3 direct(0);
-        vec3 indirect(0);
+        RayHit lastHit;
+        vec3 colour{0};
+        // primary path.
+        traceSinglePath(ray, scene, hit, path);
 
-        traceDirectRay(ray, scene, hit, direct);
-        if(hit.isHit) {
-            surfaceParameters.rayIncoming = ray.forward;
-            traceIndirectRay(scene, hit, indirect);
+        if(!hit.isHit || path.objectIndex < 0) {
+            return scene.backgroundColour;
         }
-        return direct + indirect;
+        rayPaths[0] = path;
+        surfaceParameters.position = hit.position;
+        surfaceParameters.surfaceNormal = hit.normal;
+        surfaceParameters.rayIncoming = path.incomingRay.forward;
+
+        // trace paths until we reach the termination condition.
+        // store all paths but do not evaluate light contributions yet.
+        for(bounces = 0; bounces < config.maxRayDepth; bounces++) {
+            pbrShader.sample(*currentMaterial, surfaceParameters, output);
+            path.incomingRay.origin = hit.position + hit.normal * config.secondaryRayBias;
+            path.incomingRay.forward = output.direction;
+
+            //std::cout << "bounces" << bounces << ' ' << path.incomingRay.forward.x << ',' << path.incomingRay.forward.y << ',' << path.incomingRay.forward.z << '.' << endl;
+            closestIntersection(scene.objects, path.incomingRay, path.hit, path.objectIndex);
+            // ray escaped, set pixel colour to background colour: assume black;
+            if (!path.hit.isHit || path.objectIndex < 0) {
+                path.lightContribution = vec3(0);
+                //terminate.
+                break;
+            }
+            rayPaths[bounces] = path;
+            lastHit = path.hit;
+            surfaceParameters.position = lastHit.position;
+            surfaceParameters.surfaceNormal = lastHit.normal;
+            surfaceParameters.rayIncoming = path.incomingRay.forward;
+            //TODO: add russian roulette termination.
+            //russianRouletteProbability = sampleRussianRoulette();
+            //if(russianRouletteProbability < config.killProbabilityThreshold) {
+            //    break;
+            //}
+            if(!sampleRussianRoulette()) {
+                break;
+            }
+        }
+        // sum up all contribution from path segments, last segment first until we reach the starting point.
+        vec3 pathContribution(0);
+        float distance;
+        RayPath& path2 = rayPaths[bounces - 1];
+        int materialId = scene.objects[path2.objectIndex]->materialId;
+        currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
+        surfaceParameters.rayIncoming = path2.incomingRay.forward;
+        surfaceParameters.surfaceNormal = path2.hit.normal;
+        surfaceParameters.position = path2.hit.position;
+        path2.lightContribution = evaluateLightContributions(surfaceParameters, scene);
+
+        for(int i = bounces - 2; i >=0 ; i--) {
+            RayPath& lastPath = rayPaths[i + 1];
+            path2 = rayPaths[i];
+            if(!path2.hit.isHit || path2.objectIndex < 0) {
+                continue;
+            }
+            materialId = scene.objects[path2.objectIndex]->materialId;
+            currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
+            surfaceParameters.rayIncoming = path2.incomingRay.forward;
+            surfaceParameters.surfaceNormal = path2.hit.normal;
+            surfaceParameters.position = path2.hit.position;
+            path2.lightContribution = evaluateLightContributions(surfaceParameters, scene);
+
+            vec3 toLastPoint = (lastPath.hit.position - path2.hit.position);
+            float distance2 = glm::dot(toLastPoint, toLastPoint);
+            distance2 = distance2 < 1 ? 1 : distance2;
+            path2.lightContribution += lastPath.lightContribution / (distance2 * 0.50f * INVERSE2PI) * 0.3f;
+        }
+
+        return colour;
     }
 
     int PathTracer::selectLight(vector<shared_ptr<Light>> lights, const int size, vec3 position) {
@@ -63,20 +129,17 @@ namespace McRenderFace {
      * @param colour
      * @return
      */
-    void PathTracer::traceDirectRay(const Ray &ray, Scene &scene, RayHit& hit, vec3 &directColour) {
+    void PathTracer::traceSinglePath(const Ray &ray, Scene &scene, RayHit &hit, RayPath &path) {
         int closestObjectIndex = -1;
         // primary ray
         closestIntersection(scene.objects, ray, hit, closestObjectIndex);
         if(!hit.isHit || closestObjectIndex < 0){
-            directColour = scene.backgroundColour;
             return;
         }
-        int materialId = scene.objects[closestObjectIndex]->materialId;
-        currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
-        surfaceParameters.rayIncoming = ray.forward;
-        surfaceParameters.surfaceNormal = hit.normal;
-        surfaceParameters.position = hit.position;
-        directColour = evaluateLightContributions(surfaceParameters, scene);
+        path.incomingRay = ray;
+        path.objectIndex = closestObjectIndex;
+        path.hit = hit;
+        path.lightContribution = vec3(0);
     }
 
     /**
@@ -107,118 +170,12 @@ namespace McRenderFace {
         return hit;
     }
 
-    void PathTracer::traceIndirectRay(Scene& scene, const RayHit& hit, vec3 &indirect) {
-        PbrBrdfSampleOutput output;
-
-        int closestObjectIndex = -1;
-        int bounces;
-        RayPath path;
-        RayHit lastHit = hit;
-
-        float russianRouletteProbability = 0.0f;
-        surfaceParameters.position = hit.position;
-        surfaceParameters.surfaceNormal = hit.normal;
-        // trace paths until we reach the termination condition.
-        // store all paths but do not evaluate light contributions yet.
-        for(bounces = 0; bounces < config.maxRayDepth; bounces++) {
-            pbrShader.sample(*currentMaterial, surfaceParameters, output);
-            path.incomingRay.origin = lastHit.position + lastHit.normal * config.secondaryRayBias;
-            path.incomingRay.forward = output.direction;
-
-            //std::cout << "bounces" << bounces << ' ' << path.incomingRay.forward.x << ',' << path.incomingRay.forward.y << ',' << path.incomingRay.forward.z << '.' << endl;
-            closestIntersection(scene.objects, path.incomingRay, path.hit, path.objectIndex);
-            // ray escaped, set pixel colour to background colour: assume black;
-            if (!path.hit.isHit || path.objectIndex < 0) {
-                path.lightContribution = vec3(0);
-                //terminate.
-                break;
-            }
-            indirectRayPaths[bounces] = path;
-            lastHit = path.hit;
-            surfaceParameters.position = lastHit.position;
-            surfaceParameters.surfaceNormal = lastHit.normal;
-            surfaceParameters.rayIncoming = path.incomingRay.forward;
-            //TODO: add russian roulette termination.
-            //russianRouletteProbability = sampleRussianRoulette();
-            //if(russianRouletteProbability < config.killProbabilityThreshold) {
-            //    break;
-            //}
+    bool PathTracer::sampleRussianRoulette() {
+        if(uniform(gen) < config.killProbabilityThreshold) {
+            return true;
+        } else{
+            return false;
         }
-
-        if(bounces < 1) {
-            indirect= vec3(0);
-            return;
-        }
-
-        // sum up all contribution from path segments, last segment first until we reach the starting point.
-        vec3 pathContribution(0);
-        float distance;
-        RayPath& path2 = indirectRayPaths[bounces - 1];
-        int materialId = scene.objects[path2.objectIndex]->materialId;
-        currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
-        surfaceParameters.rayIncoming = path2.incomingRay.forward;
-        surfaceParameters.surfaceNormal = path2.hit.normal;
-        surfaceParameters.position = path2.hit.position;
-        path2.lightContribution = evaluateLightContributions(surfaceParameters, scene);
-
-        for(int i = bounces - 2; i >=0 ; i--) {
-            RayPath& lastPath = indirectRayPaths[i + 1];
-            path2 = indirectRayPaths[i];
-            if(!path2.hit.isHit || path2.objectIndex < 0) {
-                continue;
-            }
-            materialId = scene.objects[path2.objectIndex]->materialId;
-            currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
-            surfaceParameters.rayIncoming = path2.incomingRay.forward;
-            surfaceParameters.surfaceNormal = path2.hit.normal;
-            surfaceParameters.position = path2.hit.position;
-            path2.lightContribution = evaluateLightContributions(surfaceParameters, scene);
-
-            vec3 toLastPoint = (lastPath.hit.position - path2.hit.position);
-            float distance2 = glm::dot(toLastPoint, toLastPoint);
-            distance2 = distance2 < 1 ? 1 : distance2;
-            path2.lightContribution += lastPath.lightContribution / (distance2 * 0.50f * INVERSE2PI) * 0.3f;
-        }
-
-        indirect = indirectRayPaths[0].lightContribution;
-    }
-
-    vec3 PathTracer::evaluateLightContributions(const PbrSurfaceParameters &parameters, Scene &scene) {
-        vec3 contributionsAccum(0);
-        vector<shared_ptr<Light>>& lights = scene.lights;
-        PbrShaderOutput output;
-        for(auto& light : lights) {
-            vec3 toLight = light->position - parameters.position;
-            float distance2 = glm::dot(toLight, toLight);
-            float distance = sqrt(distance2);
-            toLight /= distance;
-            RayHit shadowRayHit = traceShadowRay(parameters.position + parameters.surfaceNormal * config.shadowRayBias,
-                                                 scene,
-                                                 *(light.get()),
-                                                 distance);
-            // in shadow, ray hit something in front of the light.
-            if(shadowRayHit.isHit && shadowRayHit.t > 0 && shadowRayHit.t < distance) {
-                continue;
-            }
-
-            // pure colour
-            // target.setColor(x, y, dynamic_cast<LambertMaterial*>(material)->diffuseColour);
-            // continue;
-            lightParameters.lightColour = light->colour;
-            lightParameters.lightDirection = toLight;
-            lightParameters.lightExposure = light->exposure;
-            // light intensity inverse square attenuation.
-            lightParameters.lightIntensity = static_cast<float>(light->intensity * 0.25 * M_1_PI / distance2);
-            lightParameters.viewerDirection = glm::normalize(scene.camera.position - parameters.position);
-
-            pbrShader.compute(*currentMaterial, lightParameters, parameters, output);
-            contributionsAccum += output.colour;
-        }
-        return contributionsAccum;
-    }
-
-    float PathTracer::sampleRussianRoulette() {
-        return 0.5;
     }
 
     void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex) {

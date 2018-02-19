@@ -6,6 +6,7 @@
 #define RENDERER_PATHTRACER_HPP
 
 #include <glm/glm.hpp>
+#include <random>
 #include "../scene/Ray.hpp"
 #include "../scene/Scene.hpp"
 #include "../scene/Mesh.hpp"
@@ -35,15 +36,20 @@ namespace McRenderFace {
         PbrLightParameters lightParameters;
         PbrSurfaceParameters surfaceParameters;
         PbrMaterial* currentMaterial {nullptr};
-        vector<RayPath> indirectRayPaths;
+        vector<RayPath> rayPaths;
+        random_device rd;
+        mt19937 gen;
+        uniform_real_distribution<float> uniform{0.0f, 1.0f};
     public:
         explicit PathTracer(RayTracerConfig configIn)
                 : config{configIn},
                   pbrShader{},
                   lightParameters{},
                   surfaceParameters{},
-                  indirectRayPaths{static_cast<unsigned long>(configIn.maxRayDepth)}
-        {};
+                  rayPaths{static_cast<unsigned long>(configIn.maxRayDepth + 1)}
+        {
+            gen = mt19937(rd());
+        };
 
         ~PathTracer(){};
 
@@ -52,11 +58,11 @@ namespace McRenderFace {
 
         float sampleUniform(float min, float max);
 
-        void traceDirectRay(const Ray &ray, Scene &scene, RayHit& hit, vec3 &colour);
+        void traceSinglePath(const Ray &ray, Scene &scene, RayHit &hit, RayPath &path);
         void traceIndirectRay(Scene& scene, const RayHit& hit, vec3 &indirect);
         RayHit traceShadowRay(vec3 position, Scene& scene, Light& light, float lightDistance);
         vec3 evaluateLightContributions(const PbrSurfaceParameters &surface, Scene &scene);
-        float sampleRussianRoulette();
+        bool sampleRussianRoulette();
     };
 
     void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex);
