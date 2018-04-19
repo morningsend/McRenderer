@@ -22,7 +22,7 @@ namespace McRenderFace {
     struct Light {
         LightType type{LightType::PointLight};
         float intensity{1.0f};
-        float exposure{1.0f};
+        float exposure{0.0f};
         vec3 colour{1.0f};
         vec3 position{0.0f};
         bool castShadow{true};

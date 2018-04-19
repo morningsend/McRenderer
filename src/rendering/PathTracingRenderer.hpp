@@ -15,8 +15,8 @@
 #include "RayTracerConfig.hpp"
 #include "GaussianSampler.hpp"
 
-#include "../shading/lambert/LamberShader.hpp"
-#include "../shading/pbr/PbrShader.hpp"
+#include "../brdf/lambert/LamberShader.hpp"
+#include "../brdf/MicroFacetShader.hpp"
 #include "PathTracer.hpp"
 
 #ifndef MAXFLOAT

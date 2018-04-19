@@ -6,8 +6,9 @@
 #define RENDERER_PHONG_SHADER_HPP
 
 #include <glm/glm.hpp>
-#include "../UvSampler3D.hpp"
+#include "../../image/UvSampler3D.hpp"
 #include "../Material.hpp"
+#include "../Brdf.hpp"
 
 namespace McRenderFace {
     namespace Shading {
@@ -28,7 +29,6 @@ namespace McRenderFace {
             vec3 lightColour;
             float lightIntensity;
             float lightDistance;
-            float numberOfLights;
             float ambientWeight;
             float diffuseWeight;
             float specularWeight;

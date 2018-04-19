@@ -4,7 +4,7 @@ project(renderer CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/lib -lSDL2_image -lSDL2 -std=c++11 -lm -lstdc++ -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -L/usr/local/lib -lSDL2_image -lSDL2 -std=c++11 -lm -lstdc++ -O3")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -23,7 +23,7 @@ set(SOURCE_FILES
         src/scene/SimpleScene.cpp src/scene/SimpleScene.hpp
         src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp
-        src/shading/phong/PhongShader.cpp src/shading/phong/PhongShader.hpp
+        src/brdf/phong/PhongShader.cpp src/brdf/phong/PhongShader.hpp
         src/Exception.cpp src/Exception.hpp
         src/rendering/Renderer.cpp src/rendering/Renderer.hpp
         src/window/KeyboardEventHandler.cpp src/window/KeyboardEventHandler.hpp
@@ -37,21 +37,21 @@ set(SOURCE_FILES
         src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
         src/obj/MtlFileReader.cpp src/obj/MtlFileReader.hpp
         src/IOUtility.cpp src/IOUtility.hpp
-        src/shading/pbr/PbrShader.cpp src/shading/pbr/PbrShader.hpp
-        src/shading/blinn/BlinnShader.cpp src/shading/blinn/BlinnShader.hpp
-        src/shading/lambert/LamberShader.cpp src/shading/lambert/LamberShader.hpp
+        src/brdf/MicroFacetShader.cpp src/brdf/MicroFacetShader.hpp
+        src/brdf/blinn/BlinnShader.cpp src/brdf/blinn/BlinnShader.hpp
+        src/brdf/lambert/LamberShader.cpp src/brdf/lambert/LamberShader.hpp
         src/scene/Scene.cpp src/scene/Scene.hpp
         src/scene/AxisAlignedPlane.cpp src/scene/AxisAlignedPlane.hpp
-        src/scene/RayIntersecting.hpp src/shading/UvSampler1D.hpp
-        src/shading/UvSampler3D.hpp
-        src/shading/ConstantColourSampler.cpp src/shading/ConstantColourSampler.hpp
-        src/shading/ConstantFloatSampler.cpp src/shading/ConstantFloatSampler.hpp
-        src/shading/GrayScaleImageSampler.hpp src/shading/GrayScaleImageSampler.cpp
-        src/shading/RGBImageSampler.cpp src/shading/RGBImageSampler.hpp
+        src/scene/RayIntersecting.hpp src/image/UvSampler1D.hpp
+        src/image/UvSampler3D.hpp
+        src/image/ConstantColourSampler.cpp src/image/ConstantColourSampler.hpp
+        src/image/ConstantFloatSampler.cpp src/image/ConstantFloatSampler.hpp
+        src/image/GrayScaleImageSampler.hpp src/image/GrayScaleImageSampler.cpp
+        src/brdf/RGBImageSampler.cpp src/brdf/RGBImageSampler.hpp
         src/image/PngReader.cpp src/image/PngReader.hpp
         src/image/Image.cpp src/image/Image.hpp
-        src/shading/Material.hpp
-        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp)
+        src/brdf/Material.hpp
+        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 

@@ -1,4 +1,4 @@
-#define GLM_SWIZZLE
+//#define GLM_SWIZZLE
 #include <iostream>
 #include <unordered_map>
 #include "window/Window.hpp"
@@ -39,9 +39,9 @@ void setupCornellBoxScene(Scene& scene) {
     PbrMaterial* mat = new PbrMaterial;
 
     // gray diffuse = 0
-    mat->diffuseColour = vec3(.80f);
+    mat->diffuseColour = vec3(.4f);
     mat->diffuseRoughness = 0.01f;
-    mat->specularColour = vec3(0.0f);
+    mat->specularColour = vec3(.8f);
     mat->reflectionColour = vec3(0.1f);
     mat->fresnelSpecularReflection = false;
 
@@ -51,7 +51,7 @@ void setupCornellBoxScene(Scene& scene) {
 
     // red diffuse = 1
     mat->diffuseColour = vec3(0.953f, 0.357f, 0.212f);
-    mat->specularColour = vec3(0.1f);
+    mat->specularColour = vec3(0.8f);
     mat->diffuseRoughness = 0.01f;
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
@@ -64,13 +64,12 @@ void setupCornellBoxScene(Scene& scene) {
     mat = new PbrMaterial;
 
     mat->diffuseColour = vec3(0.486f, 0.631f, 0.663f);
-    mat->specularColour = vec3(.1f);
+    mat->specularColour = vec3(.8f);
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
     mat->specularRoughness = 1.0f;
 
     scene.addMaterial(mat);
-
 
     // dark specular = 3
     mat = new PbrMaterial;
@@ -88,16 +87,11 @@ void setupCornellBoxScene(Scene& scene) {
 
     PointLight* light1 = new PointLight;
     light1->type = LightType::PointLight;
-    light1->position = vec3(0, 0.9, 0);
-    light1->intensity = 8.0f;
+    light1->position = vec3(0, .9, 0);
+    light1->intensity = 0.5f;
     light1->colour = vec3(1.0f, 1.0f, 0.997f);
     scene.addLight(light1);
 
-    PointLight* light2 = new PointLight;
-    light2->position = vec3(0.8,0.8,0.8);
-    light2->intensity = 5.0f;
-    light2->colour = vec3(1.0f, 1.0f, 0.987f);
-    scene.addLight(light2);
     vec3 vertices[] = {
             vec3(-1, 1, 1),
             vec3(1, 1, 1),
@@ -184,11 +178,11 @@ void addObjectToTestScene(Scene& scene){
     mesh->materialId = 0;
     mesh->transform.scale = vec3(0.5f, 0.5f, 0.5f);
     //scene.addObject(mesh);
-    Sphere* sphere = new Sphere(0.3, vec3(.5, -.7f, 0));
+    Sphere* sphere = new Sphere(0.22, vec3(0, 0.4f, 0));
     sphere->materialId = 3;
     scene.addObject(sphere);
 
-    sphere = new Sphere(0.5, vec3(-.5, -.5f, -.3));
+    sphere = new Sphere(0.5, vec3(-.5, -.5f, 0));
     sphere->materialId = 3;
     scene.addObject(sphere);
 }
@@ -204,8 +198,8 @@ int main() {
 
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder.useMultithreading(4)
-            .maxRayDepth(2)
-            .samplingLevel(1)
+            .maxRayDepth(9)
+            .samplingLevel(3)
             .traceShadowsWithBias(.001f)
             .softShadow(true)
             .build();

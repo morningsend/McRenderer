@@ -6,7 +6,7 @@
 #define RENDERER_LAMBERSHADER_HPP
 #include <cmath>
 #include <glm/glm.hpp>
-#include "../UvSampler3D.hpp"
+#include "../../image/UvSampler3D.hpp"
 #include "../Material.hpp"
 
 namespace McRenderFace{

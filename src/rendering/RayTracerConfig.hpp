@@ -14,10 +14,10 @@ namespace McRenderFace {
         bool softShadow{true};
         float shadowRayBias{0.001};
         float secondaryRayBias{0.001};
-        int maxRayDepth{2};
+        int maxRayDepth{10};
         int samplingLevel{0}; // we sample (2^sampling level) many rays per pixel.
         // allow path to continue x% of time, when probabilty > x, kill path.
-        float killProbabilityThreshold{0.74};
+        float killProbabilityThreshold{0.85};
     };
     /**
      * Fluent Builder API

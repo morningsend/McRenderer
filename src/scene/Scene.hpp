@@ -8,7 +8,7 @@
 #include "Camera.hpp"
 #include "Mesh.hpp"
 #include "Light.hpp"
-#include "../shading/Material.hpp"
+#include "../brdf/Material.hpp"
 #include <memory>
 
 namespace McRenderFace {

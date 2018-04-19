@@ -31,8 +31,6 @@ namespace McRenderFace {
 
     struct MeshData {
         vector<Triangle> triangles;
-        vector<TriangleUV> uvCoords;
-
         void invertNormals();
         BoundingBox computeBoundingBox();
         void computeNormals();

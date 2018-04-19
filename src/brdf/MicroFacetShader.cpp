@@ -2,10 +2,10 @@
 // Created by Zaiyang Li on 10/02/2018.
 //
 
-#include "PbrShader.hpp"
+#include "MicroFacetShader.hpp"
 namespace McRenderFace {
     namespace Shading {
-        void PbrShader::compute(const PbrMaterial &material,
+        void MicroFacetShader::compute(const PbrMaterial &material,
                                 const PbrLightParameters &lightParameters,
                                 const PbrSurfaceParameters &surfaceParameters,
                                 PbrShaderOutput &output)
@@ -15,9 +15,10 @@ namespace McRenderFace {
             vec3 halfVector = glm::normalize(lightParameters.lightDirection + surfaceParameters.surfaceNormal);
             float cosineLightAngle = glm::dot(lightParameters.lightDirection, surfaceParameters.surfaceNormal);
             float cosineViewAngle = glm::dot(lightParameters.viewerDirection, surfaceParameters.surfaceNormal);
+            float distance2 = glm::dot(lightParameters.lightPosition, surfaceParameters.position);
             cosineLightAngle = cosineLightAngle > 0 ? cosineLightAngle : 0;
             cosineViewAngle = cosineViewAngle> 0 ? cosineViewAngle : 0;
-            float lightIntensity = lightParameters.lightIntensity * pow(2.0f, lightParameters.lightExposure);
+            float lightIntensity = lightParameters.lightIntensity * std::pow(2.0f, lightParameters.lightExposure);
             float alpha = material.specularRoughness * material.specularRoughness;
             alpha = alpha >= 0.0001f ? alpha : 0.0001f;
             float g = smithG1Shlick(cosineViewAngle, alpha);
@@ -56,26 +57,26 @@ namespace McRenderFace {
             float phiDiff = glm::dot(u, v);
             phiDiff = phiDiff > 0 ? phiDiff : 0;
             vec3 diffuseColour = material.diffuseColour * (A + B * phiDiff * sin(a) * tan(b));
-            diffuseColour = material.diffuseColour* lightParameters.lightColour * lightIntensity * cosineLightAngle;
+            diffuseColour = diffuseColour * lightParameters.lightColour * lightIntensity * cosineLightAngle;
             // combine diffuse and specular.
-            diffuseColour *= (1-fresnel);
-            output.colour = specularColour + diffuseColour;
+            //diffuseColour *= (1-fresnel);
+            output.colour = diffuseColour;
         }
 
-        float PbrShader::fresnelF0(float fresnelIOR) {
+        float MicroFacetShader::fresnelF0(float fresnelIOR) {
             float f = (1 - fresnelIOR) / (1 + fresnelIOR);
             return f*f;
         }
 
-        void PbrShader::microfacet(vec3 light, vec3 half) {
+        void MicroFacetShader::microfacet(vec3 light, vec3 half) {
 
         }
 
-        float PbrShader::implicitGeometry(vec3 l, vec3 n, vec3 h) {
+        float MicroFacetShader::implicitGeometry(vec3 l, vec3 n, vec3 h) {
             return glm::dot(l, n) * glm::dot(h, n);
         }
 
-        float PbrShader::ggxSpecularDistribution(float alpha, vec3 m, vec3 normal) {
+        float MicroFacetShader::ggxSpecularDistribution(float alpha, vec3 m, vec3 normal) {
             float alpha2 = alpha * alpha;
             float dot = glm::dot(m, normal);
             dot = dot * dot;
@@ -84,65 +85,67 @@ namespace McRenderFace {
             return static_cast<float>(alpha2 / (M_PI * temp));
         }
 
-        float PbrShader::fresnelShlick(float f0, vec3 lightDirection, vec3 halfVector) {
+        float MicroFacetShader::fresnelShlick(float f0, vec3 lightDirection, vec3 halfVector) {
             float dot = glm::dot(lightDirection, halfVector);
             float dot2 = dot * dot;
             return f0 + (1 - f0) * dot2 * dot2 * dot;
         }
-        float PbrShader::fresnelShlick(float f0, float cosineLH) {
+        float MicroFacetShader::fresnelShlick(float f0, float cosineLH) {
             float cosineLH2 = cosineLH * cosineLH;
             return f0 + (1.0f - f0) * cosineLH2 * cosineLH2 * cosineLH;
         }
-        float PbrShader::smithG1Shlick(vec3 v1, vec3 v2, float alpha) {
+        float MicroFacetShader::smithG1Shlick(vec3 v1, vec3 v2, float alpha) {
             float k = alpha * SQRT_2_PI();
             float cosineAngle = glm::dot(v1, v2);
 
             return cosineAngle / (cosineAngle * (1 - k) + k);
         }
 
-        constexpr float PbrShader::SQRT_2_PI() const{
+        constexpr float MicroFacetShader::SQRT_2_PI() const{
             return static_cast<float>(0.7978845608);
         }
 
-        float PbrShader::smithG1Shlick(float cosineViewAngle, float alpha) {
+        float MicroFacetShader::smithG1Shlick(float cosineViewAngle, float alpha) {
             float k = alpha * SQRT_2_PI();
             return cosineViewAngle / (cosineViewAngle * (1 - k) + k);
         }
 
-        constexpr float PbrShader::INVERSE_2_PI() const {
-            return static_cast<float>(0.5 * 1 / M_PI);
+        constexpr float MicroFacetShader::INVERSE_2_PI() const {
+            return static_cast<float>(0.5 / M_PI);
         }
 
-        float PbrShader::blinnNormalNdf(float theta, float alpha) {
+        float MicroFacetShader::blinnNormalNdf(float theta, float alpha) {
             return alpha + 2 * INVERSE_2_PI() * pow(cos(theta), alpha);
         }
 
-        float PbrShader::blinnSampleTheta(float alpha) {
-            float rand = dist(generator);
+        float MicroFacetShader::blinnSampleTheta(float alpha) {
+            float rand = 0.5f;
             float power = pow(rand, 1 / (alpha + 2));
             return acos(power);
         }
 
-        float PbrShader::blinnPdf(vec3 normal, vec3 half, float m) {
+        float MicroFacetShader::blinnPdf(vec3 normal, vec3 half, float m) {
             float cosine = glm::dot(normal, half);
             cosine = cosine > 0 ? cosine : 0;
             return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
         }
 
-        void PbrShader::sample(const PbrMaterial &material,
+        void MicroFacetShader::sample(const PbrMaterial &material,
                                const PbrSurfaceParameters &surfaceParameters,
                                PbrBrdfSampleOutput& output) {
-            vec3 half = glm::normalize(surfaceParameters.surfaceNormal-surfaceParameters.rayIncoming);
-            float alpha = material.specularRoughness * material.specularRoughness;
-            float theta = blinnSampleTheta(alpha);
-            float phi = dist(generator) * 2 * static_cast<float>(M_PI);
 
-            vec3 direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
-                                           (2.0f * glm::dot(surfaceParameters.rayIncoming,
-                                                             surfaceParameters.surfaceNormal)
-                                            );
-            float angle = acos(glm::dot(direction, surfaceParameters.rayIncoming));
+            //vec3 direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
+            //                               (2.0f * glm::dot(surfaceParameters.rayIncoming,
+            //                                                 surfaceParameters.surfaceNormal)
+            //                                );
+            //float angle = acos(glm::dot(direction, surfaceParameters.rayIncoming));
+            HemisphereSample sample = sampler.sampleCosineWeightedUnitHemisphere();
+
+            output.direction = HemisphereSampler::transformHemispherePointToNormal(
+                    surfaceParameters.surfaceNormal,
+                    sample.direction
+            );
+            output.pdf = sample.pdf;
         }
-
     }
 }

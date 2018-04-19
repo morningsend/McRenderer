@@ -6,7 +6,7 @@
 #define RENDERER_RGBIMAGESAMPLER_HPP
 
 #include <glm/glm.hpp>
-#include "UvSampler3D.hpp"
+#include "../image/UvSampler3D.hpp"
 
 namespace McRenderFace {
     using namespace glm;

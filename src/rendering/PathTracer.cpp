@@ -4,89 +4,102 @@
 
 #include <iostream>
 #include "PathTracer.hpp"
-#include "PathTracingRenderer.hpp"
 
 namespace McRenderFace {
 
     vec3 PathTracer::traceRay(Scene &scene, const Ray& ray) {
-        PbrBrdfSampleOutput output;
+        PbrBrdfSampleOutput samplerOutput;
+        PbrLightParameters lightParameters;
+        PbrShaderOutput shaderOutput;
+        Light defaultLight = *scene.lights[0];
         int closestObjectIndex = -1;
         int bounces;
         RayPath path;
         RayHit hit;
-        RayHit lastHit;
-        vec3 colour{0};
+        RayHit shadowHit;
+        vec3 outputColour{0};
+        PbrMaterial* currentMaterial;
+        int materialId;
+        float scale = 1;
         // primary path.
-        traceSinglePath(ray, scene, hit, path);
+        closestIntersection(scene.objects, ray, path.hit, path.objectIndex);
 
-        if(!hit.isHit || path.objectIndex < 0) {
+        if(!path.hit.isHit || path.objectIndex < 0) {
             return scene.backgroundColour;
         }
-        rayPaths[0] = path;
-        surfaceParameters.position = hit.position;
-        surfaceParameters.surfaceNormal = hit.normal;
+        shadowHit = traceShadowRay(path.hit.position+ path.hit.normal * config.shadowRayBias, scene, defaultLight);
+
+        surfaceParameters.position = path.hit.position;
+        surfaceParameters.surfaceNormal = path.hit.normal;
         surfaceParameters.rayIncoming = path.incomingRay.forward;
 
+        lightParameters.viewerDirection = glm::normalize(path.incomingRay.forward * -1.0f);
+        lightParameters.lightColour = defaultLight.colour;
+        lightParameters.lightDirection = glm::normalize(defaultLight.position - path.hit.position);
+        lightParameters.lightExposure = defaultLight.exposure;
+        lightParameters.lightIntensity = defaultLight.intensity;
+        lightParameters.lightPosition = defaultLight.position;
+
+        materialId = scene.objects[path.objectIndex]->materialId;
+        currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
+        if(!shadowHit.isHit) {
+            pbrShader.compute(
+                    *currentMaterial,
+                    lightParameters,
+                    surfaceParameters,
+                    shaderOutput
+            );
+            outputColour = shaderOutput.colour;
+        }
+        //
         // trace paths until we reach the termination condition.
         // store all paths but do not evaluate light contributions yet.
-        for(bounces = 0; bounces < config.maxRayDepth; bounces++) {
-            pbrShader.sample(*currentMaterial, surfaceParameters, output);
-            path.incomingRay.origin = hit.position + hit.normal * config.secondaryRayBias;
-            path.incomingRay.forward = output.direction;
+        for(bounces = 0; bounces < 4; bounces++) {
+            pbrShader.sample(*currentMaterial, surfaceParameters, samplerOutput);
+            scale /= samplerOutput.pdf;
+            path.incomingRay.origin = path.hit.position + path.hit.normal * config.secondaryRayBias;
+            path.incomingRay.forward = samplerOutput.direction;
 
             //std::cout << "bounces" << bounces << ' ' << path.incomingRay.forward.x << ',' << path.incomingRay.forward.y << ',' << path.incomingRay.forward.z << '.' << endl;
             closestIntersection(scene.objects, path.incomingRay, path.hit, path.objectIndex);
             // ray escaped, set pixel colour to background colour: assume black;
             if (!path.hit.isHit || path.objectIndex < 0) {
-                path.lightContribution = vec3(0);
                 //terminate.
                 break;
             }
-            rayPaths[bounces] = path;
-            lastHit = path.hit;
-            surfaceParameters.position = lastHit.position;
-            surfaceParameters.surfaceNormal = lastHit.normal;
+            shadowHit = traceShadowRay(path.hit.position + path.hit.normal * config.shadowRayBias, scene, defaultLight);
+
+            surfaceParameters.position = path.hit.position;
+            surfaceParameters.surfaceNormal = path.hit.normal;
             surfaceParameters.rayIncoming = path.incomingRay.forward;
-            //TODO: add russian roulette termination.
-            //russianRouletteProbability = sampleRussianRoulette();
-            //if(russianRouletteProbability < config.killProbabilityThreshold) {
-            //    break;
-            //}
+
+            lightParameters.viewerDirection = glm::normalize(path.incomingRay.forward * -1.0f);
+            lightParameters.lightColour = defaultLight.colour;
+            lightParameters.lightDirection = glm::normalize(defaultLight.position - path.hit.position);
+            lightParameters.lightExposure = defaultLight.exposure;
+            lightParameters.lightIntensity = defaultLight.intensity;
+            lightParameters.lightPosition = defaultLight.position;
+            materialId = scene.objects[path.objectIndex]->materialId;
+            currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
+
+            if(!shadowHit.isHit){
+
+                pbrShader.compute(
+                        *currentMaterial,
+                        lightParameters,
+                        surfaceParameters,
+                        shaderOutput
+                );
+
+                outputColour += shaderOutput.colour;
+            }
             if(!sampleRussianRoulette()) {
+                //cout << "Russiang roulette: ray terminated at " << bounces << " bounces" << endl;
                 break;
             }
         }
-        // sum up all contribution from path segments, last segment first until we reach the starting point.
-        vec3 pathContribution(0);
-        float distance;
-        RayPath& path2 = rayPaths[bounces - 1];
-        int materialId = scene.objects[path2.objectIndex]->materialId;
-        currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
-        surfaceParameters.rayIncoming = path2.incomingRay.forward;
-        surfaceParameters.surfaceNormal = path2.hit.normal;
-        surfaceParameters.position = path2.hit.position;
-        path2.lightContribution = evaluateLightContributions(surfaceParameters, scene);
-
-        for(int i = bounces - 2; i >=0 ; i--) {
-            RayPath& lastPath = rayPaths[i + 1];
-            path2 = rayPaths[i];
-            if(!path2.hit.isHit || path2.objectIndex < 0) {
-                continue;
-            }
-            materialId = scene.objects[path2.objectIndex]->materialId;
-            currentMaterial = dynamic_cast<PbrMaterial *>(scene.materials[materialId].get());
-            surfaceParameters.rayIncoming = path2.incomingRay.forward;
-            surfaceParameters.surfaceNormal = path2.hit.normal;
-            surfaceParameters.position = path2.hit.position;
-            path2.lightContribution = evaluateLightContributions(surfaceParameters, scene);
-
-            vec3 toLastPoint = (lastPath.hit.position - path2.hit.position);
-            float distance2 = glm::dot(toLastPoint, toLastPoint);
-            distance2 = distance2 < 1 ? 1 : distance2;
-            path2.lightContribution += lastPath.lightContribution / (distance2 * 0.50f * INVERSE2PI) * 0.3f;
-        }
-
-        return colour;
+        //cout << "bounces " << bounces << endl;
+        return outputColour;
     }
 
     int PathTracer::selectLight(vector<shared_ptr<Light>> lights, const int size, vec3 position) {
@@ -139,7 +152,6 @@ namespace McRenderFace {
         path.incomingRay = ray;
         path.objectIndex = closestObjectIndex;
         path.hit = hit;
-        path.lightContribution = vec3(0);
     }
 
     /**
@@ -149,8 +161,9 @@ namespace McRenderFace {
      * @param light
      * @return
      */
-    RayHit PathTracer::traceShadowRay(vec3 position, Scene &scene, Light &light, float lightDistance) {
+    RayHit PathTracer::traceShadowRay(vec3 position, Scene &scene, Light &light) {
         Ray ray{position, glm::normalize(light.position - position)};
+        float lightDistance = glm::dot(ray.forward, (light.position - position));
         RayHit hit;
         switch (light.type) {
             case LightType::PointLight:
@@ -167,15 +180,16 @@ namespace McRenderFace {
             default:
                 break;
         }
+        hit.isHit = false;
         return hit;
     }
 
     bool PathTracer::sampleRussianRoulette() {
-        if(uniform(gen) < config.killProbabilityThreshold) {
-            return true;
-        } else{
-            return false;
-        }
+        return uniform(gen) < config.killProbabilityThreshold;
+    }
+
+    vec3 PathTracer::evaluateLightContributions(const PbrSurfaceParameters &surface, Scene &scene) {
+        return glm::vec3(1);
     }
 
     void closestIntersection(vector<shared_ptr<SceneObject>>& models, const Ray& ray, RayHit& hitResult, int& closestIndex) {

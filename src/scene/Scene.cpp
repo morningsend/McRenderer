@@ -3,7 +3,7 @@
 //
 
 #include "Scene.hpp"
-#include "../shading/lambert/LamberShader.hpp"
+#include "../brdf/lambert/LamberShader.hpp"
 namespace McRenderFace {
 
     void createTestScene(Scene &scene) {
@@ -18,7 +18,7 @@ namespace McRenderFace {
         PointLight* light = new PointLight();
         light->colour = vec3(1.0f, 1.0f, 1.0f);
         light->intensity = 10.0f;
-        light->position = vec3(0.0f, 1.58f, 0.0f);
+        light->position = vec3(0.0f, 1.0f, 0.0f);
         scene.addLight(light);
 
         // default material;
@@ -54,9 +54,6 @@ namespace McRenderFace {
 
         data->triangles.push_back(tri);
         data->triangles.push_back(tri2);
-        data->uvCoords.push_back(uv);
-        data->uvCoords.push_back(uv);
-        data->uvCoords.push_back(uv);
 
         model->meshData = data;
 

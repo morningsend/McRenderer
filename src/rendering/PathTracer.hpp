@@ -13,7 +13,7 @@
 #include "RayTracerConfig.hpp"
 #include "GaussianSampler.hpp"
 #include "RenderTarget.hpp"
-#include "../shading/pbr/PbrShader.hpp"
+#include "../brdf/MicroFacetShader.hpp"
 
 namespace McRenderFace {
     using namespace std;
@@ -25,18 +25,15 @@ namespace McRenderFace {
     struct RayPath {
         Ray incomingRay { vec3(0), vec3(0)};
         RayHit hit{};
-        vec3 lightContribution{0,0,0};
         int objectIndex {-1};
     };
 
     class PathTracer {
     private:
         RayTracerConfig config;
-        PbrShader pbrShader;
+        MicroFacetShader pbrShader;
         PbrLightParameters lightParameters;
         PbrSurfaceParameters surfaceParameters;
-        PbrMaterial* currentMaterial {nullptr};
-        vector<RayPath> rayPaths;
         random_device rd;
         mt19937 gen;
         uniform_real_distribution<float> uniform{0.0f, 1.0f};
@@ -45,8 +42,7 @@ namespace McRenderFace {
                 : config{configIn},
                   pbrShader{},
                   lightParameters{},
-                  surfaceParameters{},
-                  rayPaths{static_cast<unsigned long>(configIn.maxRayDepth + 1)}
+                  surfaceParameters{}
         {
             gen = mt19937(rd());
         };
@@ -59,8 +55,7 @@ namespace McRenderFace {
         float sampleUniform(float min, float max);
 
         void traceSinglePath(const Ray &ray, Scene &scene, RayHit &hit, RayPath &path);
-        void traceIndirectRay(Scene& scene, const RayHit& hit, vec3 &indirect);
-        RayHit traceShadowRay(vec3 position, Scene& scene, Light& light, float lightDistance);
+        RayHit traceShadowRay(vec3 position, Scene& scene, Light& light);
         vec3 evaluateLightContributions(const PbrSurfaceParameters &surface, Scene &scene);
         bool sampleRussianRoulette();
     };

@@ -51,15 +51,14 @@ namespace McRenderFace {
             tri.vertices[2] = vertices[face.vertex[2]];
 
             if(uvCoords.size() > 0) {
-                triUv.uvCoords[0] = uvCoords[face.uvCoord[0]];
-                triUv.uvCoords[1] = uvCoords[face.uvCoord[0]];
-                triUv.uvCoords[2] = uvCoords[face.uvCoord[0]];
+                tri.uvCoords[0] = uvCoords[face.uvCoord[0]];
+                tri.uvCoords[1] = uvCoords[face.uvCoord[0]];
+                tri.uvCoords[2] = uvCoords[face.uvCoord[0]];
             }
 
             tri.computeNormal();
 
             meshData->triangles.push_back(tri);
-            meshData->uvCoords.push_back(triUv);
 
             cout << i << ':' << face.vertex[0] << ' ' << face.vertex[1] << ' ' << face.vertex[2] << endl;
             cout << i << ':' << tri.vertices[0].x << ' '

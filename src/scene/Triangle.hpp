@@ -12,6 +12,7 @@ namespace McRenderFace {
     using namespace glm;
     struct Triangle : RayIntersecting{
         vec3 vertices[3];
+        vec2 uvCoords[3]{vec2(0,0), vec2(1,0), vec2(1,1)};
         vec3 normal {0, 0, 1};
         vec2 barycentricCoordOf(vec3 point);
         vec2 barycentricCoordOf(vec4 point);
