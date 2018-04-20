@@ -24,7 +24,8 @@ namespace McRenderFace {
         Triangle(): Triangle(vec3(0), vec3(0), vec3(0), vec3(0)) { }
         Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 normalIn)
                 : vertices{ v0, v1, v2 },
-                  normal{normalIn} {}
+                  normal{normalIn} {
+        }
     };
 }
 

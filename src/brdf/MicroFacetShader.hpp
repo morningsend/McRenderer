@@ -32,6 +32,9 @@ namespace McRenderFace {
             float specularGlossiness{20.0f};
             float reflectionRoughness{0.0f};
 
+            vec3 emissiveColour{0};
+            float emissiveIntensity{0};
+
             UvSampler3D *diffuseMap{nullptr};
             UvSampler3D *specularMap{nullptr};
             UvSampler3D *reflectionMap{nullptr};
@@ -124,10 +127,9 @@ namespace McRenderFace {
                          const PbrLightParameters &lightParameters,
                          const PbrSurfaceParameters &surfaceParameters,
                          PbrShaderOutput &output);
-
-            void sample(const PbrMaterial &material,
-                        const PbrSurfaceParameters &surfaceParameters,
-                        PbrBrdfSampleOutput &output);
+            void sampleDiffuse(const PbrMaterial &material,
+                               vec3 normal,
+                               PbrBrdfSampleOutput &output);
         };
 
         struct BeckmannShader : public MicroFacetShader {

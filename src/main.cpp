@@ -39,12 +39,11 @@ void setupCornellBoxScene(Scene& scene) {
     PbrMaterial* mat = new PbrMaterial;
 
     // gray diffuse = 0
-    mat->diffuseColour = vec3(.4f);
+    mat->diffuseColour = vec3(.9f);
     mat->diffuseRoughness = 0.01f;
     mat->specularColour = vec3(.8f);
     mat->reflectionColour = vec3(0.1f);
     mat->fresnelSpecularReflection = false;
-
     scene.addMaterial(mat);
 
     mat = new PbrMaterial;
@@ -55,7 +54,7 @@ void setupCornellBoxScene(Scene& scene) {
     mat->diffuseRoughness = 0.01f;
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = 1.0f;
+    mat->specularRoughness = 0.01f;
     mat->fresnelSpecularReflection = false;
 
     scene.addMaterial(mat);
@@ -67,7 +66,7 @@ void setupCornellBoxScene(Scene& scene) {
     mat->specularColour = vec3(.8f);
     mat->reflectionColour = vec3(0.0f);
     mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = 1.0f;
+    mat->specularRoughness = 0.01f;
 
     scene.addMaterial(mat);
 
@@ -82,13 +81,25 @@ void setupCornellBoxScene(Scene& scene) {
     mat->diffuseRoughness = .001f;
     scene.addMaterial(mat);
 
+    // white emissive = 4
+    mat = new PbrMaterial;
+    mat->diffuseColour = vec3(1);
+    mat->diffuseRoughness = 0.01f;
+    mat->specularColour = vec3(1);
+    mat->reflectionColour = vec3(1);
+    mat->fresnelSpecularReflection = false;
+    mat->emissiveColour = vec3(1,1,1);
+    mat->emissiveIntensity = 10.0f;
+    scene.addMaterial(mat);
+
+    mat = new PbrMaterial;
     //35mm camera lens.
     scene.camera.focalLength = .55;
 
     PointLight* light1 = new PointLight;
     light1->type = LightType::PointLight;
     light1->position = vec3(0, .9, 0);
-    light1->intensity = 0.5f;
+    light1->intensity = 2.5f;
     light1->colour = vec3(1.0f, 1.0f, 0.997f);
     scene.addLight(light1);
 
@@ -156,9 +167,9 @@ void setupCornellBoxScene(Scene& scene) {
     mesh[4]->materialId = 0;
     mesh[4]->meshData = new MeshData();
     mesh[4]->meshData
-            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[3],vertices[7],normals[2]));
+            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[7],vertices[3],normals[2]));
     mesh[4]->meshData
-            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[7],vertices[6],normals[2]));
+            ->triangles.push_back(McRenderFace::Triangle(vertices[2],vertices[6],vertices[7],normals[2]));
 
     scene.addObject(mesh[0]);
     scene.addObject(mesh[1]);
@@ -175,15 +186,14 @@ void addObjectToTestScene(Scene& scene){
     const ObjModel& obj = *namedModels["icosahedron"];
     mesh = new Mesh;
     Mesh::initializeMeshFromObj(*mesh, obj);
-    mesh->materialId = 0;
     mesh->transform.scale = vec3(0.5f, 0.5f, 0.5f);
     //scene.addObject(mesh);
-    Sphere* sphere = new Sphere(0.22, vec3(0, 0.4f, 0));
-    sphere->materialId = 3;
+    Sphere* sphere = new Sphere(0.22, vec3(0, 0.8f, 0));
+    sphere->materialId = 4;
     scene.addObject(sphere);
 
-    sphere = new Sphere(0.5, vec3(-.5, -.5f, 0));
-    sphere->materialId = 3;
+    sphere = new Sphere(0.3, vec3(-.5, -.3f, 0));
+    sphere->materialId = 0;
     scene.addObject(sphere);
 }
 
@@ -197,11 +207,11 @@ int main() {
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     RayTracerConfigBuilder builder;
-    RayTracerConfig config = builder.useMultithreading(4)
-            .maxRayDepth(9)
-            .samplingLevel(3)
-            .traceShadowsWithBias(.001f)
-            .softShadow(true)
+    RayTracerConfig config = builder
+            .useMultithreading(4)
+            .maxRayDepth(4)
+            .samplingLevel(4)
+            .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 
     PathTracingRenderer rayTracer{config};
@@ -211,6 +221,6 @@ int main() {
     window.registerDrawFunction(&drawFunction);
     window.registerKeyboardEventHandler(&cameraKeyboardController);
     window.renderLoop();
-    
+
     return 0;
 }

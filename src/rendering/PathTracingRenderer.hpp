@@ -37,15 +37,14 @@ namespace McRenderFace {
         RayTracerConfig config;
         vector<vec3> cameraRaySamples;
         GaussianSampler sampler;
-
         PathTracer pathTracer;
-
+        
         void generateRayDirectionsAtPixel(int width,
                                           int height,
                                           int x,
                                           int y,
                                           const Camera& camera,
-                                          vector<vec3>& rayDirecitons);
+                                          vector<vec3>& rayDirections);
     public:
         PathTracingRenderer(RayTracerConfig configIn):
                 pathTracer{configIn},

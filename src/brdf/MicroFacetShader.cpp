@@ -12,7 +12,7 @@ namespace McRenderFace {
         {
 
             // cook-torrance specular begins here ====
-            vec3 halfVector = glm::normalize(lightParameters.lightDirection + surfaceParameters.surfaceNormal);
+            vec3 halfVector = glm::normalize(lightParameters.lightDirection + lightParameters.viewerDirection);
             float cosineLightAngle = glm::dot(lightParameters.lightDirection, surfaceParameters.surfaceNormal);
             float cosineViewAngle = glm::dot(lightParameters.viewerDirection, surfaceParameters.surfaceNormal);
             float distance2 = glm::dot(lightParameters.lightPosition, surfaceParameters.position);
@@ -130,21 +130,28 @@ namespace McRenderFace {
             return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
         }
 
-        void MicroFacetShader::sample(const PbrMaterial &material,
-                               const PbrSurfaceParameters &surfaceParameters,
-                               PbrBrdfSampleOutput& output) {
+
+        void MicroFacetShader::sampleDiffuse(const PbrMaterial &material,
+                                             vec3 normal,
+                                             PbrBrdfSampleOutput &output) {
 
             //vec3 direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
             //                               (2.0f * glm::dot(surfaceParameters.rayIncoming,
             //                                                 surfaceParameters.surfaceNormal)
             //                                );
             //float angle = acos(glm::dot(direction, surfaceParameters.rayIncoming));
+            // Hemisphere aligned with Z-Axis, we have to rotate it so
+            // that the hemisphere is oriented along surface normal
             HemisphereSample sample = sampler.sampleCosineWeightedUnitHemisphere();
+            float dDotN = dot(normal, vec3(0,0,1));
+            float angle = acos(dDotN);
+            if(angle < 0.01) {
+                output.direction = sample.direction;
+            } else {
+                vec3 axis = cross(vec3(0,0,1), normal);
+                output.direction = rotate(sample.direction, angle, axis);
+            }
 
-            output.direction = HemisphereSampler::transformHemispherePointToNormal(
-                    surfaceParameters.surfaceNormal,
-                    sample.direction
-            );
             output.pdf = sample.pdf;
         }
     }

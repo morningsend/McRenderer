@@ -22,12 +22,12 @@ namespace McRenderFace {
         scene.addLight(light);
 
         // default material;
-        LambertMaterial* grayMaterial = new LambertMaterial;
+        PbrMaterial* grayMaterial = new PbrMaterial;
 
-        LambertMaterial* redMaterial = new LambertMaterial;
+        PbrMaterial* redMaterial = new PbrMaterial;
         redMaterial->diffuseColour = vec3(0.75f, 0.1f, 0.1f);
 
-        LambertMaterial* blueMaterial = new LambertMaterial;
+        PbrMaterial* blueMaterial = new PbrMaterial;
         blueMaterial->diffuseColour = vec3(0.1f, 0.1, 0.75f);
 
         scene.addMaterial(grayMaterial);
@@ -72,8 +72,8 @@ namespace McRenderFace {
         lights.push_back(shared_ptr<Light>(light));
     }
 
-    void Scene::addMaterial(Material *material) {
-        materials.push_back(shared_ptr<Material>(material));
+    void Scene::addMaterial(PbrMaterial *material) {
+        materials.push_back(shared_ptr<PbrMaterial>(material));
         material->materialId = static_cast<int>(materials.size() - 1);
     }
 

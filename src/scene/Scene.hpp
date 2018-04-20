@@ -8,7 +8,7 @@
 #include "Camera.hpp"
 #include "Mesh.hpp"
 #include "Light.hpp"
-#include "../brdf/Material.hpp"
+#include "../brdf/MicroFacetShader.hpp"
 #include <memory>
 
 namespace McRenderFace {
@@ -18,11 +18,11 @@ namespace McRenderFace {
         Camera camera;
         vector<shared_ptr<SceneObject>> objects{};
         vector<shared_ptr<Light>> lights{};
-        vector<shared_ptr<Material>> materials;
+        vector<shared_ptr<PbrMaterial>> materials;
         vec3 backgroundColour{0.0f};
         void addObject(SceneObject *object);
         void addLight(Light* light);
-        void addMaterial(Material* material);
+        void addMaterial(PbrMaterial* material);
         void preprocessMeshes();
     };
 

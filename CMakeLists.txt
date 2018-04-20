@@ -4,7 +4,7 @@ project(renderer CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -L/usr/local/lib -lSDL2_image -lSDL2 -std=c++11 -lm -lstdc++ -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -48,10 +48,8 @@ set(SOURCE_FILES
         src/image/ConstantFloatSampler.cpp src/image/ConstantFloatSampler.hpp
         src/image/GrayScaleImageSampler.hpp src/image/GrayScaleImageSampler.cpp
         src/brdf/RGBImageSampler.cpp src/brdf/RGBImageSampler.hpp
-        src/image/PngReader.cpp src/image/PngReader.hpp
-        src/image/Image.cpp src/image/Image.hpp
         src/brdf/Material.hpp
-        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp)
+        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp src/rendering/UniformStratifiedSampler.cpp src/rendering/UniformStratifiedSampler.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
@@ -63,18 +61,17 @@ set(TESTS_SOURCE_FILES ${SOURCE_FILES}
         tests/scene/SphereTest.hpp)
 
 add_library(Catch INTERFACE)
+find_package(SDL2 REQUIRED)
 
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${CATCH_INCLUDE_DIR})
 include_directories("${PROJECT_SOURCE_DIR}/lib/glm/")
 
-find_package(SDL2_image REQUIRED)
-find_package(sdl2 REQUIRED)
+
 
 add_executable(renderer ${SOURCE_FILES} src/main.cpp )
 add_executable(renderer_tests ${TESTS_SOURCE_FILES} tests/testMain.cpp)
 
 target_link_libraries(renderer ${SDL2_LIBRARIES})
-target_link_libraries(renderer ${SDL2_IMAGE_LIBRARY})
-target_link_libraries(renderer_tests ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARY})
+target_link_libraries(renderer_tests ${SDL2_LIBRARIES})

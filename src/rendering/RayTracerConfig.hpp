@@ -8,6 +8,11 @@
 #include <utility>
 
 namespace McRenderFace {
+    enum PixelSamplingMethod {
+        CorrelatedMultiJittered,
+        UniformStratified,
+        Sobol
+    };
     struct RayTracerConfig {
         int threadCount{1};
         bool renderShadows{true};
@@ -18,6 +23,8 @@ namespace McRenderFace {
         int samplingLevel{0}; // we sample (2^sampling level) many rays per pixel.
         // allow path to continue x% of time, when probabilty > x, kill path.
         float killProbabilityThreshold{0.85};
+        PixelSamplingMethod samplingMethod{PixelSamplingMethod::UniformStratified};
+
     };
     /**
      * Fluent Builder API
@@ -54,6 +61,10 @@ namespace McRenderFace {
         }
         RayTracerConfig build() {
             return config;
+        }
+        RayTracerConfigBuilder& samplingMethod(PixelSamplingMethod samplinMethod) {
+            config.samplingMethod = samplinMethod;
+            return *this;
         }
     };
 }

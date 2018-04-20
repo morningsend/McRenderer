@@ -37,19 +37,19 @@ namespace McRenderFace {
         }
     }
 
-    void PathTracingRenderer::generateRayDirectionsAtPixel(int width, int height, int x, int y, const Camera& camera, vector<vec3>& rayDirecitons) {
+    void PathTracingRenderer::generateRayDirectionsAtPixel(int width, int height, int x, int y, const Camera& camera, vector<vec3>& rayDirections) {
         //sampler.reset();
         vec2 pixelCenter(x + 0.5f, y + 0.5f);
         vec2 variance(.26f);
         vec2 pointSample;
-
-        for(int i = 0; i < rayDirecitons.size(); i++) {
+        const int size = rayDirections.size();
+        for(int i = 0; i < size; i++) {
             sampler.sample(pointSample, pixelCenter, variance);
             float screenX = -(pointSample.x / float(width - 1) - 0.5f) * 2.0f * camera.fovLength;
             float screenY = -(pointSample.y / float(height - 1) - 0.5f) * 2.0f * camera.fovLength;
             vec3 worldCoord = camera.toWorldCoordinate(screenX, screenY);
 
-            rayDirecitons[i] = glm::normalize(worldCoord - camera.position);
+            rayDirections[i] = glm::normalize(worldCoord - camera.position);
         }
     }
 }
