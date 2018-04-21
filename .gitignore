@@ -75,3 +75,5 @@ CTestTestfile.cmake
 renderer
 renderer_tests
 .vscode/
+
+*.bmp

@@ -64,4 +64,8 @@ namespace McRenderFace {
         }
 
     }
+
+    void Window::saveImage(std::string filename) {
+        SDL_SaveImage(screenBuffer, filename.c_str());
+    }
 }

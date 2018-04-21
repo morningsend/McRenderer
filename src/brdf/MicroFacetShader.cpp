@@ -5,6 +5,11 @@
 #include "MicroFacetShader.hpp"
 namespace McRenderFace {
     namespace Shading {
+        using namespace glm;
+        static inline float max(float a, float b) {
+            return a > b ? a : b;
+        }
+        static const float INVERSEPI = static_cast<const float>(1 / M_PI);
         void MicroFacetShader::compute(const PbrMaterial &material,
                                 const PbrLightParameters &lightParameters,
                                 const PbrSurfaceParameters &surfaceParameters,
@@ -153,6 +158,24 @@ namespace McRenderFace {
             }
 
             output.pdf = sample.pdf;
+        }
+
+        float LambertBrdf::evaluate(vec3 wIn, vec3 wOut, vec3 normal) {
+            return max(dot(wIn, normal), 0) * INVERSEPI;
+        }
+
+        void LambertBrdf::sample(vec3 normal, BxdfSample &brdfSample) {
+            HemisphereSample sample = sampler.sampleCosineWeightedUnitHemisphere();
+            float dDotN = glm::dot(normal, vec3(0,0,1));
+            float angle = acos(dDotN);
+            if(angle < 0.01) {
+                brdfSample.direction = sample.direction;
+            } else {
+                vec3 axis = cross(vec3(0,0,1), normal);
+                brdfSample.direction = glm::rotate(sample.direction, angle, axis);
+            }
+
+            brdfSample.probability = sample.pdf;
         }
     }
 }

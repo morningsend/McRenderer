@@ -7,16 +7,19 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-
+#include <random>
 namespace McRenderFace {
     using namespace glm;
-    class UniformStratifiedSampler {
+    using namespace std;
+    class UniformSampler {
     private:
-        int samplinglevel;
+        uniform_real_distribution<float> dist;
+        default_random_engine engine;
     public:
-        UniformStratifiedSampler(int level) : samplinglevel{level} {}
 
-        void sample(int samplingLevel, float x, float y, std::vector<vec2> samples);
+        inline vec2 sample() {
+            return vec2(dist(engine), dist(engine));
+        }
     };
 }
 

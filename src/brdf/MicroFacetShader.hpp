@@ -130,10 +130,52 @@ namespace McRenderFace {
             void sampleDiffuse(const PbrMaterial &material,
                                vec3 normal,
                                PbrBrdfSampleOutput &output);
+
+            void sampleBeckmannNormalDistribution(const PbrMaterial &material,
+                                                  vec3 normal,
+                                                  PbrBrdfSampleOutput& output);
+
         };
 
         struct BeckmannShader : public MicroFacetShader {
 
+        };
+
+        struct BxdfSample {
+            vec3 direction;
+            float probability;
+        };
+
+        enum BxdfType {
+            Diffuse, Specular,
+        };
+        class Bxdf {
+        public:
+            virtual BxdfType getType() { return BxdfType ::Diffuse; };
+            virtual float evaluate(vec3 wIn, vec3 wOut, vec3 normal) = 0;
+            virtual void sample(vec3 normal, BxdfSample& sample) = 0;
+        };
+
+        class LambertBrdf : public Bxdf {
+        private:
+            HemisphereSampler sampler;
+        public:
+            BxdfType getType() override { return BxdfType ::Diffuse; };
+            float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override;
+            void sample(vec3 normal, BxdfSample& sample) override;
+        };
+
+        class CookTorranceBrdf: public Bxdf {
+
+        };
+
+        class BeckmannBrdf: public CookTorranceBrdf {
+        private:
+            float roughness;
+        public:
+            BeckmannBrdf(float roughness);
+            float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override;
+            void sample(vec3 normal, BxdfSample& sample) override;
         };
     }
 }

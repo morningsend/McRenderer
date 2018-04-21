@@ -49,6 +49,7 @@ namespace McRenderFace {
             drawFunction = function;
         }
         void update();
+        void saveImage(std::string filename);
     };
 }
 

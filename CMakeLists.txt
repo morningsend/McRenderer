@@ -49,7 +49,7 @@ set(SOURCE_FILES
         src/image/GrayScaleImageSampler.hpp src/image/GrayScaleImageSampler.cpp
         src/brdf/RGBImageSampler.cpp src/brdf/RGBImageSampler.hpp
         src/brdf/Material.hpp
-        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp src/rendering/UniformStratifiedSampler.cpp src/rendering/UniformStratifiedSampler.hpp)
+        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp src/rendering/UniformSampler.cpp src/rendering/UniformSampler.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 

@@ -36,6 +36,9 @@ namespace  McRenderFace {
         result += up * screenY;
         return result;
     }
+    vec3 Camera::toWorldCoordinate(vec2 screenCoord) {
+        return toWorldCoordinate(screenCoord.x, screenCoord.y);
+    }
     vec2 Camera::toScreenCoordinate(const vec3& point) {
         return {0.0f, 0.0f};
     }

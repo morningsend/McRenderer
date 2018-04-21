@@ -18,6 +18,7 @@
 #include "../brdf/lambert/LamberShader.hpp"
 #include "../brdf/MicroFacetShader.hpp"
 #include "PathTracer.hpp"
+#include "UniformSampler.hpp"
 
 #ifndef MAXFLOAT
 #define MAXFLOAT 999999999
@@ -35,10 +36,9 @@ namespace McRenderFace {
     class PathTracingRenderer : public Renderer {
     private:
         RayTracerConfig config;
-        vector<vec3> cameraRaySamples;
-        GaussianSampler sampler;
+        GaussianSampler gaussianSampler;
         PathTracer pathTracer;
-        
+        UniformSampler uniformSampler;
         void generateRayDirectionsAtPixel(int width,
                                           int height,
                                           int x,
@@ -49,9 +49,7 @@ namespace McRenderFace {
         PathTracingRenderer(RayTracerConfig configIn):
                 pathTracer{configIn},
                 config{configIn},
-                sampler{1000},
-                cameraRaySamples(1 << configIn.samplingLevel)
-        {};
+                gaussianSampler{1000} {}
         void render(Scene& scene, RenderTarget& target) override;
         ~PathTracingRenderer(){};
     };

@@ -28,7 +28,7 @@ namespace McRenderFace {
         vec3 normal;
         RayHit hit{};
         int objectIndex {-1};
-        PbrBrdfSampleOutput sample;
+        BxdfSample sample;
         vec3 emission;
         PbrMaterial* material;
     };
@@ -43,7 +43,7 @@ namespace McRenderFace {
         mt19937 gen;
         uniform_real_distribution<float> uniform{0.0f, 1.0f};
         std::vector<RaySurfaceInteraction> pathVertices;
-
+        LambertBrdf lambertBrdf;
     public:
         explicit PathTracer(RayTracerConfig configIn)
                 : config{configIn},

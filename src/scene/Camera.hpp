@@ -32,6 +32,8 @@ namespace McRenderFace {
         void rotateY(float angle);
         // range -1 to 1
         vec3 toWorldCoordinate(float screenX, float screenY) const;
+        vec3 toWorldCoordinate(vec2 screenCoord);
+
         vec2 toScreenCoordinate(const vec3& point);
 
         void computeRightVector(){

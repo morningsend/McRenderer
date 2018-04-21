@@ -11,45 +11,32 @@ namespace McRenderFace {
     void PathTracingRenderer::render(Scene &scene, RenderTarget &target) {
         const int width = target.getWidth();
         const int height = target.getHeight();
-        target.clear();
-        float focalLength = scene.camera.focalLength;
         Camera& camera = scene.camera;
         camera.computeFovLength();
-        Light* light = scene.lights[0].get();
         Ray ray{camera.position, vec3(0, 0, 0)};
         RayHit hit;
-        int closestIndex = 0;
-        vec3 meshColour(0.75, 0.75, 0.75);
-        const float inverseSampleSize = 1.0f / static_cast<float>(1 << config.samplingLevel);
         vec3 colourAccum(0.0f);
+        float sampleSquareWidth = static_cast<float>(1 << config.samplingLevel);
+        float sampleSize = sampleSquareWidth * sampleSquareWidth;
+        float sampleSizeInv = 1.0f / sampleSize;
+        float sampleWidthInv = 1.0f / sampleSize;
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
-                generateRayDirectionsAtPixel(width, height, x, y, camera, cameraRaySamples);
                 colourAccum = vec3(0);
-                // shoot multiple rays for anti-aliasing.
-                for (int i = 0; i < cameraRaySamples.size(); i++) {
-                    ray.forward = cameraRaySamples[i];
-                    colourAccum += pathTracer.traceRay(scene, ray);
+                for(int xx = 0; xx < sampleSquareWidth; xx++) {
+                    for(int yy = 0; yy < sampleSquareWidth; yy++) {
+                        vec2 sample = uniformSampler.sample() * sampleWidthInv;
+                        sample = vec2(x, y) + vec2(xx * sampleWidthInv, yy * sampleWidthInv);
+                        float screenX = -(sample.x / float(width - 1) - 0.5f) * 2.0f * camera.fovLength;
+                        float screenY = -(sample.y / float(height - 1) - 0.5f) * 2.0f * camera.fovLength;
+                        vec3 dir = normalize(camera.toWorldCoordinate(screenX, screenY) - camera.position);
+                        ray.forward = dir;
+                        colourAccum += pathTracer.traceRay(scene, ray);
+                    }
                 }
-                colourAccum *= inverseSampleSize;
+                colourAccum *= sampleSizeInv;
                 target.setColor(x, y, colourAccum);
             }
-        }
-    }
-
-    void PathTracingRenderer::generateRayDirectionsAtPixel(int width, int height, int x, int y, const Camera& camera, vector<vec3>& rayDirections) {
-        //sampler.reset();
-        vec2 pixelCenter(x + 0.5f, y + 0.5f);
-        vec2 variance(.26f);
-        vec2 pointSample;
-        const int size = rayDirections.size();
-        for(int i = 0; i < size; i++) {
-            sampler.sample(pointSample, pixelCenter, variance);
-            float screenX = -(pointSample.x / float(width - 1) - 0.5f) * 2.0f * camera.fovLength;
-            float screenY = -(pointSample.y / float(height - 1) - 0.5f) * 2.0f * camera.fovLength;
-            vec3 worldCoord = camera.toWorldCoordinate(screenX, screenY);
-
-            rayDirections[i] = glm::normalize(worldCoord - camera.position);
         }
     }
 }

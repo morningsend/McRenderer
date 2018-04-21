@@ -210,7 +210,7 @@ int main() {
     RayTracerConfig config = builder
             .useMultithreading(4)
             .maxRayDepth(4)
-            .samplingLevel(4)
+            .samplingLevel(2)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 
@@ -221,6 +221,6 @@ int main() {
     window.registerDrawFunction(&drawFunction);
     window.registerKeyboardEventHandler(&cameraKeyboardController);
     window.renderLoop();
-
+    window.saveImage("output.bmp");
     return 0;
 }

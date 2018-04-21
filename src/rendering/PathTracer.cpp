@@ -6,18 +6,6 @@
 #include "PathTracer.hpp"
 
 namespace McRenderFace {
-    inline float max(float a, float b) {
-        return a > b ? a : b;
-    }
-    float lambertBrdf(){
-        return 0.5f / (float) M_PI;
-    }
-    void sampleLambert(float& pdf, vec3 dir){
-
-    }
-    float lambertBrdf(vec3 l, vec3 n, vec3 v) {
-
-    }
     vec3 debugPathSize(vector<RaySurfaceInteraction> vertices, int maxDepth) {
         float weight = (float) vertices.size() / maxDepth;
         return vec3(1) * weight;
@@ -35,19 +23,16 @@ namespace McRenderFace {
         RayHit hit;
         PbrMaterial* currentMaterial;
         int materialId = 0;
-        PbrBrdfSampleOutput sample;
+        BxdfSample sample;
         RaySurfaceInteraction inter;
         pathVertices.clear();
         for(int i = 0; i < config.maxRayDepth; i++) {
-
-            float t = (float) (config.maxRayDepth - i) / config.maxRayDepth;
 
             closestIntersection(scene.objects, currentRay, hit, hitObjectIndex);
 
             if(!hit.isHit || hitObjectIndex < 0) {
                 break;
             }
-
             inter.hit = hit;
             inter.objectIndex = hitObjectIndex;
             inter.wIn = -currentRay.forward;
@@ -55,7 +40,7 @@ namespace McRenderFace {
             materialId = scene.objects[hitObjectIndex]->materialId;
 
             currentMaterial = scene.materials[materialId].get();
-            pbrShader.sampleDiffuse(*currentMaterial, hit.normal, sample);
+            lambertBrdf.sample(inter.normal, sample);
             currentRay.origin = hit.position + hit.normal * 0.001f;
             currentRay.forward = sample.direction;
 
@@ -139,8 +124,8 @@ namespace McRenderFace {
             RaySurfaceInteraction& interaction = vertices[i];
             vec3 lightDir = interaction.wOut;
             vec3 normal = interaction.normal;
-            float brdf = max(dot(lightDir, normal), 0) * INVERSEPI;
-            lightAccum = (lightAccum * interaction.material->diffuseColour) * brdf / interaction.sample.pdf + interaction.emission;
+            float brdf = lambertBrdf.evaluate(interaction.wIn,  interaction.wOut, interaction.normal);
+            lightAccum = (lightAccum * interaction.material->diffuseColour) * brdf / interaction.sample.probability + interaction.emission;
         }
         return lightAccum;
     }
