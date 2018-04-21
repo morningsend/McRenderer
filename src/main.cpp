@@ -89,7 +89,7 @@ void setupCornellBoxScene(Scene& scene) {
     mat->reflectionColour = vec3(1);
     mat->fresnelSpecularReflection = false;
     mat->emissiveColour = vec3(1,1,1);
-    mat->emissiveIntensity = 10.0f;
+    mat->emissiveIntensity = 3.0f;
     scene.addMaterial(mat);
 
     mat = new PbrMaterial;
@@ -210,12 +210,12 @@ int main() {
     RayTracerConfig config = builder
             .useMultithreading(4)
             .maxRayDepth(4)
-            .samplingLevel(2)
+            .samplingLevel(4)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 
-    PathTracingRenderer rayTracer{config};
-    RenderTargetDrawFunction drawFunction{&scene2, &rayTracer, &renderTarget};
+    PathTracingRenderer renderer{config};
+    RenderTargetDrawFunction drawFunction{&scene2, &renderer, &renderTarget};
 
     Window window{"", SCREEN_WIDTH, SCREEN_HEIGHT, false};
     window.registerDrawFunction(&drawFunction);

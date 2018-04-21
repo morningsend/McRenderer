@@ -9,6 +9,7 @@
 #include <vector>
 #include "../SDLauxiliary.hpp"
 #include "KeyboardEventHandler.hpp"
+#include "DrawingTask.hpp"
 
 namespace McRenderFace {
     class DrawFunction {
@@ -16,6 +17,7 @@ namespace McRenderFace {
         virtual ~DrawFunction() = default;
 
         virtual void draw(screen *screen, Uint32 elapsedTime) = 0;
+        virtual DrawingTask* drawAsync(screen* screen, Uint32 elapsedTime) = 0;
         void clearScreen(screen* screen){
             memset(screen->buffer, 0, screen->width * screen->height*sizeof(uint32_t));
         }
@@ -41,6 +43,7 @@ namespace McRenderFace {
         Window(const std::string& title, int width, int height, bool fullscreen);
         ~Window();
         void renderLoop();
+        void renderFrame();
         void stop() { shouldStopRender = true; }
         void registerKeyboardEventHandler(KeyboardEventHandler* handler) {
             handlers.push_back(handler);
