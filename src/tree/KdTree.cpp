@@ -37,11 +37,11 @@ namespace McRenderFace {
     }
 
     KdTreeNode::KdTreeNode()
-            :  KdTreeNode(nullptr, nullptr, BoundingBox{}){
+            :  KdTreeNode(nullptr, nullptr, AxisAlignedBoundingBox{}){
 
     }
 
-    KdTreeNode::KdTreeNode(KdTreeNode *leftIn, KdTreeNode *rightIn, BoundingBox box)
+    KdTreeNode::KdTreeNode(KdTreeNode *leftIn, KdTreeNode *rightIn, AxisAlignedBoundingBox box)
             : left{leftIn},
               right{rightIn},
               boundingBox{box},

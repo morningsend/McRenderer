@@ -15,12 +15,6 @@ namespace McRenderFace {
         scene.camera.aspectRatio = 1.0f;
         scene.camera.fieldOfViewDegrees = 43.0f;
 
-        PointLight* light = new PointLight();
-        light->colour = vec3(1.0f, 1.0f, 1.0f);
-        light->intensity = 10.0f;
-        light->position = vec3(0.0f, 1.0f, 0.0f);
-        scene.addLight(light);
-
         // default material;
         PbrMaterial* grayMaterial = new PbrMaterial;
 

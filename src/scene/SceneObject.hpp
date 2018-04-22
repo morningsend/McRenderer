@@ -5,7 +5,7 @@
 #ifndef RENDERER_SCENEOBJECT_HPP
 #define RENDERER_SCENEOBJECT_HPP
 
-#include "BoundingBox.hpp"
+#include "AxisAlignedBoundingBox.hpp"
 #include "Transform.hpp"
 #include "RayIntersecting.hpp"
 
@@ -17,7 +17,7 @@ namespace McRenderFace {
     struct SceneObject : public RayIntersecting {
         int objectId {0};
         Transform transform {};
-        BoundingBox boundingBox {};
+        AxisAlignedBoundingBox boundingBox {};
         int materialId {0};
         bool visible{true};
 

@@ -15,7 +15,7 @@ namespace McRenderFace {
         if(gammaCorrect) {
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    vec3 gammaCorrected = glm::pow(renderTarget->getColor(x, y), vec3(1.0f/2.0f));
+                    vec3 gammaCorrected = glm::pow(renderTarget->getColor(x, y), vec3(1.0f/2.2f));
                     PutPixelSDL(screen, x, y, gammaCorrected);
                 };
             };

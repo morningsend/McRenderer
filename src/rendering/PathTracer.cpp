@@ -35,7 +35,7 @@ namespace McRenderFace {
             }
             inter.hit = hit;
             inter.objectIndex = hitObjectIndex;
-            inter.wIn = -currentRay.forward;
+            inter.wOut = -currentRay.forward;
             inter.normal = hit.normal;
             materialId = scene.objects[hitObjectIndex]->materialId;
 
@@ -46,7 +46,7 @@ namespace McRenderFace {
 
             inter.material = currentMaterial;
             inter.emission = currentMaterial->emissiveColour * currentMaterial->emissiveIntensity;
-            inter.wOut = sample.direction;
+            inter.wIn = sample.direction;
             inter.sample = sample;
             pathVertices.push_back(inter);
         }

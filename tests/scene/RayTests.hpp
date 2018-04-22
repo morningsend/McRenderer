@@ -7,7 +7,7 @@
 
 #include "../../src/scene/Ray.hpp"
 #include "../../src/scene/Triangle.hpp"
-#include "../../src/scene/BoundingBox.hpp"
+#include "../../src/scene/AxisAlignedBoundingBox.hpp"
 
 
 using namespace McRenderFace;
@@ -65,7 +65,7 @@ TEST_CASE("good case", "[rayCast]") {
 }
 
 TEST_CASE("ray not hit bounding box", "[rayCast]") {
-    BoundingBox box;
+    AxisAlignedBoundingBox box;
     box.min = vec3(-1, -1, -1);
     box.max = vec3(1, 1, 1);
     Ray ray{ vec3(-2), vec3(1, 0, 0)};

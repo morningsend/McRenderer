@@ -134,34 +134,8 @@ namespace McRenderFace {
             cosine = cosine > 0 ? cosine : 0;
             return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
         }
-
-
-        void MicroFacetShader::sampleDiffuse(const PbrMaterial &material,
-                                             vec3 normal,
-                                             PbrBrdfSampleOutput &output) {
-
-            //vec3 direction = surfaceParameters.rayIncoming - surfaceParameters.surfaceNormal *
-            //                               (2.0f * glm::dot(surfaceParameters.rayIncoming,
-            //                                                 surfaceParameters.surfaceNormal)
-            //                                );
-            //float angle = acos(glm::dot(direction, surfaceParameters.rayIncoming));
-            // Hemisphere aligned with Z-Axis, we have to rotate it so
-            // that the hemisphere is oriented along surface normal
-            HemisphereSample sample = sampler.sampleCosineWeightedUnitHemisphere();
-            float dDotN = dot(normal, vec3(0,0,1));
-            float angle = acos(dDotN);
-            if(angle < 0.01) {
-                output.direction = sample.direction;
-            } else {
-                vec3 axis = cross(vec3(0,0,1), normal);
-                output.direction = rotate(sample.direction, angle, axis);
-            }
-
-            output.pdf = sample.pdf;
-        }
-
         float LambertBrdf::evaluate(vec3 wIn, vec3 wOut, vec3 normal) {
-            return max(dot(wIn, normal), 0) * INVERSEPI;
+            return max(dot(wOut, normal), 0) * INVERSEPI;
         }
 
         void LambertBrdf::sample(vec3 normal, BxdfSample &brdfSample) {
@@ -176,6 +150,72 @@ namespace McRenderFace {
             }
 
             brdfSample.probability = sample.pdf;
+        }
+
+        constexpr float CookTorranceBrdf::INVERSE_2_PI()  {
+            return static_cast<float>(0.5 / M_PI);
+        }
+        constexpr float CookTorranceBrdf::SQRT_2_PI() {
+            return 0.7978845608f;
+        }
+
+        float CookTorranceBrdf::blinnPhongNormalDistribution(float alpha, float nDotH) {
+            return (alpha + 2) * INVERSE_2_PI() * pow(nDotH, alpha);
+        }
+
+
+
+        float CookTorranceBrdf::ggxNormalDistribution(float roughness, float nDotH) {
+            float roughness2 = roughness * roughness;
+            float nDotH2 = nDotH * nDotH;
+            float tanNDotH2 = (1 - nDotH2) / nDotH2;
+            float denom = nDotH2 * (roughness2 + tanNDotH2);
+            denom *= denom * denom * MULITPLE_PI(1.0f);
+            float sign = nDotH > 0 ? 1 : 0;
+            return sign * roughness2 / denom;
+        }
+
+        float CookTorranceBrdf::beckmannNormalDistribution(float roughness, float nDotH) {
+            float invroughness2 = roughness * roughness;
+            invroughness2 = 1.0f/ invroughness2;
+            float nDotH2 = nDotH * nDotH;
+
+            float exponent = (1.0f - 1.0f / nDotH2) * invroughness2;
+            float denom = MULITPLE_PI(1.0f) * nDotH2 * nDotH2;
+            return std::exp(exponent) * denom * invroughness2;
+        }
+
+        float CookTorranceBrdf::cookTorranceGeometry(float nDotH, float nDotL, float vDotH, float nDotV) {
+            float invVDotH = 1.0f / vDotH;
+            float t1 = 2 * nDotH * nDotV * invVDotH;
+            float t2 = 2 * nDotH * nDotL * invVDotH;
+            return std::min<float>(std::min<float>(t1, t2), 1);
+        }
+
+        float CookTorranceBrdf::schlickSmithG1(float nDotX, float roughness) {
+            return 0;
+        }
+
+        float CookTorranceBrdf::schlickBeckmannGeometry(float nDotL, float nDotV, float roughness) {
+            float roughness2 = roughness * roughness;
+            //0.7978845608 = sqrt (2/pi)
+            float k = roughness2 * 0.7978845608f;
+            float smith1L = nDotL/(nDotL * (1-k) + k);
+            float smith1V = nDotV/(nDotV * (1-k) + k);
+            return smith1L * smith1V;
+        }
+
+        float CookTorranceBrdf::ggxSmithG1(float xDotH, float xDotN, float roughness) {
+            float chi = xDotH > 0 ? 1 : 0;
+            float xDotN2 = xDotN * xDotN;
+            float tanTheta2 = (1 - xDotN2) / xDotN2;
+            float denom = 1.0f + std::sqrt(1.0f + roughness * roughness * tanTheta2) * xDotN;
+            return chi * xDotH * 2 / denom;
+        }
+
+        float CookTorranceBrdf::ggxSmithGeometry(float nDotL, float nDotV, float lDotH, float vDotH, float roughness) {
+            return ggxSmithG1(lDotH, nDotL, roughness)
+                   * ggxSmithG1(vDotH, nDotV, roughness);
         }
     }
 }

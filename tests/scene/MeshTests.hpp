@@ -15,7 +15,7 @@ TEST_CASE("Computing bounding box is axis aligned", "[FaceMeshData computeBoundi
     MeshData data;
     Triangle triangle(vec3(1, -1, 1), vec3(-1, 1, -1), vec3(-1, 1, -1), vec3(0));
     data.triangles.push_back(triangle);
-    BoundingBox box = data.computeBoundingBox();
+    AxisAlignedBoundingBox box = data.computeBoundingBox();
 
     CHECK(box.min[0] == -1.0f);
     CHECK(box.min[1] == -1.0f);
@@ -28,7 +28,7 @@ TEST_CASE("Computing bounding box is axis aligned", "[FaceMeshData computeBoundi
 
 TEST_CASE("computing bounding box on empty mesh return (0,0,0,0,0,0)", "[FaceMeshData computeBoundingBox") {
     MeshData data;
-    BoundingBox box = data.computeBoundingBox();
+    AxisAlignedBoundingBox box = data.computeBoundingBox();
     REQUIRE((box.min.x == 0 &&
             box.min.y == 0 &&
             box.min.z == 0

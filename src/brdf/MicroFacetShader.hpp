@@ -89,25 +89,16 @@ namespace McRenderFace {
 
             constexpr float INVERSE_2_PI() const;
 
-            float G(float omega_i, float omega_o, vec3 halfDirection);
-
-            float sampleNormalDistribution(vec3 halfDirection);
-
             float fresnelShlick(float f0, vec3 lightDirection, vec3 halfVector);
 
             float fresnelShlick(float f0, float cosineLH);
 
             float fresnelF0(float fresnelIOR);
 
-            float diffuseOrenNayarDistribution(vec3 diffuseColour, float roughness, float albedo);
-
-            vec3 torranceSparrowSpecular(vec3 specuarColour, float roughtness);
-
             float ggxSpecularDistribution(float alpha, vec3 m, vec3 normal);
 
             void microfacet(vec3 light, vec3 half);
 
-            float smithFunction(vec3 lightDirection, vec3 halfVector, vec3 viewDirection, vec3 surfaceNormal);
 
             float smithG1Shlick(vec3 v1, vec3 v2, float alpha);
 
@@ -121,25 +112,13 @@ namespace McRenderFace {
 
             float blinnPdf(vec3 normal, vec3 half, float m);
 
-            vec3 sampleBlinnNormalPdf(float theta);
 
             void compute(const PbrMaterial &material,
                          const PbrLightParameters &lightParameters,
                          const PbrSurfaceParameters &surfaceParameters,
                          PbrShaderOutput &output);
-            void sampleDiffuse(const PbrMaterial &material,
-                               vec3 normal,
-                               PbrBrdfSampleOutput &output);
-
-            void sampleBeckmannNormalDistribution(const PbrMaterial &material,
-                                                  vec3 normal,
-                                                  PbrBrdfSampleOutput& output);
-
         };
 
-        struct BeckmannShader : public MicroFacetShader {
-
-        };
 
         struct BxdfSample {
             vec3 direction;
@@ -154,6 +133,7 @@ namespace McRenderFace {
             virtual BxdfType getType() { return BxdfType ::Diffuse; };
             virtual float evaluate(vec3 wIn, vec3 wOut, vec3 normal) = 0;
             virtual void sample(vec3 normal, BxdfSample& sample) = 0;
+            virtual float pdf(vec3 normal, vec3 wOut, vec3 wIn) = 0;
         };
 
         class LambertBrdf : public Bxdf {
@@ -163,19 +143,45 @@ namespace McRenderFace {
             BxdfType getType() override { return BxdfType ::Diffuse; };
             float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override;
             void sample(vec3 normal, BxdfSample& sample) override;
+            float pdf(vec3 normal, vec3 wOut, vec3 wIn) override {
+                float nDotW = glm::dot(normal, wIn);
+                nDotW = nDotW < 0 ? 0 : nDotW;
+                return static_cast<float>(nDotW / M_PI);
+            }
         };
 
         class CookTorranceBrdf: public Bxdf {
 
+        public:
+            BxdfType getType() override { return BxdfType::Specular; };
+            /**
+             * returns sqrt(2 pi)
+             * @return
+             */
+            static constexpr float SQRT_2_PI();
+            static constexpr float INVERSE_2_PI();
+            /** returns (m * pi) */
+            static constexpr float MULITPLE_PI(float m){ return static_cast<float > (M_PI * m); }
+            /** returns 1 / (m * pi) */
+            static constexpr float INVERSE_MULTIPLE_PI(float m) { return 1.0f / MULITPLE_PI(m); }
+
+            inline static float beckmannNormalDistribution(float roughness, float nDotH);
+            inline static float ggxNormalDistribution(float roughness, float nDotH);
+            inline static float blinnPhongNormalDistribution(float shininess, float nDotH);
+            inline static float schlickSmithG1(float nDotX, float roughness);
+            inline static float ggxSmithG1(float xDotH, float xDotN, float roughness);
+            static inline float ggxSmithGeometry(float nDotL, float nDotV, float lDotH, float vDotH, float roughness);
+            inline float schlickBeckmannGeometry(float nDotL, float nDotV, float roughness);
+            inline static float cookTorranceGeometry(float nDotH, float nDotl, float vDotH, float nDotV);
         };
 
-        class BeckmannBrdf: public CookTorranceBrdf {
+        class BeckmannBrdf: public Bxdf {
         private:
             float roughness;
         public:
-            BeckmannBrdf(float roughness);
-            float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override;
-            void sample(vec3 normal, BxdfSample& sample) override;
+            BeckmannBrdf(float roughness) : roughness{roughness} { }
+            float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override{ return 0;};
+            void sample(vec3 normal, BxdfSample& sample) override{};
         };
     }
 }

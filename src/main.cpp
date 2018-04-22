@@ -39,7 +39,7 @@ void setupCornellBoxScene(Scene& scene) {
     PbrMaterial* mat = new PbrMaterial;
 
     // gray diffuse = 0
-    mat->diffuseColour = vec3(.9f);
+    mat->diffuseColour = vec3(1.0f);
     mat->diffuseRoughness = 0.01f;
     mat->specularColour = vec3(.8f);
     mat->reflectionColour = vec3(0.1f);
@@ -96,12 +96,6 @@ void setupCornellBoxScene(Scene& scene) {
     //35mm camera lens.
     scene.camera.focalLength = .55;
 
-    PointLight* light1 = new PointLight;
-    light1->type = LightType::PointLight;
-    light1->position = vec3(0, .9, 0);
-    light1->intensity = 2.5f;
-    light1->colour = vec3(1.0f, 1.0f, 0.997f);
-    scene.addLight(light1);
 
     vec3 vertices[] = {
             vec3(-1, 1, 1),
@@ -210,7 +204,7 @@ int main() {
     RayTracerConfig config = builder
             .useMultithreading(4)
             .maxRayDepth(4)
-            .samplingLevel(4)
+            .samplingLevel(2)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 
@@ -221,6 +215,8 @@ int main() {
     window.registerDrawFunction(&drawFunction);
     window.registerKeyboardEventHandler(&cameraKeyboardController);
     window.renderLoop();
-    window.saveImage("output.bmp");
+
+    renderTarget.saveHdrOutput("output.hdr");
+    renderTarget.savePngOutput("output.png");
     return 0;
 }

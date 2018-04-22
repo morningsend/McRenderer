@@ -2,7 +2,7 @@
 // Created by Zaiyang Li on 31/01/2018.
 //
 
-#include "BoundingBox.hpp"
+#include "AxisAlignedBoundingBox.hpp"
 
 namespace McRenderFace {
 
@@ -12,7 +12,7 @@ namespace McRenderFace {
      * @param box
      * @return
      */
-    RayHit McRenderFace::BoundingBox::castRay(const McRenderFace::Ray &ray) {
+    RayHit McRenderFace::AxisAlignedBoundingBox::castRay(const McRenderFace::Ray &ray) {
 #define MIDDLE 2
 #define LESS 1
 #define GREATER 2
@@ -20,7 +20,7 @@ namespace McRenderFace {
         bool isInside = true;
         char quadrant[3] = { MIDDLE, MIDDLE, MIDDLE};
         vec3 tMax;
-        BoundingBox& box = *this;
+        AxisAlignedBoundingBox& box = *this;
         for(int i = 0; i < 3; i++) {
             if(ray.origin[i] < box.min[i]) {
                 isInside = false;

@@ -6,6 +6,7 @@
 #define RENDERER_RENDERTARGET_HPP
 #include <string>
 #include <glm/vec3.hpp>
+#include <opencv/cv.hpp>
 #include "../Exception.hpp"
 #include <stdexcept>
 
@@ -13,6 +14,7 @@
 namespace McRenderFace {
     using namespace glm;
     using namespace std;
+    using namespace cv;
     class RenderTarget {
     private:
         int width;
@@ -26,7 +28,8 @@ namespace McRenderFace {
         void fillColor(int xMin, int yMin, int xMax, int yMax, vec3 colour);
         int getWidth();
         int getHeight();
-        void saveOutput(const string& path);
+        void saveHdrOutput(const string &path);
+        void savePngOutput(const string &path, bool sRGB = true);
         vec3& operator()(int x, int y);
         void clear();
     };

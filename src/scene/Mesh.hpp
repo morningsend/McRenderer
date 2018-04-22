@@ -10,7 +10,7 @@
 
 #include "Transform.hpp"
 #include "Vertex.hpp"
-#include "BoundingBox.hpp"
+#include "AxisAlignedBoundingBox.hpp"
 #include "Triangle.hpp"
 #include "../obj/ObjFileReader.hpp"
 #include "SceneObject.hpp"
@@ -32,7 +32,7 @@ namespace McRenderFace {
     struct MeshData {
         vector<Triangle> triangles;
         void invertNormals();
-        BoundingBox computeBoundingBox();
+        AxisAlignedBoundingBox computeBoundingBox();
         void computeNormals();
         ~MeshData() = default;;
     };

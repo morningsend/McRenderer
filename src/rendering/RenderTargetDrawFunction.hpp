@@ -50,7 +50,7 @@ namespace McRenderFace {
         Scene* scene;
         RenderTarget* renderTarget;
         Renderer* renderer;
-        bool gammaCorrect {true};
+        bool gammaCorrect {false};
         vec3 gamma{1.0f/2.2f};
         vector<DrawingTask> tasks;
     public:

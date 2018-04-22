@@ -4,7 +4,7 @@ project(renderer CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -stdlib=libc++")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -21,7 +21,7 @@ set(SOURCE_FILES
         src/scene/Sphere.cpp src/scene/Sphere.hpp
         src/rendering/PathTracingRenderer.cpp src/rendering/PathTracingRenderer.hpp
         src/scene/SimpleScene.cpp src/scene/SimpleScene.hpp
-        src/scene/BoundingBox.cpp src/scene/BoundingBox.hpp
+        src/scene/AxisAlignedBoundingBox.cpp src/scene/AxisAlignedBoundingBox.hpp
         src/rendering/RenderTarget.cpp src/rendering/RenderTarget.hpp
         src/brdf/phong/PhongShader.cpp src/brdf/phong/PhongShader.hpp
         src/Exception.cpp src/Exception.hpp
@@ -62,16 +62,14 @@ set(TESTS_SOURCE_FILES ${SOURCE_FILES}
 
 add_library(Catch INTERFACE)
 find_package(SDL2 REQUIRED)
-
+find_package(OpenCV REQUIRED)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
-
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${CATCH_INCLUDE_DIR})
+include_directories(  )
+include_directories(${SDL2_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${CATCH_INCLUDE_DIR})
 include_directories("${PROJECT_SOURCE_DIR}/lib/glm/")
-
-
 
 add_executable(renderer ${SOURCE_FILES} src/main.cpp )
 add_executable(renderer_tests ${TESTS_SOURCE_FILES} tests/testMain.cpp)
 
-target_link_libraries(renderer ${SDL2_LIBRARIES})
-target_link_libraries(renderer_tests ${SDL2_LIBRARIES})
+target_link_libraries(renderer ${SDL2_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(renderer_tests ${SDL2_LIBRARIES} ${OpenCV_LIBS})

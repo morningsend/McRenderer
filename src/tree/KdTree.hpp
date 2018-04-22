@@ -14,10 +14,10 @@ namespace McRenderFace {
     struct KdTreeNode {
         KdTreeNode* left {nullptr};
         KdTreeNode* right {nullptr};
-        BoundingBox boundingBox;
+        AxisAlignedBoundingBox boundingBox;
         AxisAlignedPlane plane;
 
-        KdTreeNode(KdTreeNode* leftIn, KdTreeNode* rightIn, BoundingBox box);
+        KdTreeNode(KdTreeNode* leftIn, KdTreeNode* rightIn, AxisAlignedBoundingBox box);
         KdTreeNode();
 
         void freeChildren();

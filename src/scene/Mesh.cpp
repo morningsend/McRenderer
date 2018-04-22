@@ -7,7 +7,7 @@
 
 namespace McRenderFace {
     void Mesh::computeBoundingBox() {
-        boundingBox = (meshData != nullptr) ? meshData->computeBoundingBox() : BoundingBox();
+        boundingBox = (meshData != nullptr) ? meshData->computeBoundingBox() : AxisAlignedBoundingBox();
     }
 
     RayHit Mesh::castRay(const Ray &ray) {
@@ -113,8 +113,8 @@ namespace McRenderFace {
         transform.reset();
     }
 
-    BoundingBox MeshData::computeBoundingBox() {
-        BoundingBox boundingBox;
+    AxisAlignedBoundingBox MeshData::computeBoundingBox() {
+        AxisAlignedBoundingBox boundingBox;
 
         if(triangles.size() < 1) {
             return boundingBox;

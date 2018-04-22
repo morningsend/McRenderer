@@ -77,3 +77,5 @@ renderer_tests
 .vscode/
 
 *.bmp
+*.png
+*.hdr

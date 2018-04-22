@@ -12,13 +12,13 @@ namespace McRenderFace {
     /**
      * Axis Aligned Bounding Box
      */
-    struct BoundingBox : public RayIntersecting{
+    struct AxisAlignedBoundingBox : public RayIntersecting{
         glm::vec3 min{0,0,0};
         glm::vec3 max{0,0,0};
 
-        BoundingBox() = default;
-        BoundingBox(glm::vec3 minIn, glm::vec3 maxIn): min{minIn}, max{maxIn} { }
-        BoundingBox(const BoundingBox& box) = default;
+        AxisAlignedBoundingBox() = default;
+        AxisAlignedBoundingBox(glm::vec3 minIn, glm::vec3 maxIn): min{minIn}, max{maxIn} { }
+        AxisAlignedBoundingBox(const AxisAlignedBoundingBox& box) = default;
 
         RayHit castRay(const Ray& ray) override;
     };
