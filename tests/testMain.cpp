@@ -8,4 +8,5 @@
 #include "./scene/RayTests.hpp"
 #include "./scene/MeshTests.hpp"
 #include "./scene/SphereTest.hpp"
+#include "./scene/RayBoundingBoxTests.hpp"
 #include "./obj/ObjFileReaderTests.hpp"

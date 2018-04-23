@@ -20,7 +20,12 @@ namespace McRenderFace {
         AxisAlignedBoundingBox(glm::vec3 minIn, glm::vec3 maxIn): min{minIn}, max{maxIn} { }
         AxisAlignedBoundingBox(const AxisAlignedBoundingBox& box) = default;
 
-        RayHit castRay(const Ray& ray) override;
+        void castRay(const Ray& ray, RayHit& hit) override;
+        inline float surfaceArea() {
+            vec3 deltas = min - max;
+            vec3 components(deltas.y, deltas.z, deltas.x);
+            return glm::dot(deltas, components) * 2.0f;
+        }
     };
 }
 

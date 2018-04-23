@@ -19,7 +19,6 @@ namespace McRenderFace {
         Transform transform {};
         AxisAlignedBoundingBox boundingBox {};
         int materialId {0};
-        bool visible{true};
 
         virtual void computeBoundingBox() = 0;
         virtual void applyTransform() = 0;

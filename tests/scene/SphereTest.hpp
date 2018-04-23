@@ -14,14 +14,16 @@ using namespace glm;
 TEST_CASE("Sphere ray intersection should return false if no hit", "[Sphere castRay]") {
     Ray ray{vec3(2,0,2), vec3(0,0,-1)};
     Sphere sphere{1, vec3(0)};
-    RayHit hit = sphere.castRay(ray);
+    RayHit hit;
+    sphere.castRay(ray, hit);
     REQUIRE(!hit.isHit);
 }
 
 TEST_CASE("Sphere ray intersection should return closest point if hit", "[Sphere castRay]") {
     Ray ray{vec3(0,0,2), vec3(0,0,-1)};
     Sphere sphere{1, vec3(0)};
-    RayHit hit = sphere.castRay(ray);
+    RayHit hit;
+    sphere.castRay(ray, hit);
     REQUIRE(hit.isHit);
     CHECK(hit.t == 1.0f);
     CHECK(hit.position.x == 0);

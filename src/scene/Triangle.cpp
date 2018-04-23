@@ -26,8 +26,8 @@ namespace McRenderFace {
      * @param ray
      * @return RayHit
      */
-    RayHit McRenderFace::Triangle::castRay(const McRenderFace::Ray &ray) {
-        RayHit hit;
+    void McRenderFace::Triangle::castRay(const McRenderFace::Ray &ray, RayHit& hit) {
+        hit.isHit = false;
         vec3 edge1 = vertices[1] - vertices[0];
         vec3 edge2 = vertices[2] - vertices[0];
 
@@ -39,20 +39,20 @@ namespace McRenderFace {
 
         // determinant is zero, no intersection
         if(abs(determinant) < EPSILON) {
-            return hit;
+            return;
         }
         determinant = 1.0f / determinant;
         //barycentric coordinates
         float u = glm::dot(P, rayTriangle) * determinant;
         if(u < 0.0f || u > 1.0f) {
-          return hit;
+          return;
         }
         float v = glm::dot(Q, ray.forward) * determinant;
         if(v < 0.0f || v > 1.0f) {
-          return hit;
+          return;
         }
         if(v + u > 1.0f) {
-          return hit;
+          return;
         }
         float t = glm::dot(Q, edge2) * determinant;
 
@@ -62,7 +62,6 @@ namespace McRenderFace {
         hit.t = t;
         hit.position = ray.at(t);
         hit.normal = normal;
-        return hit;
     }
 
     void Triangle::invertNormal(bool recompute) {

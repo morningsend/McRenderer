@@ -10,19 +10,23 @@ namespace McRenderFace {
         boundingBox = (meshData != nullptr) ? meshData->computeBoundingBox() : AxisAlignedBoundingBox();
     }
 
-    RayHit Mesh::castRay(const Ray &ray) {
+    void Mesh::castRay(const Ray &ray, RayHit& hit) {
         // optimization: if ray does not hit bounding box, terminate.
         //cout << "number of triangles" << meshData->triangles.size() << endl;
-        RayHit hit;
+        boundingBox.castRay(ray, hit);
+        if(!hit.isHit) {
+            return;
+        }
+        hit.isHit = false;
         const auto& triangles = meshData -> triangles;
-        RayHit closest;
+        RayHit hitTemp;
         for(auto tri : triangles) {
-            hit = tri.castRay(ray);
-            if(hit.isHit&& hit.t > 0 && hit.t < closest.t) {
-                closest = hit;
+            hitTemp.isHit = false;
+            tri.castRay(ray, hitTemp);
+            if(hitTemp.isHit&& hitTemp.t > 0 && hitTemp.t < hit.t) {
+                 hit = hitTemp;
             }
         }
-        return closest;
     }
 
     void Mesh::initializeMeshFromObj(Mesh &mesh, const ObjModel &obj, bool computeNormalAsNeeded) {
@@ -59,22 +63,7 @@ namespace McRenderFace {
             tri.computeNormal();
 
             meshData->triangles.push_back(tri);
-
-            cout << i << ':' << face.vertex[0] << ' ' << face.vertex[1] << ' ' << face.vertex[2] << endl;
-            cout << i << ':' << tri.vertices[0].x << ' '
-                    << tri.vertices[0].y << ' '
-                    << tri.vertices[0].z << ' '
-                    <<endl;
-            cout << i << ':' << tri.vertices[1].x << ' '
-                 << tri.vertices[1].y << ' '
-                 << tri.vertices[1].z << ' '
-                 <<endl;
-            cout << i << ':' << tri.vertices[2].x << ' '
-                 << tri.vertices[2].y << ' '
-                 << tri.vertices[2].z << ' '
-                 <<endl;
             i++;
-
         }
         mesh.computeBoundingBox();
     }
@@ -119,7 +108,7 @@ namespace McRenderFace {
         if(triangles.size() < 1) {
             return boundingBox;
         }
-        boundingBox.max = vec3(FLT_MIN);
+        boundingBox.max = vec3(-FLT_MAX);
         boundingBox.min = vec3(FLT_MAX);
         for(auto tri : triangles) {
             boundingBox.min = glm::min(boundingBox.min, tri.vertices[0]);

@@ -17,9 +17,13 @@ namespace McRenderFace {
         ~Sphere() override = default;
 
         // SceneObject virtual methods implementation
-        RayHit castRay(const Ray& ray) override ;
+        void castRay(const Ray& ray, RayHit & rayHit) override ;
         void computeBoundingBox() override ;
         void applyTransform() override ;
+
+        inline float surfaceArea() {
+            return 4.0f * radius * radius * (float) M_PI;
+        }
     };
 
 }

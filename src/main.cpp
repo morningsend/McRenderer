@@ -203,8 +203,8 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder
             .useMultithreading(4)
-            .maxRayDepth(4)
-            .samplingLevel(2)
+            .maxRayDepth(3)
+            .samplingLevel(4)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 

@@ -10,8 +10,7 @@ namespace McRenderFace {
      * @param ray
      * @return
      */
-    RayHit Sphere::castRay(const Ray &ray) {
-        RayHit hit;
+    void Sphere::castRay(const Ray &ray, RayHit& hit) {
         vec3 hypotenuse = origin - ray.origin;
 
         // project raySphere onto ray direction to determine the minimum distance between
@@ -23,7 +22,8 @@ namespace McRenderFace {
         float miniumDistance2 = glm::dot(opposite, opposite);
         float r2 = radius * radius;
         if(miniumDistance2 > r2) {
-            return hit;
+            hit.isHit = false;
+            return;
         }
         hit.isHit = true;
         // there are usually two points of intersection, we take the nearest one.
@@ -32,7 +32,6 @@ namespace McRenderFace {
         // computing normal is just to normalize a point on a sphere.
         // on unit sphere, each point is the same as the normal at that point.
         hit.normal = (hit.position - origin) / radius;
-        return hit;
     }
 
     void Sphere::computeBoundingBox() {

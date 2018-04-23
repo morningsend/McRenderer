@@ -19,8 +19,13 @@ namespace McRenderFace {
         vec3 positionOf(float u, float v);
         void computeNormal(bool normalize = true);
         void invertNormal(bool recompute = false);
-        RayHit castRay(const Ray& ray) override;
-
+        void castRay(const Ray& ray, RayHit& hit) override;
+        inline float surfaceArea() {
+            vec3 e1 = vertices[1] - vertices[0];
+            vec3 e2 = vertices[2] - vertices[0];
+            vec3 perp = cross(e1, e2);
+            return length(perp);
+        }
         Triangle(): Triangle(vec3(0), vec3(0), vec3(0), vec3(0)) { }
         Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 normalIn)
                 : vertices{ v0, v1, v2 },

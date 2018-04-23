@@ -526,6 +526,9 @@
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/scene/MeshTests.hpp">
 			<Option target="renderer_tests"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/scene/RayBoundingBoxTests.hpp">
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/tests/scene/RayTests.hpp">
 			<Option target="renderer_tests"/>
 		</Unit>

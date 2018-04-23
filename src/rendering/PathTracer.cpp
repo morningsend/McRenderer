@@ -139,7 +139,7 @@ namespace McRenderFace {
         int modelCount = static_cast<int>(models.size());
         for(int i = 0; i < modelCount; i++) {
             obj = models[i].get();
-            hit = obj->castRay(ray);
+            obj->castRay(ray, hit);
             if(hit.isHit && hit.t > 0 && hit.t < closestHit.t) {
                 closestHit = hit;
                 closest = i;

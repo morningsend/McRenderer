@@ -4,10 +4,11 @@
 
 #ifndef RENDERER_MESH_HPP
 #define RENDERER_MESH_HPP
+#define GLM_ENABLE_EXPERIMENTAL
 #include <limits>
 #include <vector>
 #include <glm/glm.hpp>
-
+#include <glm/gtx/extended_min_max.hpp>
 #include "Transform.hpp"
 #include "Vertex.hpp"
 #include "AxisAlignedBoundingBox.hpp"
@@ -43,7 +44,7 @@ namespace McRenderFace {
     /**
      * Mesh implementing per vertex normal.
      */
-    struct Mesh : SceneObject{
+    struct Mesh : SceneObject {
         MeshType type {MeshType::PerFaceNormal};
         MeshData* meshData {nullptr};
 
@@ -58,7 +59,7 @@ namespace McRenderFace {
             }
         }
         void computeBoundingBox() override;
-        RayHit castRay(const Ray& ray) override ;
+        void castRay(const Ray& ray, RayHit & rayHit) override ;
         void applyTransform() override;
         static void initializeMeshFromObj(Mesh &mesh, const ObjModel &obj, bool computeNormalAsNeeded = true);
     };

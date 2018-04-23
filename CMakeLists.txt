@@ -4,7 +4,7 @@ project(renderer CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
 set(SOURCE_FILES 
         src/scene/Transform.cpp src/scene/Transform.hpp
@@ -58,7 +58,7 @@ set(TESTS_SOURCE_FILES ${SOURCE_FILES}
         tests/scene/MeshTests.hpp
         tests/obj/ObjFileReaderTests.hpp
         tests/obj/MtlFileReaderTests.hpp
-        tests/scene/SphereTest.hpp)
+        tests/scene/SphereTest.hpp tests/scene/RayBoundingBoxTests.hpp)
 
 add_library(Catch INTERFACE)
 find_package(SDL2 REQUIRED)

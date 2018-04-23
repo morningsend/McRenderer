@@ -25,7 +25,8 @@ TEST_CASE("ray cast on triangle will not hit if ray has 0 direction", "[rayCast]
     ray.origin = vec3(0,0,0);
     ray.forward = vec3(0, 0, 0);
 
-    RayHit result = triangle.castRay(ray);
+    RayHit result;
+    triangle.castRay(ray, result);
     REQUIRE(!result.isHit);
 }
 
@@ -41,7 +42,8 @@ TEST_CASE("ray cast on triangle will fail if parallel with the plane", "[rayCast
     ray.origin = vec3(0,0,0);
     ray.forward = vec3(1, 0, 0);
 
-    RayHit result = triangle.castRay(ray);
+    RayHit result;
+    triangle.castRay(ray, result);
 
     REQUIRE(!result.isHit);
 }
@@ -58,7 +60,8 @@ TEST_CASE("good case", "[rayCast]") {
     ray.origin = vec3(0,0,1);
     ray.forward = vec3(0.2, 0.2, -1);
 
-    RayHit result = triangle.castRay(ray);
+    RayHit result;
+    triangle.castRay(ray, result);
 
     REQUIRE(result.isHit);
     REQUIRE(result.position.z < 0.0001);
@@ -69,7 +72,8 @@ TEST_CASE("ray not hit bounding box", "[rayCast]") {
     box.min = vec3(-1, -1, -1);
     box.max = vec3(1, 1, 1);
     Ray ray{ vec3(-2), vec3(1, 0, 0)};
-    RayHit hit = box.castRay(ray);
+    RayHit hit;
+    box.castRay(ray, hit);
     REQUIRE(!hit.isHit);
 }
 #endif

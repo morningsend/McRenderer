@@ -2,6 +2,7 @@
 // Created by Zaiyang Li on 10/02/2018.
 //
 
+#include <iostream>
 #include "Scene.hpp"
 #include "../brdf/lambert/LamberShader.hpp"
 namespace McRenderFace {
@@ -72,10 +73,16 @@ namespace McRenderFace {
     }
 
     void Scene::preprocessMeshes() {
-
         for(auto& mesh : objects) {
             mesh->applyTransform();
             mesh->computeBoundingBox();
+            std::cout <<"min(" << mesh->boundingBox.min.x << ' '
+                      << mesh->boundingBox.min.y << ' '
+                      << mesh->boundingBox.min.z << ')'
+                      <<"max(" << mesh->boundingBox.max.x << ' '
+                      << mesh->boundingBox.max.y << ' '
+                      << mesh->boundingBox.max.z << ')'
+                      << endl;
         }
     }
 }
