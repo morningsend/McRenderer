@@ -20,21 +20,27 @@ namespace McRenderFace {
         float sampleSize = sampleSquareWidth * sampleSquareWidth;
         float sampleSizeInv = 1.0f / sampleSize;
         float sampleWidthInv = 1.0f / sampleSize;
+        vec2 center(0.5f);
+        float totalWeight;
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 colourAccum = vec3(0);
+                totalWeight = 0;
                 for(int xx = 0; xx < sampleSquareWidth; xx++) {
                     for(int yy = 0; yy < sampleSquareWidth; yy++) {
-                        vec2 sample = uniformSampler.sample() * sampleWidthInv;
-                        sample = vec2(x, y) + vec2(xx * sampleWidthInv, yy * sampleWidthInv);
+                        vec2 sample = uniformSampler.sample();
+                        float weight = filter.evaluate(sample - center);
+                        sample *= sampleWidthInv;
+                        sample += vec2(x, y) + vec2(xx * sampleWidthInv, yy * sampleWidthInv);
                         float screenX = -(sample.x / float(width - 1) - 0.5f) * 2.0f * camera.fovLength;
                         float screenY = -(sample.y / float(height - 1) - 0.5f) * 2.0f * camera.fovLength;
                         vec3 dir = normalize(camera.toWorldCoordinate(screenX, screenY) - camera.position);
                         ray.forward = dir;
-                        colourAccum += pathTracer.traceRay(scene, ray);
+                        totalWeight += weight;
+                        colourAccum += pathTracer.traceRay(scene, ray) * weight;
                     }
                 }
-                colourAccum *= sampleSizeInv;
+                colourAccum /= totalWeight;
                 target.setColor(x, y, colourAccum);
             }
         }

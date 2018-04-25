@@ -19,6 +19,7 @@
 #include "../brdf/MicroFacetShader.hpp"
 #include "PathTracer.hpp"
 #include "UniformSampler.hpp"
+#include "SubPixelReconstructionFilter.hpp"
 
 #ifndef MAXFLOAT
 #define MAXFLOAT 999999999
@@ -39,11 +40,15 @@ namespace McRenderFace {
         GaussianSampler gaussianSampler;
         PathTracer pathTracer;
         UniformSampler uniformSampler;
+        //MitchellNetravaliFilter filter;
+        GaussianFilter filter;
     public:
         PathTracingRenderer(RayTracerConfig configIn):
                 pathTracer{configIn},
                 config{configIn},
-                gaussianSampler{1000} {}
+                gaussianSampler{1000},
+                filter{vec2(1.5f, 1.5f), 1.2f}
+        {}
         void render(Scene& scene, RenderTarget& target) override;
         ~PathTracingRenderer(){};
     };

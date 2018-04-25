@@ -42,7 +42,7 @@ TEST_CASE("cube file should return 8 vertices and 24 triangles", "[ObjFileReader
     CHECK(face.normal[2] == 0);
 }
 
-TEST_CASE("face data with missing texture coordinate should work", "[ObjFileReader read()3]") {
+TEST_CASE("face data with missing maps coordinate should work", "[ObjFileReader read()3]") {
     ObjFileReader reader("models/icosahedron.obj");
     auto models = reader.read();
     CHECK(models.size() == 1);

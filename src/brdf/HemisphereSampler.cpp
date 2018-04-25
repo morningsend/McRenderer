@@ -45,13 +45,17 @@ namespace McRenderFace {
      * @return
      */
     glm::vec2 HemisphereSampler::sampleConcentricDisk(float u, float v) {
-        float r = 0, theta = 0;
-        u = 2.f * u - 1.0f;
-        v = 2.f * v - 1.0f;
+
+
         if(u == 0.0f && v == 0.0f){
             return vec2(0,0);
         }
-        if(abs(u) > abs(v)) {
+
+        float r = 0, theta = 0;
+        u = 2.0f * u - 1.0f;
+        v = 2.0f * v - 1.0f;
+
+        if(u * u > v * v) {
             r = u;
             theta = PI() * 0.25f * v / u;
         } else {

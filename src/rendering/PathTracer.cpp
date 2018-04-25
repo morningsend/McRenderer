@@ -26,11 +26,62 @@ namespace McRenderFace {
         BxdfSample sample;
         RaySurfaceInteraction inter;
         pathVertices.clear();
-        for(int i = 0; i < config.maxRayDepth; i++) {
-
+        for(int i = 0; i < config.minRayBounces; i++) {
+            hit.isHit = false;
             closestIntersection(scene.objects, currentRay, hit, hitObjectIndex);
 
             if(!hit.isHit || hitObjectIndex < 0) {
+                inter.objectIndex = -1;
+                inter.wOut = -currentRay.forward;
+                inter.wIn = vec3(0);
+                inter.normal = vec3(0);
+                inter.material = nullptr;
+                inter.emission = scene.envMap ? scene.envMap->sampleNormal(currentRay.forward) : vec3(.2f);
+                inter.sample = BxdfSample();
+                pathVertices.push_back(inter);
+                break;
+            }
+            inter.hit = hit;
+            inter.objectIndex = hitObjectIndex;
+            inter.wOut = -currentRay.forward;
+            inter.normal = hit.normal;
+            materialId = scene.objects[hitObjectIndex]->materialId;
+
+            currentMaterial = scene.materials[materialId].get();
+            switch(currentMaterial->type) {
+                case Reflective:
+                    sample.direction = currentRay.forward - hit.normal * (dot(currentRay.forward, hit.normal) * 2);
+                    sample.probability = 1;
+                    break;
+                default:
+                    lambertBrdf.sample(inter.normal, sample);
+                    break;
+            }
+
+            currentRay.origin = hit.position + hit.normal * 0.001f;
+            currentRay.forward = sample.direction;
+
+            inter.material = currentMaterial;
+            inter.emission = currentMaterial->emissiveColour * currentMaterial->emissiveIntensity;
+            inter.wIn = sample.direction;
+            inter.sample = sample;
+            pathVertices.push_back(inter);
+        }
+        /*
+        float russianRouletteProb = config.killProbability;
+        while(sampleRussianRoulette()) {
+            hit.isHit = false;
+            closestIntersection(scene.objects, currentRay, hit, hitObjectIndex);
+
+            if(!hit.isHit || hitObjectIndex < 0) {
+                inter.hit = hit;
+                inter.objectIndex = -1;
+                inter.wOut = -currentRay.forward;
+                inter.wIn = vec3(0);
+                inter.normal = vec3(0);
+                inter.material = nullptr;
+                inter.emission = scene.envMap->sampleNormal(currentRay.forward);
+                inter.sample = BxdfSample();
                 break;
             }
             inter.hit = hit;
@@ -49,7 +100,8 @@ namespace McRenderFace {
             inter.wIn = sample.direction;
             inter.sample = sample;
             pathVertices.push_back(inter);
-        }
+        }*/
+
         return evaluateLightContributions(pathVertices);
         //return debugPathSize(pathVertices, config.maxRayDepth);
         //return debugDiffuse(pathVertices);
@@ -110,7 +162,7 @@ namespace McRenderFace {
     }
 
     bool PathTracer::sampleRussianRoulette() {
-        return uniform(gen) < config.killProbabilityThreshold;
+        return uniform(gen) < config.killProbability;
     }
 
     vec3 PathTracer::evaluateLightContributions(std::vector<RaySurfaceInteraction> vertices) {
@@ -119,7 +171,6 @@ namespace McRenderFace {
         }
         const int size = vertices.size();
         vec3 lightAccum = vertices[size - 1].emission;
-
         for(int i = size - 2; i >= 0; i--) {
             RaySurfaceInteraction& interaction = vertices[i];
             vec3 lightDir = interaction.wOut;
@@ -134,11 +185,13 @@ namespace McRenderFace {
         int closest = -1;
         RayHit closestHit;
         closestHit.t = MAXFLOAT;
+        closestHit.isHit = false;
         RayHit hit;
         SceneObject* obj;
         int modelCount = static_cast<int>(models.size());
         for(int i = 0; i < modelCount; i++) {
             obj = models[i].get();
+            hit.isHit = false;
             obj->castRay(ray, hit);
             if(hit.isHit && hit.t > 0 && hit.t < closestHit.t) {
                 closestHit = hit;

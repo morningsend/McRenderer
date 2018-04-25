@@ -4,12 +4,12 @@
 
 #ifndef RENDERER_SCENE_HPP
 #define RENDERER_SCENE_HPP
-
+#include <memory>
 #include "Camera.hpp"
 #include "Mesh.hpp"
 #include "Light.hpp"
 #include "../brdf/MicroFacetShader.hpp"
-#include <memory>
+#include "../maps/SphericalEnvMap.hpp"
 
 namespace McRenderFace {
     using namespace Shading;
@@ -20,6 +20,7 @@ namespace McRenderFace {
         vector<shared_ptr<Light>> lights{};
         vector<shared_ptr<PbrMaterial>> materials;
         vec3 backgroundColour{0.0f};
+        std::shared_ptr<SphericalEnvMap> envMap;
         void addObject(SceneObject *object);
         void addLight(Light* light);
         void addMaterial(PbrMaterial* material);

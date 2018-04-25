@@ -19,8 +19,6 @@ namespace McRenderFace {
 
         float fieldOfViewDegrees{40.0f};
         float aspectRatio{1.0f};
-        float nearClippingDistance{0.001f};
-        float farClippingDistance{100.0f};
         float focalLength{0.035f};
         float fovLength{0.0f};
         float apertureFStop{2.8};

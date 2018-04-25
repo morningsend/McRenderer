@@ -20,9 +20,10 @@ namespace McRenderFace {
         float shadowRayBias{0.001};
         float secondaryRayBias{0.001};
         int maxRayDepth{10};
+        int minRayBounces{3};
         int samplingLevel{0}; // we sample (2^sampling level) many rays per pixel.
         // allow path to continue x% of time, when probabilty > x, kill path.
-        float killProbabilityThreshold{0.85};
+        float killProbability{0.75};
         PixelSamplingMethod samplingMethod{PixelSamplingMethod::UniformStratified};
 
     };
@@ -47,6 +48,10 @@ namespace McRenderFace {
             config.maxRayDepth = depth >= 0 ? depth : 0;
             return *this;
         }
+        RayTracerConfigBuilder& minBounces(int bounces) {
+            config.minRayBounces = bounces >= 0 ? bounces : 1;
+            return *this;
+        }
         RayTracerConfigBuilder& traceShadowsWithBias(float bias) {
             config.shadowRayBias = bias;
             return *this;
@@ -57,6 +62,10 @@ namespace McRenderFace {
         }
         RayTracerConfigBuilder& secondaryBias(float bias) {
             config.secondaryRayBias = bias;
+            return *this;
+        }
+        RayTracerConfigBuilder& russianRouletteProb(float prob) {
+            config.killProbability = prob > .9f ? 0.9f : prob;
             return *this;
         }
         RayTracerConfig build() {

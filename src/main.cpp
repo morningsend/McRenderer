@@ -15,8 +15,8 @@
 using namespace std;
 using namespace McRenderFace;
 
-#define SCREEN_WIDTH 300
-#define SCREEN_HEIGHT 300
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 256
 
 void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
     for(const ::Triangle& tri : testTriangles){
@@ -31,11 +31,13 @@ void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFa
 
 void setupCornellBoxScene(Scene& scene) {
 
-    scene.camera.position = vec3(0,0,2);
+    scene.camera.position = vec3(0,0,1.7);
     scene.camera.forward = vec3(0,0,-1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
-
+    scene.camera.aspectRatio = (float) SCREEN_WIDTH / SCREEN_HEIGHT;
+    scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
+    scene.envMap->setExposure(3.0f);
     PbrMaterial* mat = new PbrMaterial;
 
     // gray diffuse = 0
@@ -89,10 +91,17 @@ void setupCornellBoxScene(Scene& scene) {
     mat->reflectionColour = vec3(1);
     mat->fresnelSpecularReflection = false;
     mat->emissiveColour = vec3(1,1,1);
-    mat->emissiveIntensity = 3.0f;
+    mat->emissiveIntensity = 1.0f;
     scene.addMaterial(mat);
 
+
+    // reflective = 5;
     mat = new PbrMaterial;
+    mat->diffuseColour = vec3(1);
+    mat->specularColour = vec3(1);
+    mat->type = MaterialType::Reflective;
+    scene.addMaterial(mat);
+
     //35mm camera lens.
     scene.camera.focalLength = .55;
 
@@ -124,6 +133,7 @@ void setupCornellBoxScene(Scene& scene) {
             new Mesh,
             new Mesh,
     };
+    /*
     //bottom -> gray
     mesh[0]->materialId = 0;
     mesh[0]->meshData = new MeshData();
@@ -145,7 +155,7 @@ void setupCornellBoxScene(Scene& scene) {
             .push_back(McRenderFace::Triangle(vertices[4],vertices[7],vertices[3],normals[0]));
     //top -> gray
     mesh[2]->meshData = new MeshData();
-    mesh[2]->materialId = 0;
+    mesh[2]->materialId = 4;
     mesh[2]->meshData
             ->triangles.push_back(McRenderFace::Triangle(vertices[0],vertices[3],vertices[1],normals[4]));
     mesh[2]->meshData
@@ -170,6 +180,7 @@ void setupCornellBoxScene(Scene& scene) {
     scene.addObject(mesh[2]);
     scene.addObject(mesh[3]);
     scene.addObject(mesh[4]);
+     */
 }
 
 void addObjectToTestScene(Scene& scene){
@@ -180,22 +191,64 @@ void addObjectToTestScene(Scene& scene){
     const ObjModel& obj = *namedModels["icosahedron"];
     mesh = new Mesh;
     Mesh::initializeMeshFromObj(*mesh, obj);
-    mesh->transform.scale = vec3(0.5f, 0.5f, 0.5f);
     //scene.addObject(mesh);
-    Sphere* sphere = new Sphere(0.22, vec3(0, 0.8f, 0));
-    sphere->materialId = 4;
+    Sphere* sphere = new Sphere(0.5f, vec3(0.5, 0, -0.2f));
+    sphere->materialId = 0;
     scene.addObject(sphere);
 
-    sphere = new Sphere(0.3, vec3(-.5, -.3f, 0));
-    sphere->materialId = 0;
+    sphere = new Sphere(.5f, vec3(-.5, 0, 0));
+    sphere->materialId = 5;
+    scene.addObject(sphere);
+}
+
+void setupIBLTestScene(Scene& scene) {
+    //camera
+    scene.camera.position = vec3(0,0,1);
+    scene.camera.forward = vec3(0,0,-1);
+    scene.camera.fieldOfViewDegrees = 45.0f;
+    scene.camera.up = vec3(0,1,0);
+    scene.camera.computeRightVector();
+    scene.camera.aspectRatio = (float) SCREEN_WIDTH / SCREEN_HEIGHT;
+    scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
+    scene.envMap->setExposure(3.0f);
+    PbrMaterial* mat = new PbrMaterial;
+
+    // white emissive = 0
+    mat->diffuseColour = vec3(1.0f);
+    mat->diffuseRoughness = 0.01f;
+    mat->specularColour = vec3(.8f);
+    mat->reflectionColour = vec3(0.1f);
+    mat->fresnelSpecularReflection = false;
+    mat->emissiveColour = vec3(1);
+    mat->emissiveIntensity = 0.0f;
+    scene.addMaterial(mat);
+
+    mat = new PbrMaterial;
+
+    // reflective = 1
+    mat->type = MaterialType::Reflective;
+    mat->diffuseColour = vec3(0.0f);
+    mat->specularColour = vec3(.9f);
+    mat->reflectionColour = vec3(0.1f);
+    mat->fresnelSpecularReflection = false;
+    scene.addMaterial(mat);
+
+    Sphere* sphere = new Sphere(1, vec3(0.5, -0.4f, -0.2f));
+    sphere->materialId = 1;
+    scene.addObject(sphere);
+
+    sphere = new Sphere(1, vec3(0));
+    sphere->materialId = 1;
     scene.addObject(sphere);
 }
 
 int main() {
+    //testLoadingImage("images/hdrmaps_com_free_076_4K.hdr");
     std::cout << "Hello, World!" << std::endl;
     Scene scene2;
     setupCornellBoxScene(scene2);
     addObjectToTestScene(scene2);
+    //setupIBLTestScene(scene2);
     scene2.preprocessMeshes();
     CameraKeyboardController cameraKeyboardController{&scene2.camera};
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -203,8 +256,9 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder
             .useMultithreading(4)
-            .maxRayDepth(3)
-            .samplingLevel(4)
+            .minBounces(4)
+            .russianRouletteProb(0.72f)
+            .samplingLevel(6)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 

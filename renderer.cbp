@@ -265,6 +265,26 @@
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/main.cpp">
 			<Option target="renderer"/>
 		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/maps/SphericalEnvMap.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/maps/SphericalEnvMap.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/maps/TextureMap2D.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/maps/TextureMap2D.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/math/FastMath.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/obj/MtlFileReader.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
@@ -334,6 +354,14 @@
 			<Option target="renderer_tests"/>
 		</Unit>
 		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/Renderer.hpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/SubPixelReconstructionFilter.cpp">
+			<Option target="renderer"/>
+			<Option target="renderer_tests"/>
+		</Unit>
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/rendering/SubPixelReconstructionFilter.hpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>

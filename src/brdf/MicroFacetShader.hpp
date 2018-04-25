@@ -17,6 +17,11 @@ namespace McRenderFace {
         using namespace glm;
         using namespace std;
 
+        enum MaterialType {
+            Pbr,
+            Reflective,
+            Refractive
+        };
         /**
          * Simple physically based shading model.
          */
@@ -25,6 +30,8 @@ namespace McRenderFace {
             vec3 specularColour{0.0f};
             vec3 reflectionColour{0.0f};
             vec3 refractionColour{0.0f};
+
+            MaterialType type{MaterialType::Pbr};
 
             float diffuseAlbedo{0.8f};
             float diffuseRoughness{0.0f};
@@ -73,8 +80,8 @@ namespace McRenderFace {
             vec3 colour;
         };
         struct PbrBrdfSampleOutput {
-            vec3 direction;
-            float pdf;
+            vec3 direction {0};
+            float pdf{1.0f};
         };
 
         struct MicroFacetShader {
@@ -121,8 +128,8 @@ namespace McRenderFace {
 
 
         struct BxdfSample {
-            vec3 direction;
-            float probability;
+            vec3 direction{0};
+            float probability{1};
         };
 
         enum BxdfType {

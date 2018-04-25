@@ -16,14 +16,11 @@ namespace  McRenderFace {
             : position(positionIn),
               forward(forwardIn),
               up(upIn),
-              nearClippingDistance{0.1f},
-              farClippingDistance{1000.0f},
               aspectRatio{1.0f},
               focalLength{.02f}
     {
         computeRightVector();
     }
-
 
     mat4 Camera::viewingMatrix() {
         return glm::mat4();

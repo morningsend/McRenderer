@@ -99,7 +99,7 @@ screen* InitializeSDL(const char * title, int width,int height, bool fullscreen)
                                    s->width,s->height);
     if(s->texture==0)
     {
-        std::cout << "Could not allocate texture: "
+        std::cout << "Could not allocate maps: "
                   << SDL_GetError() << std::endl;
         exit(1);
     }
