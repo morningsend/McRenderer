@@ -497,11 +497,11 @@
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/tree/KdTree.cpp">
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/structure/BVH.cpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>
-		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/tree/KdTree.hpp">
+		<Unit filename="/Users/zaiyangli/Documents/COMS3/ComputerGraphics/renderer/src/structure/BVH.hpp">
 			<Option target="renderer"/>
 			<Option target="renderer_tests"/>
 		</Unit>

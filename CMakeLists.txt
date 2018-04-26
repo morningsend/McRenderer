@@ -31,7 +31,6 @@ set(SOURCE_FILES
         src/window/Window.cpp src/window/Window.hpp
         src/rendering/RenderTargetDrawFunction.cpp src/rendering/RenderTargetDrawFunction.hpp
         src/window/TestDrawFunction.cpp src/window/TestDrawFunction.hpp
-        src/tree/KdTree.cpp src/tree/KdTree.hpp
         src/CameraKeyboardController.cpp src/CameraKeyboardController.hpp
         src/obj/ObjFileReader.cpp src/obj/ObjFileReader.hpp
         src/rendering/RayTracerConfig.cpp src/rendering/RayTracerConfig.hpp
@@ -49,7 +48,7 @@ set(SOURCE_FILES
         src/image/GrayScaleImageSampler.hpp src/image/GrayScaleImageSampler.cpp
         src/brdf/RGBImageSampler.cpp src/brdf/RGBImageSampler.hpp
         src/brdf/Material.hpp
-        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp src/rendering/UniformSampler.cpp src/rendering/UniformSampler.hpp src/window/DrawingTask.cpp src/window/DrawingTask.hpp src/rendering/SubPixelReconstructionFilter.cpp src/rendering/SubPixelReconstructionFilter.hpp src/maps/SphericalEnvMap.cpp src/maps/SphericalEnvMap.hpp src/maps/TextureMap2D.cpp src/maps/TextureMap2D.hpp src/math/FastMath.hpp)
+        src/rendering/GaussianSampler.cpp src/rendering/GaussianSampler.hpp src/rendering/PathTracer.cpp src/rendering/PathTracer.hpp src/scene/SceneObject.hpp src/brdf/Brdf.hpp src/brdf/HemisphereSampler.cpp src/brdf/HemisphereSampler.hpp src/rendering/UniformSampler.cpp src/rendering/UniformSampler.hpp src/window/DrawingTask.cpp src/window/DrawingTask.hpp src/rendering/SubPixelReconstructionFilter.cpp src/rendering/SubPixelReconstructionFilter.hpp src/maps/SphericalEnvMap.cpp src/maps/SphericalEnvMap.hpp src/maps/TextureMap2D.cpp src/maps/TextureMap2D.hpp src/math/FastMath.hpp src/structure/BVH.cpp src/structure/BVH.hpp)
 
 set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/catch/")
 
