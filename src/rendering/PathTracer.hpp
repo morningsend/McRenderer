@@ -31,6 +31,7 @@ namespace McRenderFace {
         BxdfSample sample;
         vec3 emission;
         PbrMaterial* material;
+        MaterialType materialType;
     };
 
     class PathTracer {
@@ -44,6 +45,8 @@ namespace McRenderFace {
         uniform_real_distribution<float> uniform{0.0f, 1.0f};
         std::vector<RaySurfaceInteraction> pathVertices;
         LambertBrdf lambertBrdf;
+        CookTorranceBrdf cookTorranceBrdf{};
+
     public:
         explicit PathTracer(RayTracerConfig configIn)
                 : config{configIn},

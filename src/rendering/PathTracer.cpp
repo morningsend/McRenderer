@@ -49,12 +49,23 @@ namespace McRenderFace {
 
             currentMaterial = scene.materials[materialId].get();
             switch(currentMaterial->type) {
-                case Reflective:
-                    sample.direction = currentRay.forward - hit.normal * (dot(currentRay.forward, hit.normal) * 2);
+                case MaterialType::Specular:
+                    cookTorranceBrdf.sampleGGXNormalDistribution(inter.wOut,
+                                                                      inter.normal,
+                                                                      currentMaterial->specularRoughness,
+                                                                      sample);
+                    break;
+                case MaterialType::Reflective:
+                    sample.direction = currentRay.forward - inter.normal * (dot(currentRay.forward, inter.normal) * 2);
                     sample.probability = 1;
                     break;
+                case MaterialType::Diffuse:
+                    lambertBrdf.sample(inter.wOut, sample);
+                    break;
+
+                // fall back to lambert
                 default:
-                    lambertBrdf.sample(inter.normal, sample);
+                    lambertBrdf.sample(inter.wOut, sample);
                     break;
             }
 
@@ -65,6 +76,7 @@ namespace McRenderFace {
             inter.emission = currentMaterial->emissiveColour * currentMaterial->emissiveIntensity;
             inter.wIn = sample.direction;
             inter.sample = sample;
+            inter.materialType = currentMaterial->type;
             pathVertices.push_back(inter);
         }
         /*
@@ -171,12 +183,36 @@ namespace McRenderFace {
         }
         const int size = vertices.size();
         vec3 lightAccum = vertices[size - 1].emission;
+        float brdf = 0.0f;
+        vec3 surfaceColour;
         for(int i = size - 2; i >= 0; i--) {
             RaySurfaceInteraction& interaction = vertices[i];
-            vec3 lightDir = interaction.wOut;
-            vec3 normal = interaction.normal;
-            float brdf = lambertBrdf.evaluate(interaction.wIn,  interaction.wOut, interaction.normal);
-            lightAccum = (lightAccum * interaction.material->diffuseColour) * brdf / interaction.sample.probability + interaction.emission;
+            PbrMaterial* material = interaction.material;
+            surfaceColour = vec3(0);
+            float wInDotN = std::max<float>(dot(interaction.wIn, interaction.normal), 0.0f);
+            switch(interaction.materialType) {
+                case MaterialType::Reflective:
+                    surfaceColour = material->reflectionColour;
+                    brdf = 1.0f;
+                    break;
+                case MaterialType::Diffuse:
+                    brdf = lambertBrdf.evaluate(interaction.wIn, interaction.wOut, interaction.normal);
+                    surfaceColour = material->diffuseColour;
+                    break;
+                case MaterialType::Specular:
+                    brdf = cookTorranceBrdf.evaluateGGXBrdf(interaction.wOut,
+                                                            interaction.wIn,
+                                                            interaction.normal,
+                                                            material->specularRoughness,
+                                                            material->specularIndexOfRefraction);
+                    brdf = std::isnan(brdf) ? 0 : brdf;
+                    surfaceColour = material->specularColour;
+                    //cout << "specular brdf " << brdf<< endl;
+                    break;
+                default:
+                    break;
+            }
+            lightAccum = (lightAccum * surfaceColour) * brdf * wInDotN / interaction.sample.probability + interaction.emission;
         }
         return lightAccum;
     }

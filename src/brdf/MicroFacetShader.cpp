@@ -2,6 +2,7 @@
 // Created by Zaiyang Li on 10/02/2018.
 //
 
+#include <iostream>
 #include "MicroFacetShader.hpp"
 namespace McRenderFace {
     namespace Shading {
@@ -166,22 +167,21 @@ namespace McRenderFace {
 
 
         float CookTorranceBrdf::ggxNormalDistribution(float roughness, float nDotH) {
+            cout << nDotH << endl;
             float roughness2 = roughness * roughness;
             float nDotH2 = nDotH * nDotH;
             float tanNDotH2 = (1 - nDotH2) / nDotH2;
             float denom = nDotH2 * (roughness2 + tanNDotH2);
-            denom *= denom * denom * MULITPLE_PI(1.0f);
+            denom = denom * denom * MULTIPLE_PI(1);
             float sign = nDotH > 0 ? 1 : 0;
             return sign * roughness2 / denom;
         }
 
         float CookTorranceBrdf::beckmannNormalDistribution(float roughness, float nDotH) {
-            float invroughness2 = roughness * roughness;
-            invroughness2 = 1.0f/ invroughness2;
+            float invroughness2 = 1.0f / roughness * roughness;
             float nDotH2 = nDotH * nDotH;
-
             float exponent = (1.0f - 1.0f / nDotH2) * invroughness2;
-            float denom = MULITPLE_PI(1.0f) * nDotH2 * nDotH2;
+            float denom = MULTIPLE_PI(1.0f) * nDotH2 * nDotH2;
             return std::exp(exponent) * denom * invroughness2;
         }
 
@@ -208,7 +208,7 @@ namespace McRenderFace {
         float CookTorranceBrdf::ggxSmithG1(float xDotH, float xDotN, float roughness) {
             float chi = xDotH > 0 ? 1 : 0;
             float xDotN2 = xDotN * xDotN;
-            float tanTheta2 = (1 - xDotN2) / xDotN2;
+            float tanTheta2 = xDotN2 == 0 ? 100000 : (1 - xDotN2) / xDotN2;
             float denom = 1.0f + std::sqrt(1.0f + roughness * roughness * tanTheta2) * xDotN;
             return chi * xDotH * 2 / denom;
         }
@@ -216,6 +216,81 @@ namespace McRenderFace {
         float CookTorranceBrdf::ggxSmithGeometry(float nDotL, float nDotV, float lDotH, float vDotH, float roughness) {
             return ggxSmithG1(lDotH, nDotL, roughness)
                    * ggxSmithG1(vDotH, nDotV, roughness);
+        }
+
+        void CookTorranceBrdf::sampleBeckmannNormalDistribution(const vec3& wOut, const vec3& normal, float alpha, BxdfSample &sample) {
+            vec2 randomNumbers = uniform.sample();
+            float alpha2 = alpha * alpha;
+            float phi = randomNumbers.x * MULTIPLE_PI(2.0f);
+
+            float logY = log(randomNumbers.y);
+            logY = std::isinf(logY) ? 0 : logY;
+            float tanTheta2 = -alpha2 * logY;
+
+            float cosTheta = 1.0f / std::sqrt(tanTheta2 + 1);
+            float sinTheta = std::sqrt(max(0, 1 - cosTheta * cosTheta));
+            float sinPhi = std::sin(phi);
+            float cosPhi = std::cos(phi);
+
+            vec3 wH = vec3(
+                    sinTheta * cosPhi,
+                    sinTheta * sinPhi,
+                    cosTheta
+            );
+
+            vec3 axisOfRotation = cross(wH, normal);
+            float angle = std::acos(dot(wH, normal));
+            wH = rotate(wH ,angle, axisOfRotation);
+            float wOutDotWH = max(dot(wOut, wH), 0.001);
+            sample.probability = beckmannNormalDistribution(alpha, wOutDotWH) / (wOutDotWH * 4.0f);
+            sample.direction = -wOut - wH * (wOutDotWH * 2.0f);
+        }
+
+        void CookTorranceBrdf::sampleGGXNormalDistribution(const vec3 &wOut, const vec3 &normal, float alpha,
+                                                           BxdfSample &sample) {
+
+            vec2 randomNumbers = uniform.sample();
+            float phi = randomNumbers.x * MULTIPLE_PI(2.0f);
+            float t = (1 - randomNumbers.y) / (randomNumbers.y * (alpha * alpha - 1) + 1);
+            float cosTheta = std::sqrt(t);
+            float sinTheta = std::sqrt(1 - cosTheta * cosTheta);
+            float cosPhi = std::cos(phi);
+            float sinPhi = std::sin(phi);
+
+            vec3 wH = vec3(
+                    sinTheta * cosPhi,
+                    sinTheta * sinPhi,
+                    cosTheta
+            );
+            vec3 axis = cross(vec3(0,0,1), normal);
+            float angle = std::acos(normal.z);
+            wH = rotate(wH,angle, axis);
+            float wODotWH = dot(wOut, wH);
+            float d = ggxNormalDistribution(alpha, dot(normal, wH));// / (4.0f * max(wODotWH, 0.001f));
+            sample.probability = d / (4.0f * max(wODotWH, 0.001f));
+            sample.direction = normalize(-wOut + wH * (wODotWH * 2.0f));
+
+            //cout << d << endl;
+        }
+
+        float CookTorranceBrdf::evaluateGGXBrdf(const vec3 &wOut,
+                                                const vec3 &wIn,
+                                                const vec3 &normal,
+                                                float alpha,
+                                                float ior){
+            vec3 wH = normalize((wOut + wIn) * 0.5f);
+            float nDotL = std::max<float>(dot(normal, wIn), 0);
+            float nDotV = std::max<float>(dot(normal, wOut), 0);
+            float lDotH = std::max<float>(dot(wIn, wH), 0);
+            float vDotH = std::max<float>(dot(wOut, wH), 0);
+            float nDotH = std::max<float>(dot(normal, wH), 0);
+            //float g = ggxSmithGeometry(nDotL, nDotV, lDotH, vDotH, alpha);
+            float g = schlickGGXGeometricShadowMaskingFunc(nDotL, nDotV, alpha);
+            float d = ggxNormalDistribution(alpha, nDotH);
+            float fresnel0 = f0(ior, 1);
+            float f = shlickFresnel(lDotH, fresnel0);
+            //cout << "fresnel: " << f << endl;
+            return 1 * g * d / max(0.001, (4 * nDotL * nDotV));
         }
     }
 }

@@ -23,6 +23,15 @@ namespace McRenderFace {
         virtual void computeBoundingBox() = 0;
         virtual void applyTransform() = 0;
         ~SceneObject() override = default;
+
+        vec3 getCenter(){
+            return (boundingBox.max + boundingBox.min) * 0.5f;
+        }
+
+        AxisAlignedBoundingBox getBoundingBox() {
+            return boundingBox;
+        }
+
     };
 }
 

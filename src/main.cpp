@@ -30,21 +30,21 @@ void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFa
 }
 
 void setupCornellBoxScene(Scene& scene) {
-
-    scene.camera.position = vec3(0,0,1.7);
+    scene.camera.position = vec3(0,0,2.0f);
     scene.camera.forward = vec3(0,0,-1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
+    scene.camera.focalLength = .55;
+    scene.camera.computeFovLength();
     scene.camera.aspectRatio = (float) SCREEN_WIDTH / SCREEN_HEIGHT;
-    scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
-    scene.envMap->setExposure(3.0f);
+    //scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
+    //scene.envMap->setExposure(3.0f);
+
     PbrMaterial* mat = new PbrMaterial;
 
     // gray diffuse = 0
     mat->diffuseColour = vec3(1.0f);
     mat->diffuseRoughness = 0.01f;
-    mat->specularColour = vec3(.8f);
-    mat->reflectionColour = vec3(0.1f);
     mat->fresnelSpecularReflection = false;
     scene.addMaterial(mat);
 
@@ -52,59 +52,55 @@ void setupCornellBoxScene(Scene& scene) {
 
     // red diffuse = 1
     mat->diffuseColour = vec3(0.953f, 0.357f, 0.212f);
-    mat->specularColour = vec3(0.8f);
-    mat->diffuseRoughness = 0.01f;
-    mat->reflectionColour = vec3(0.0f);
-    mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = 0.01f;
     mat->fresnelSpecularReflection = false;
-
+    mat->type = MaterialType::Diffuse;
     scene.addMaterial(mat);
 
     // cyan diffuse = 2
     mat = new PbrMaterial;
 
     mat->diffuseColour = vec3(0.486f, 0.631f, 0.663f);
-    mat->specularColour = vec3(.8f);
-    mat->reflectionColour = vec3(0.0f);
-    mat->specularGlossiness = 0.0f;
-    mat->specularRoughness = 0.01f;
-
+    mat->type = MaterialType::Diffuse;
     scene.addMaterial(mat);
 
     // dark specular = 3
     mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(0.8);
+    mat->type = MaterialType::Specular;
     mat->specularColour = vec3(1.0f);
-    mat->reflectionColour = vec3(0.0f);
-    mat->specularGlossiness = 0.0f;
     mat->specularRoughness = .5f;
-    mat->diffuseRoughness = .001f;
+    mat->specularIndexOfRefraction = 2.5f;
     scene.addMaterial(mat);
 
     // white emissive = 4
     mat = new PbrMaterial;
-    mat->diffuseColour = vec3(1);
-    mat->diffuseRoughness = 0.01f;
-    mat->specularColour = vec3(1);
-    mat->reflectionColour = vec3(1);
-    mat->fresnelSpecularReflection = false;
     mat->emissiveColour = vec3(1,1,1);
     mat->emissiveIntensity = 1.0f;
+    mat->type = MaterialType::Emissive;
     scene.addMaterial(mat);
-
 
     // reflective = 5;
     mat = new PbrMaterial;
-    mat->diffuseColour = vec3(1);
-    mat->specularColour = vec3(1);
+    mat->reflectionColour = vec3(1);
     mat->type = MaterialType::Reflective;
     scene.addMaterial(mat);
 
-    //35mm camera lens.
-    scene.camera.focalLength = .55;
+    // specular = 6;
+    mat = new PbrMaterial;
+    mat->specularColour = vec3(1);
+    mat->type = MaterialType::Specular;
+    mat->specularRoughness = .2f;
+    mat->specularIndexOfRefraction = 2.5f;
+    scene.addMaterial(mat);
 
+    // Refractive = 7;
+    mat = new PbrMaterial;
+    mat->type = MaterialType::Refractive;
+    mat->refractiveColour = vec3(1);
+    mat->refractiveIndexOfRefraction = 1.5f;
+    scene.addMaterial(mat);
+
+    //35mm camera lens.
 
     vec3 vertices[] = {
             vec3(-1, 1, 1),
@@ -133,7 +129,7 @@ void setupCornellBoxScene(Scene& scene) {
             new Mesh,
             new Mesh,
     };
-    /*
+
     //bottom -> gray
     mesh[0]->materialId = 0;
     mesh[0]->meshData = new MeshData();
@@ -180,7 +176,14 @@ void setupCornellBoxScene(Scene& scene) {
     scene.addObject(mesh[2]);
     scene.addObject(mesh[3]);
     scene.addObject(mesh[4]);
-     */
+
+    Sphere* sphere = new Sphere(0.2f, vec3(0.3f, -.8f, 0));
+    sphere->materialId = 6;
+    scene.addObject(sphere);
+
+    sphere = new Sphere(.2f, vec3(-.3f, -.8f, 0));
+    sphere->materialId = 5;
+    scene.addObject(sphere);
 }
 
 void addObjectToTestScene(Scene& scene){
@@ -192,54 +195,115 @@ void addObjectToTestScene(Scene& scene){
     mesh = new Mesh;
     Mesh::initializeMeshFromObj(*mesh, obj);
     //scene.addObject(mesh);
-    Sphere* sphere = new Sphere(0.5f, vec3(0.5, 0, -0.2f));
+}
+
+void setupIBLTestScene(Scene& scene) {
+    scene.camera.position = vec3(0,0,2.7);
+    scene.camera.forward = vec3(0,0,-1);
+    scene.camera.up = vec3(0,1,0);
+    scene.camera.computeRightVector();
+    scene.camera.focalLength = .35;
+    scene.camera.aspectRatio = (float) SCREEN_WIDTH / SCREEN_HEIGHT;
+    scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
+    scene.envMap->setExposure(3.0f);
+
+    PbrMaterial* mat = new PbrMaterial;
+
+    // gray diffuse = 0
+    mat->diffuseColour = vec3(1.0f);
+    mat->diffuseRoughness = 0.01f;
+    mat->specularColour = vec3(.8f);
+    mat->reflectionColour = vec3(0.1f);
+    mat->fresnelSpecularReflection = false;
+    scene.addMaterial(mat);
+
+    mat = new PbrMaterial;
+
+    // red diffuse = 1
+    mat->diffuseColour = vec3(0.953f, 0.357f, 0.212f);
+    mat->specularColour = vec3(0.8f);
+    mat->diffuseRoughness = 0.01f;
+    mat->reflectionColour = vec3(0.0f);
+    mat->specularRoughness = 0.01f;
+    mat->fresnelSpecularReflection = false;
+
+    scene.addMaterial(mat);
+
+    // cyan diffuse = 2
+    mat = new PbrMaterial;
+
+    mat->diffuseColour = vec3(0.486f, 0.631f, 0.663f);
+    mat->specularColour = vec3(.8f);
+    mat->reflectionColour = vec3(0.0f);
+    mat->specularRoughness = 0.01f;
+
+    scene.addMaterial(mat);
+
+    // dark specular = 3
+    mat = new PbrMaterial;
+
+    mat->diffuseColour = vec3(0.8);
+    mat->specularColour = vec3(1.0f);
+    mat->reflectionColour = vec3(0.0f);
+    mat->specularRoughness = .5f;
+    mat->diffuseRoughness = .001f;
+    scene.addMaterial(mat);
+
+    // white emissive = 4
+    mat = new PbrMaterial;
+    mat->emissiveColour = vec3(1,1,1);
+    mat->emissiveIntensity = 1.0f;
+    mat->type = MaterialType::Emissive;
+    scene.addMaterial(mat);
+
+    // reflective = 5;
+    mat = new PbrMaterial;
+    mat->reflectionColour = vec3(1);
+    mat->type = MaterialType::Reflective;
+    scene.addMaterial(mat);
+
+    // specular = 6;
+    mat = new PbrMaterial;
+    mat->specularColour = vec3(1);
+    mat->type = MaterialType::Specular;
+    mat->specularRoughness = 0.3f;
+    mat->specularIndexOfRefraction = 1.5f;
+    scene.addMaterial(mat);
+
+    // Refractive = 7;
+    mat = new PbrMaterial;
+    mat->type = MaterialType::Refractive;
+    mat->refractiveColour = vec3(1);
+    mat->refractiveIndexOfRefraction = 1.5f;
+    scene.addMaterial(mat);
+
+    Sphere* sphere = new Sphere(0.5f, vec3(0.5, 0, 0));
     sphere->materialId = 0;
     scene.addObject(sphere);
 
     sphere = new Sphere(.5f, vec3(-.5, 0, 0));
     sphere->materialId = 5;
     scene.addObject(sphere);
-}
 
-void setupIBLTestScene(Scene& scene) {
-    //camera
-    scene.camera.position = vec3(0,0,1);
-    scene.camera.forward = vec3(0,0,-1);
-    scene.camera.fieldOfViewDegrees = 45.0f;
-    scene.camera.up = vec3(0,1,0);
-    scene.camera.computeRightVector();
-    scene.camera.aspectRatio = (float) SCREEN_WIDTH / SCREEN_HEIGHT;
-    scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
-    scene.envMap->setExposure(3.0f);
-    PbrMaterial* mat = new PbrMaterial;
-
-    // white emissive = 0
-    mat->diffuseColour = vec3(1.0f);
-    mat->diffuseRoughness = 0.01f;
-    mat->specularColour = vec3(.8f);
-    mat->reflectionColour = vec3(0.1f);
-    mat->fresnelSpecularReflection = false;
-    mat->emissiveColour = vec3(1);
-    mat->emissiveIntensity = 0.0f;
-    scene.addMaterial(mat);
-
-    mat = new PbrMaterial;
-
-    // reflective = 1
-    mat->type = MaterialType::Reflective;
-    mat->diffuseColour = vec3(0.0f);
-    mat->specularColour = vec3(.9f);
-    mat->reflectionColour = vec3(0.1f);
-    mat->fresnelSpecularReflection = false;
-    scene.addMaterial(mat);
-
-    Sphere* sphere = new Sphere(1, vec3(0.5, -0.4f, -0.2f));
-    sphere->materialId = 1;
+    sphere = new Sphere(0.5f, vec3(1.5f, 0, 0));
+    sphere->materialId = 6;
     scene.addObject(sphere);
 
-    sphere = new Sphere(1, vec3(0));
-    sphere->materialId = 1;
+    sphere = new Sphere(0.5f, vec3(-1.5f, 0, 0));
+    sphere->materialId = 7;
     scene.addObject(sphere);
+    Mesh* plane = new Mesh();
+
+    plane->materialId = 5;
+    plane->meshData = new MeshData();
+    plane->meshData->triangles.push_back(
+            McRenderFace::Triangle(vec3(-5, -0.5f, -5), vec3(5, -0.5f, 5), vec3(-5, -0.5f, 5), vec3(0, 1, 0))
+    );
+    plane->meshData->triangles.push_back(
+            McRenderFace::Triangle(vec3(-5, -0.5f, -5), vec3(5, -0.5f, -5), vec3(5, -0.5f, 5), vec3(0, 1, 0))
+    );
+
+    scene.addObject(plane);
 }
 
 int main() {
@@ -247,7 +311,7 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     Scene scene2;
     setupCornellBoxScene(scene2);
-    addObjectToTestScene(scene2);
+
     //setupIBLTestScene(scene2);
     scene2.preprocessMeshes();
     CameraKeyboardController cameraKeyboardController{&scene2.camera};
@@ -258,7 +322,7 @@ int main() {
             .useMultithreading(4)
             .minBounces(4)
             .russianRouletteProb(0.72f)
-            .samplingLevel(6)
+            .samplingLevel(2)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 

@@ -11,46 +11,43 @@
 #include "../image/UvSampler1D.hpp"
 #include "Material.hpp"
 #include "HemisphereSampler.hpp"
+#include "../rendering/UniformSampler.hpp"
 
 namespace McRenderFace {
     namespace Shading {
         using namespace glm;
         using namespace std;
 
-        enum MaterialType {
+        enum class MaterialType {
             Pbr,
             Reflective,
-            Refractive
+            Refractive,
+            Specular,
+            Diffuse,
+            Emissive,
         };
         /**
          * Simple physically based shading model.
          */
         struct PbrMaterial : Material {
-            vec3 diffuseColour{0.75};
+            vec3 diffuseColour{0};
             vec3 specularColour{0.0f};
             vec3 reflectionColour{0.0f};
-            vec3 refractionColour{0.0f};
+            vec3 refractiveColour{0.0f};
+            MaterialType type{MaterialType::Diffuse};
 
-            MaterialType type{MaterialType::Pbr};
-
-            float diffuseAlbedo{0.8f};
             float diffuseRoughness{0.0f};
             float specularRoughness{0.1f};
-            float specularGlossiness{20.0f};
             float reflectionRoughness{0.0f};
 
             vec3 emissiveColour{0};
             float emissiveIntensity{0};
 
-            UvSampler3D *diffuseMap{nullptr};
-            UvSampler3D *specularMap{nullptr};
-            UvSampler3D *reflectionMap{nullptr};
-            UvSampler3D *refractionMap{nullptr};
-
-            float indexOfRefraction{1.0f};
+            float specularIndexOfRefraction{1.0f};
             bool fresnelSpecularReflection{false};
-            float fresnelIOR{1.0f};
+            float fresnelIOR{1.5f};
 
+            float refractiveIndexOfRefraction{1.0f};
             UvSampler3D *normalMap;
 
             float diffuseWeight;
@@ -132,14 +129,14 @@ namespace McRenderFace {
             float probability{1};
         };
 
-        enum BxdfType {
-            Diffuse, Specular,
+        enum class BxdfType {
+            Diffuse, Specular, MicroFacet, Reflective
         };
         class Bxdf {
         public:
             virtual BxdfType getType() { return BxdfType ::Diffuse; };
             virtual float evaluate(vec3 wIn, vec3 wOut, vec3 normal) = 0;
-            virtual void sample(vec3 normal, BxdfSample& sample) = 0;
+            virtual void sample(vec3 wOut, BxdfSample& sample) = 0;
             virtual float pdf(vec3 normal, vec3 wOut, vec3 wIn) = 0;
         };
 
@@ -149,7 +146,7 @@ namespace McRenderFace {
         public:
             BxdfType getType() override { return BxdfType ::Diffuse; };
             float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override;
-            void sample(vec3 normal, BxdfSample& sample) override;
+            void sample(vec3 wOut, BxdfSample& sample) override;
             float pdf(vec3 normal, vec3 wOut, vec3 wIn) override {
                 float nDotW = glm::dot(normal, wIn);
                 nDotW = nDotW < 0 ? 0 : nDotW;
@@ -157,10 +154,10 @@ namespace McRenderFace {
             }
         };
 
-        class CookTorranceBrdf: public Bxdf {
-
+        class CookTorranceBrdf {
+        private:
+            UniformSampler uniform;
         public:
-            BxdfType getType() override { return BxdfType::Specular; };
             /**
              * returns sqrt(2 pi)
              * @return
@@ -168,9 +165,9 @@ namespace McRenderFace {
             static constexpr float SQRT_2_PI();
             static constexpr float INVERSE_2_PI();
             /** returns (m * pi) */
-            static constexpr float MULITPLE_PI(float m){ return static_cast<float > (M_PI * m); }
+            static constexpr float MULTIPLE_PI(float m){ return static_cast<float > (M_PI * m); }
             /** returns 1 / (m * pi) */
-            static constexpr float INVERSE_MULTIPLE_PI(float m) { return 1.0f / MULITPLE_PI(m); }
+            static constexpr float INVERSE_MULTIPLE_PI(float m) { return 1.0f / MULTIPLE_PI(m); }
 
             inline static float beckmannNormalDistribution(float roughness, float nDotH);
             inline static float ggxNormalDistribution(float roughness, float nDotH);
@@ -180,6 +177,26 @@ namespace McRenderFace {
             static inline float ggxSmithGeometry(float nDotL, float nDotV, float lDotH, float vDotH, float roughness);
             inline float schlickBeckmannGeometry(float nDotL, float nDotV, float roughness);
             inline static float cookTorranceGeometry(float nDotH, float nDotl, float vDotH, float nDotV);
+
+            void sampleBeckmannNormalDistribution(const vec3& wOut, const vec3& normal, float alpha, BxdfSample& sample);
+            void sampleGGXNormalDistribution(const vec3& wOut, const vec3& normal, float alpha, BxdfSample& sample);
+
+            float evaluateGGXBrdf(const vec3& wOut, const vec3& wIn, const vec3& normal, float alpha, float ior);
+
+            inline float schlickGGXGeometricShadowMaskingFunc(float nDotL, float nDotV, float roughness) {
+                float m = roughness / 2;
+                float smith1 = nDotL / (nDotL * (1-m ) + m);
+                float smith2 = nDotV / (nDotV * (1-m ) + m);
+                return smith1 * smith2;
+            }
+
+            inline float shlickFresnel(float lDotH, float f0) {
+                return f0 + (1-f0) * pow(1.0f - lDotH, 5.0f);
+            }
+            inline float f0(float ior1, float ior2) {
+                float k = (ior1 - ior2) /(ior1 + ior2);
+                return k * k;
+            }
         };
 
         class BeckmannBrdf: public Bxdf {
@@ -188,7 +205,7 @@ namespace McRenderFace {
         public:
             BeckmannBrdf(float roughness) : roughness{roughness} { }
             float evaluate(vec3 wIn, vec3 wOut, vec3 normal) override{ return 0;};
-            void sample(vec3 normal, BxdfSample& sample) override{};
+            void sample(vec3 wOut, BxdfSample& sample) override{};
         };
     }
 }

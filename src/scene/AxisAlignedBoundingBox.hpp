@@ -26,6 +26,11 @@ namespace McRenderFace {
             vec3 components(deltas.y, deltas.z, deltas.x);
             return glm::dot(deltas, components) * 2.0f;
         }
+
+        inline void unionWith(AxisAlignedBoundingBox& bbox) {
+            min = glm::min(min, bbox.min);
+            max = glm::max(max, bbox.max);
+        }
     };
 }
 
