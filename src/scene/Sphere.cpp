@@ -12,26 +12,48 @@ namespace McRenderFace {
      */
     void Sphere::castRay(const Ray &ray, RayHit& hit) {
         vec3 hypotenuse = origin - ray.origin;
-
-        // project raySphere onto ray direction to determine the minimum distance between
-        // sphere center and ray path. if distance less than or equal to radius, we have a hit.
-        vec3 adjacent = glm::dot(hypotenuse, ray.forward) * ray.forward;
-
-        vec3 opposite = hypotenuse - adjacent;
-
-        float miniumDistance2 = glm::dot(opposite, opposite);
         float r2 = radius * radius;
-        if(miniumDistance2 > r2) {
-            hit.isHit = false;
-            return;
+        float d2 = dot(hypotenuse, hypotenuse);
+        if(r2 > d2) {
+            Ray newRay(ray.origin + ray.forward * (radius * 2.0f), -ray.forward);
+            hypotenuse = origin - newRay.origin;
+            // project raySphere onto ray direction to determine the minimum distance between
+            // sphere center and ray path. if distance less than or equal to radius, we have a hit.
+            vec3 adjacent = glm::dot(hypotenuse, newRay.forward) * newRay.forward;
+
+            vec3 opposite = hypotenuse - adjacent;
+
+            float miniumDistance2 = glm::dot(opposite, opposite);
+            if (miniumDistance2 > r2) {
+                hit.isHit = false;
+                return;
+            }
+            hit.isHit = true;
+            // there are usually two points of intersection, we take the nearest one.
+            hit.t = glm::dot(newRay.forward, adjacent) - sqrt(r2 - miniumDistance2);
+            hit.position = newRay.at(hit.t);
+            // computing normal is just to normalize a point on a sphere.
+            // on unit sphere, each point is the same as the normal at that point.
+            hit.normal = (hit.position - origin) / radius;
+        } else {// project raySphere onto ray direction to determine the minimum distance between
+            // sphere center and ray path. if distance less than or equal to radius, we have a hit.
+            vec3 adjacent = glm::dot(hypotenuse, ray.forward) * ray.forward;
+
+            vec3 opposite = hypotenuse - adjacent;
+
+            float miniumDistance2 = glm::dot(opposite, opposite);
+            if (miniumDistance2 > r2) {
+                hit.isHit = false;
+                return;
+            }
+            hit.isHit = true;
+            // there are usually two points of intersection, we take the nearest one.
+            hit.t = glm::dot(ray.forward, adjacent) - sqrt(r2 - miniumDistance2);
+            hit.position = ray.at(hit.t);
+            // computing normal is just to normalize a point on a sphere.
+            // on unit sphere, each point is the same as the normal at that point.
+            hit.normal = (hit.position - origin) / radius;
         }
-        hit.isHit = true;
-        // there are usually two points of intersection, we take the nearest one.
-        hit.t = glm::dot(ray.forward, adjacent) - sqrt(r2 - miniumDistance2);
-        hit.position = ray.at(hit.t);
-        // computing normal is just to normalize a point on a sphere.
-        // on unit sphere, each point is the same as the normal at that point.
-        hit.normal = (hit.position - origin) / radius;
     }
 
     void Sphere::computeBoundingBox() {

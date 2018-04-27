@@ -15,8 +15,8 @@
 using namespace std;
 using namespace McRenderFace;
 
-#define SCREEN_WIDTH 256
-#define SCREEN_HEIGHT 256
+#define SCREEN_WIDTH 512
+#define SCREEN_HEIGHT 512
 
 void convertTriangles(const vector<::Triangle>& testTriangles, vector<McRenderFace::Triangle>& renderTriangles) {
     for(const ::Triangle& tri : testTriangles){
@@ -177,13 +177,22 @@ void setupCornellBoxScene(Scene& scene) {
     scene.addObject(mesh[3]);
     scene.addObject(mesh[4]);
 
-    Sphere* sphere = new Sphere(0.2f, vec3(0.3f, -.8f, 0));
-    sphere->materialId = 6;
+    Sphere* sphere = new Sphere(0.3f, vec3(0.3f, -.7f, 0));
+    sphere->materialId = 0;
     scene.addObject(sphere);
 
-    sphere = new Sphere(.2f, vec3(-.3f, -.8f, 0));
-    sphere->materialId = 5;
+    sphere = new Sphere(.3f, vec3(-.3f, -.7f, 0));
+    sphere->materialId = 0;
     scene.addObject(sphere);
+
+    ObjFileReader objReader("models/icosahedron.obj");
+    unordered_map<string, shared_ptr<ObjModel>> namedModels = objReader.read();
+    Mesh* mesh1 {nullptr};
+
+    const ObjModel& obj = *namedModels["icosahedron"];
+    mesh1 = new Mesh;
+    Mesh::initializeMeshFromObj(*mesh1, obj);
+    //scene.addObject(mesh1);
 }
 
 void addObjectToTestScene(Scene& scene){
@@ -194,18 +203,19 @@ void addObjectToTestScene(Scene& scene){
     const ObjModel& obj = *namedModels["icosahedron"];
     mesh = new Mesh;
     Mesh::initializeMeshFromObj(*mesh, obj);
-    //scene.addObject(mesh);
+    scene.addObject(mesh);
 }
 
 void setupIBLTestScene(Scene& scene) {
     scene.camera.position = vec3(0,0,2.2);
+    //scene.camera.position = vec3(-1.6,0,1.72f);
     scene.camera.forward = vec3(0,0,-1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
     scene.camera.focalLength = .35;
     scene.camera.aspectRatio = (float) SCREEN_WIDTH / SCREEN_HEIGHT;
     scene.envMap.reset(new SphericalEnvMap("images/hdrmaps_com_free_076_4K.hdr"));
-    scene.envMap->setExposure(3.0f);
+    scene.envMap->setExposure(2.0f);
 
     PbrMaterial* mat = new PbrMaterial;
 
@@ -256,7 +266,7 @@ void setupIBLTestScene(Scene& scene) {
     mat = new PbrMaterial;
     mat->specularColour = vec3(1);
     mat->type = MaterialType::Specular;
-    mat->specularRoughness = .12f;
+    mat->specularRoughness = .06f;
     mat->specularIndexOfRefraction = 2.5f;
     scene.addMaterial(mat);
 
@@ -309,9 +319,9 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder
             .useMultithreading(4)
-            .minBounces(5)
+            .minBounces(6)
             .russianRouletteProb(0.72f)
-            .samplingLevel(2)
+            .samplingLevel(3)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)
             .build();
 

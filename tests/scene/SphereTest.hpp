@@ -56,4 +56,17 @@ TEST_CASE("Sphere transformation should translate origin", "[Sphere applyTransfo
     CHECK(sphere.origin.y == 5);
     CHECK(sphere.origin.z == 5);
 }
+
+TEST_CASE("Sphere ray intersection should return true if ray is inside", "[Sphere castRay]") {
+    Sphere sphere(1, vec3(0));
+    Ray ray(vec3(0,0,0.1), vec3(0,0,1));
+
+    RayHit hit;
+    hit.isHit = false;
+    sphere.castRay(ray, hit);
+    REQUIRE(hit.isHit);
+    CHECK(hit.position.x == 0);
+    CHECK(hit.position.y == 0);
+    CHECK(hit.position.z == 1.0f);
+}
 #endif //RENDERER_SPHERETEST_HPP

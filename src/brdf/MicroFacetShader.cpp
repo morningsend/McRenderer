@@ -136,20 +136,15 @@ namespace McRenderFace {
             return (m + 2) * INVERSE_2_PI() * pow(cosine, m);
         }
         float LambertBrdf::evaluate(vec3 wIn, vec3 wOut, vec3 normal) {
-            return max(dot(wOut, normal), 0) * INVERSEPI;
+            return max(dot(wIn, normal), 0) * INVERSEPI;
         }
 
         void LambertBrdf::sample(vec3 normal, BxdfSample &brdfSample) {
             HemisphereSample sample = sampler.sampleCosineWeightedUnitHemisphere();
             float dDotN = glm::dot(normal, vec3(0,0,1));
             float angle = acos(dDotN);
-            if(angle < 0.01) {
-                brdfSample.direction = sample.direction;
-            } else {
-                vec3 axis = cross(vec3(0,0,1), normal);
-                brdfSample.direction = glm::rotate(sample.direction, angle, axis);
-            }
-
+            vec3 axis = cross(vec3(0,0,1), normal);
+            brdfSample.direction = glm::rotate(sample.direction, angle, axis);
             brdfSample.probability = sample.pdf;
         }
 
@@ -304,7 +299,7 @@ namespace McRenderFace {
             float sinThetaT2 = ior1DivIor2 * ior1DivIor2 * (1 - cosThetaI * cosThetaI);
             vec3 reflectionDir = -wOut - normalInSameHemisphere * 2.0f * cosThetaI;
             //if sinceTheta > 1 we get total internal reflection.
-            if(sinThetaT2 > 1) { ;
+            if(sinThetaT2 > 1) {
                 sample.direction = reflectionDir;
                 sample.probability = 1;
             } else {

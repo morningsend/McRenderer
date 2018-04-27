@@ -71,13 +71,10 @@ namespace McRenderFace {
     }
 
     void Window::renderFrame() {
-        DrawingTask* task = drawFunction->drawAsync(screenBuffer, deltaTime);
-        while(NoQuitMessageSDL()) {
-            // sleep for 100ms.
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            task->update(screenBuffer);
-            SDL_Renderframe(screenBuffer);
+        update();
+        if(drawFunction!= nullptr){
+            drawFunction->draw(screenBuffer, deltaTime);
         }
-        task->cancel();
+        SDL_Renderframe(screenBuffer);
     }
 }

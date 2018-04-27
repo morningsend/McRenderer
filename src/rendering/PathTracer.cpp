@@ -69,10 +69,12 @@ namespace McRenderFace {
                                                  inter.wOut,
                                                  inter.normal,
                                                  sample);
-                    if(dot(inter.wOut, inter.normal) < 0) {
+                    // must reverse normal when inside a medium.
+                    if(dot(sample.direction, inter.normal) < 0) {
+                        inter.normal *= -1.0f;
                         currentRefractiveIOR = currentMaterial->refractiveIndexOfRefraction;
                     } else {
-                        currentRefractiveIOR = currentMaterial->refractiveIndexOfRefraction;
+                        currentRefractiveIOR = 1.0f;
                     }
                     break;
                 // fall back to lambert
@@ -205,7 +207,7 @@ namespace McRenderFace {
             switch(interaction.materialType) {
                 case MaterialType::Reflective:
                     surfaceColour = material->reflectionColour;
-                    brdf = 1.0f;
+                    brdf = interaction.sample.probability;
                     break;
                 case MaterialType::Diffuse:
                     brdf = lambertBrdf.evaluate(interaction.wIn, interaction.wOut, interaction.normal);
@@ -222,8 +224,8 @@ namespace McRenderFace {
                     //cout << "specular brdf " << brdf<< endl;
                     break;
                 case MaterialType::Refractive:
-                    brdf = 1;
                     surfaceColour = material->refractiveColour;
+                    brdf = interaction.sample.probability;
                 default:
                     break;
             }
