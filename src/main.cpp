@@ -198,7 +198,7 @@ void addObjectToTestScene(Scene& scene){
 }
 
 void setupIBLTestScene(Scene& scene) {
-    scene.camera.position = vec3(0,0,2.7);
+    scene.camera.position = vec3(0,0,2.2);
     scene.camera.forward = vec3(0,0,-1);
     scene.camera.up = vec3(0,1,0);
     scene.camera.computeRightVector();
@@ -212,8 +212,6 @@ void setupIBLTestScene(Scene& scene) {
     // gray diffuse = 0
     mat->diffuseColour = vec3(1.0f);
     mat->diffuseRoughness = 0.01f;
-    mat->specularColour = vec3(.8f);
-    mat->reflectionColour = vec3(0.1f);
     mat->fresnelSpecularReflection = false;
     scene.addMaterial(mat);
 
@@ -221,32 +219,24 @@ void setupIBLTestScene(Scene& scene) {
 
     // red diffuse = 1
     mat->diffuseColour = vec3(0.953f, 0.357f, 0.212f);
-    mat->specularColour = vec3(0.8f);
-    mat->diffuseRoughness = 0.01f;
-    mat->reflectionColour = vec3(0.0f);
-    mat->specularRoughness = 0.01f;
     mat->fresnelSpecularReflection = false;
-
+    mat->type = MaterialType::Diffuse;
     scene.addMaterial(mat);
 
     // cyan diffuse = 2
     mat = new PbrMaterial;
 
     mat->diffuseColour = vec3(0.486f, 0.631f, 0.663f);
-    mat->specularColour = vec3(.8f);
-    mat->reflectionColour = vec3(0.0f);
-    mat->specularRoughness = 0.01f;
-
+    mat->type = MaterialType::Diffuse;
     scene.addMaterial(mat);
 
     // dark specular = 3
     mat = new PbrMaterial;
 
-    mat->diffuseColour = vec3(0.8);
+    mat->type = MaterialType::Specular;
     mat->specularColour = vec3(1.0f);
-    mat->reflectionColour = vec3(0.0f);
     mat->specularRoughness = .5f;
-    mat->diffuseRoughness = .001f;
+    mat->specularIndexOfRefraction = 2.5f;
     scene.addMaterial(mat);
 
     // white emissive = 4
@@ -266,8 +256,8 @@ void setupIBLTestScene(Scene& scene) {
     mat = new PbrMaterial;
     mat->specularColour = vec3(1);
     mat->type = MaterialType::Specular;
-    mat->specularRoughness = 0.3f;
-    mat->specularIndexOfRefraction = 1.5f;
+    mat->specularRoughness = .12f;
+    mat->specularIndexOfRefraction = 2.5f;
     scene.addMaterial(mat);
 
     // Refractive = 7;
@@ -294,7 +284,7 @@ void setupIBLTestScene(Scene& scene) {
     scene.addObject(sphere);
     Mesh* plane = new Mesh();
 
-    plane->materialId = 5;
+    plane->materialId = 6;
     plane->meshData = new MeshData();
     plane->meshData->triangles.push_back(
             McRenderFace::Triangle(vec3(-5, -0.5f, -5), vec3(5, -0.5f, 5), vec3(-5, -0.5f, 5), vec3(0, 1, 0))
@@ -307,12 +297,11 @@ void setupIBLTestScene(Scene& scene) {
 }
 
 int main() {
-    //testLoadingImage("images/hdrmaps_com_free_076_4K.hdr");
     std::cout << "Hello, World!" << std::endl;
     Scene scene2;
-    setupCornellBoxScene(scene2);
+    //setupCornellBoxScene(scene2);
 
-    //setupIBLTestScene(scene2);
+    setupIBLTestScene(scene2);
     scene2.preprocessMeshes();
     CameraKeyboardController cameraKeyboardController{&scene2.camera};
     RenderTarget renderTarget(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -320,7 +309,7 @@ int main() {
     RayTracerConfigBuilder builder;
     RayTracerConfig config = builder
             .useMultithreading(4)
-            .minBounces(4)
+            .minBounces(5)
             .russianRouletteProb(0.72f)
             .samplingLevel(2)
             .samplingMethod(PixelSamplingMethod::CorrelatedMultiJittered)

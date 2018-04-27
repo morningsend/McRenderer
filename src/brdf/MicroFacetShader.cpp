@@ -167,7 +167,7 @@ namespace McRenderFace {
 
 
         float CookTorranceBrdf::ggxNormalDistribution(float roughness, float nDotH) {
-            cout << nDotH << endl;
+
             float roughness2 = roughness * roughness;
             float nDotH2 = nDotH * nDotH;
             float tanNDotH2 = (1 - nDotH2) / nDotH2;
@@ -266,11 +266,10 @@ namespace McRenderFace {
             float angle = std::acos(normal.z);
             wH = rotate(wH,angle, axis);
             float wODotWH = dot(wOut, wH);
-            float d = ggxNormalDistribution(alpha, dot(normal, wH));// / (4.0f * max(wODotWH, 0.001f));
+            float nDotH = dot(normal, wH);
+            float d = ggxNormalDistribution(alpha, nDotH);// / (4.0f * max(wODotWH, 0.001f));
             sample.probability = d / (4.0f * max(wODotWH, 0.001f));
             sample.direction = normalize(-wOut + wH * (wODotWH * 2.0f));
-
-            //cout << d << endl;
         }
 
         float CookTorranceBrdf::evaluateGGXBrdf(const vec3 &wOut,
@@ -290,7 +289,38 @@ namespace McRenderFace {
             float fresnel0 = f0(ior, 1);
             float f = shlickFresnel(lDotH, fresnel0);
             //cout << "fresnel: " << f << endl;
-            return 1 * g * d / max(0.001, (4 * nDotL * nDotV));
+            return f * g * d / max(0.001, (4 * nDotL * nDotV));
+        }
+        // Use schlick's approximation to calculate ratio of transmittance and reflection.
+        // https://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+        void FresnelBsdf::sampleRefraction(float ior1, float ior2, const vec3 &wOut, const vec3 &normal,
+                                           BxdfSample &sample) {
+            float f0 = (ior1 - ior2)/(ior1 + ior2);
+            f0 = f0 * f0;
+            float ior1DivIor2 = ior1 / ior2;
+            float cosThetaI = dot(normal, wOut);
+            vec3 normalInSameHemisphere = cosThetaI < 0 ? -normal : normal;
+            cosThetaI = cosThetaI < 0 ? -cosThetaI : cosThetaI;
+            float sinThetaT2 = ior1DivIor2 * ior1DivIor2 * (1 - cosThetaI * cosThetaI);
+            vec3 reflectionDir = -wOut - normalInSameHemisphere * 2.0f * cosThetaI;
+            //if sinceTheta > 1 we get total internal reflection.
+            if(sinThetaT2 > 1) { ;
+                sample.direction = reflectionDir;
+                sample.probability = 1;
+            } else {
+                vec3 transmissionDir = -wOut * ior1DivIor2 +
+                                       normalInSameHemisphere * (ior1DivIor2 * cosThetaI - std::sqrt(1 - sinThetaT2));
+                float reflectance = f0 + (1 - f0) * pow(1 - cosThetaI, 5.0f);
+                float transmission = 1 - reflectance;
+                // roll a dice to decide whether to reflect or refract.
+                if(uniform(engine) < reflectance) {
+                    sample.direction = reflectionDir;
+                    sample.probability = reflectance;
+                } else {
+                    sample.direction = transmissionDir;
+                    sample.probability = 1 - reflectance;
+                }
+            }
         }
     }
 }

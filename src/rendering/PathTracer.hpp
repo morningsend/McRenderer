@@ -46,7 +46,7 @@ namespace McRenderFace {
         std::vector<RaySurfaceInteraction> pathVertices;
         LambertBrdf lambertBrdf;
         CookTorranceBrdf cookTorranceBrdf{};
-
+        FresnelBsdf fresnelBsdf;
     public:
         explicit PathTracer(RayTracerConfig configIn)
                 : config{configIn},

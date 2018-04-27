@@ -48,13 +48,6 @@ namespace McRenderFace {
             float fresnelIOR{1.5f};
 
             float refractiveIndexOfRefraction{1.0f};
-            UvSampler3D *normalMap;
-
-            float diffuseWeight;
-            float specularWeight;
-            float refractionWeight;
-            float reflectionWeight;
-
             ~PbrMaterial() = default;
         };
 
@@ -130,7 +123,7 @@ namespace McRenderFace {
         };
 
         enum class BxdfType {
-            Diffuse, Specular, MicroFacet, Reflective
+            Diffuse, Specular, MicroFacet, Reflective, Refractive
         };
         class Bxdf {
         public:
@@ -139,7 +132,17 @@ namespace McRenderFace {
             virtual void sample(vec3 wOut, BxdfSample& sample) = 0;
             virtual float pdf(vec3 normal, vec3 wOut, vec3 wIn) = 0;
         };
-
+        class FresnelBsdf {
+        private:
+            std::default_random_engine engine;
+            std::uniform_real_distribution<float> uniform{0, 1};
+        public:
+            void sampleRefraction(float iorIn,
+                                float iorOut,
+                                const vec3& wOut,
+                                const vec3& normal,
+                                BxdfSample& sample);
+        };
         class LambertBrdf : public Bxdf {
         private:
             HemisphereSampler sampler;
@@ -152,6 +155,7 @@ namespace McRenderFace {
                 nDotW = nDotW < 0 ? 0 : nDotW;
                 return static_cast<float>(nDotW / M_PI);
             }
+            ~LambertBrdf(){}
         };
 
         class CookTorranceBrdf {

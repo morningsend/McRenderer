@@ -26,6 +26,7 @@ namespace McRenderFace {
         BxdfSample sample;
         RaySurfaceInteraction inter;
         pathVertices.clear();
+        float currentRefractiveIOR = 1.0f;
         for(int i = 0; i < config.minRayBounces; i++) {
             hit.isHit = false;
             closestIntersection(scene.objects, currentRay, hit, hitObjectIndex);
@@ -62,7 +63,18 @@ namespace McRenderFace {
                 case MaterialType::Diffuse:
                     lambertBrdf.sample(inter.wOut, sample);
                     break;
-
+                case MaterialType::Refractive:
+                    fresnelBsdf.sampleRefraction(currentRefractiveIOR,
+                                                 currentMaterial->refractiveIndexOfRefraction,
+                                                 inter.wOut,
+                                                 inter.normal,
+                                                 sample);
+                    if(dot(inter.wOut, inter.normal) < 0) {
+                        currentRefractiveIOR = currentMaterial->refractiveIndexOfRefraction;
+                    } else {
+                        currentRefractiveIOR = currentMaterial->refractiveIndexOfRefraction;
+                    }
+                    break;
                 // fall back to lambert
                 default:
                     lambertBrdf.sample(inter.wOut, sample);
@@ -209,6 +221,9 @@ namespace McRenderFace {
                     surfaceColour = material->specularColour;
                     //cout << "specular brdf " << brdf<< endl;
                     break;
+                case MaterialType::Refractive:
+                    brdf = 1;
+                    surfaceColour = material->refractiveColour;
                 default:
                     break;
             }

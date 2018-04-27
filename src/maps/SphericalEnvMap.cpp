@@ -18,10 +18,13 @@ namespace McRenderFace {
 
         if(std::isnan(unitNormal.x)) {
             cout << "x is nan" << endl;
+            return vec2(0,0);
         } else if (std::isnan(unitNormal.y)) {
             cout << "y is nan" << endl;
+            return vec2(0,0);
         } else if (std::isnan(unitNormal.z)) {
             cout << "z is nan" << endl;
+            return vec2(0,0);
         }
         unitNormal = clamp(unitNormal, vec3(-1), vec3(1));
         float theta = std::acos(unitNormal.z);
